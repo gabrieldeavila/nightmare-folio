@@ -18,6 +18,10 @@ module.exports = {
     "@typescript-eslint/semi": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-confusing-void-expression": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    // 1-> warning
+    "@typescript-eslint/no-unused-vars": 1,
     semi: [2, "always"],
     quotes: [2, "double", { avoidEscape: true }],
     "comma-dangle": "off",
