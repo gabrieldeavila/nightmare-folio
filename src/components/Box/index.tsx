@@ -1,6 +1,6 @@
-import { ThreeElements, useFrame } from '@react-three/fiber';
-import { useRef, useState } from 'react';
-import * as THREE from 'three';
+import { type ThreeElements, useFrame } from "@react-three/fiber";
+import { useRef, useState } from "react";
+import type * as THREE from "three";
 
 function Box(props: ThreeElements["mesh"]) {
   const ref = useRef<THREE.Mesh>(null!);
@@ -18,7 +18,7 @@ function Box(props: ThreeElements["mesh"]) {
       onPointerOver={() => hover(true)}
       onPointerOut={() => hover(false)}
     >
-      <boxGeometry args={[2, 5, 1]} />
+      <boxGeometry />
       <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
     </mesh>
   );
