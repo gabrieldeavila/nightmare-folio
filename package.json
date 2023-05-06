@@ -15,11 +15,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "react-trigger-state": "^1.1.1",
     "three": "^0.152.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set DISABLE_ESLINT_PLUGIN=true && react-scripts start && TSC_COMPILE_ON_ERROR=true",
+    "start": "set DISABLE_ESLINT_PLUGIN=true && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
