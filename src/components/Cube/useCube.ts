@@ -4,9 +4,8 @@ import { globalState } from "react-trigger-state";
 import useAtom from "../Atom/useAtom";
 import useScene from "../Scene/useScene";
 
-function useCube({ name }: { name: string }) {
-  const cubeName = useMemo(() => name + "_cube_component", [name]);
-  const sceneName = useMemo(() => name + "_scene_component", [name]);
+function useCube({ name, sceneName }: { name: string; sceneName: string }) {
+  const cubeName = useMemo(() => name, [name]);
 
   useScene({ name: sceneName });
   useAtom({
@@ -32,14 +31,14 @@ function useCube({ name }: { name: string }) {
         cube == null ||
         canvas == null ||
         scene == null ||
-        isDragging === false
+        isDragging !== true
       ) {
         return;
       }
 
       const isPressingShift = event.shiftKey;
       const isPressingCtrl = event.ctrlKey;
-      const rotationSpeed = 0.00002;
+      const rotationSpeed = 0.00007;
 
       // x and y coordinates of a mouse pointer
       const mouseX = event.clientX * rotationSpeed;

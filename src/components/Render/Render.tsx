@@ -21,7 +21,8 @@ function Render() {
     globalState.set(
       "threeRender",
       new THREE.WebGLRenderer({
-        canvas: canvas.current,
+        canvas: canvas.current!,
+        antialias: true
       })
     );
   }, [canvas]);
@@ -37,6 +38,8 @@ function Render() {
       const threeRender = globalState.get("threeRender");
 
       camera.aspect = window.innerWidth / window.innerHeight;
+      camera.position.z = 5;
+
       camera.updateProjectionMatrix();
       threeRender.setSize(window.innerWidth, window.innerHeight);
     };
