@@ -3,13 +3,19 @@ import { useTriggerState, globalState } from "react-trigger-state";
 import * as THREE from "three";
 import useCamera from "../Camera/useCamera";
 
-function Render() {
+function Render({
+  sceneName,
+  children,
+}: {
+  sceneName: string;
+  children?: React.ReactNode;
+}) {
   const [canvas] = useTriggerState({
     initial: { current: null },
     name: "canvas",
   });
 
-  useCamera({ name: "camera" });
+  useCamera({ name: "camera", sceneName });
 
   // start the render
   const starter = useCallback(() => {
@@ -22,7 +28,7 @@ function Render() {
       "threeRender",
       new THREE.WebGLRenderer({
         canvas: canvas.current!,
-        antialias: true
+        antialias: true,
       })
     );
   }, [canvas]);
@@ -89,7 +95,12 @@ function Render() {
     };
   }, []);
 
-  return <canvas ref={canvas} />;
+  return (
+    <>
+      <canvas ref={canvas} />
+      {children}
+    </>
+  );
 }
 
 export default Render;

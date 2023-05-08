@@ -14,7 +14,6 @@ function useFloor({ name, sceneName }: { name: string; sceneName: string }) {
     });
 
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    console.log(floor);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -1;
 

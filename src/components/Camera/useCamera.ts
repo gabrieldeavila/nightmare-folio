@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { useCallback, useEffect } from "react";
 import { globalState } from "react-trigger-state";
 import * as THREE from "three";
 
 function useCamera({
   name,
+  sceneName,
 }: // initial,
 {
   name: string;
   initial?: { x: number; y: number; z: number };
+  sceneName: string;
 }) {
   const setCamera = useCallback(() => {
     const canvas = globalState.get("canvas");

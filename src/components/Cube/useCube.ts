@@ -4,13 +4,24 @@ import { globalState } from "react-trigger-state";
 import useAtom from "../Atom/useAtom";
 import useScene from "../Scene/useScene";
 
-function useCube({ name, sceneName }: { name: string; sceneName: string }) {
+// position -> [x, y, z, width, height, depth]
+// width, height and depth are optional
+function useCube({
+  name,
+  sceneName,
+  position,
+}: {
+  name: string;
+  sceneName: string;
+  position: [number, number, number, number?, number?, number?];
+}) {
   const cubeName = useMemo(() => name, [name]);
 
   useScene({ name: sceneName });
   useAtom({
     name: cubeName,
     sceneName,
+    position
   });
 
   useEffect(() => {

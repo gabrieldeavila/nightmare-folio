@@ -2,12 +2,22 @@ import { useCallback, useEffect } from "react";
 import { globalState, useTriggerState } from "react-trigger-state";
 import * as THREE from "three";
 
-function useAtom({ name, sceneName }: { name: string; sceneName: string }) {
+function useAtom({
+  name,
+  sceneName,
+  geometry,
+  position,
+}: {
+  name: string;
+  sceneName: string;
+  position: [number, number, number];
+  geometry: [number, number, number, number?, number?, number?];
+}) {
   const [atom, setAtom] = useTriggerState({ name });
 
   const setCube = useCallback(() => {
     // Create a cube and add it to the scene
-    const geometry = new THREE.BoxGeometry(2, 2, 1, 2, 5);
+    const geo = new THREE.BoxGeometry(...geometry);
     const materials = [
       new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Right face (red)
       new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Left face (green)
@@ -17,8 +27,8 @@ function useAtom({ name, sceneName }: { name: string; sceneName: string }) {
       new THREE.MeshBasicMaterial({ color: 0x00ffff }), // Back face (cyan)
     ];
 
-    globalState.set(name, new THREE.Mesh(geometry, materials));
-  }, [name]);
+    globalState.set(name, new THREE.Mesh(geo, materials));
+  }, [geometry, name]);
 
   useEffect(() => {
     setCube();
@@ -27,6 +37,7 @@ function useAtom({ name, sceneName }: { name: string; sceneName: string }) {
     const currAtom = globalState.get(name);
     const threeRender = globalState.get("threeRender");
     const camera = globalState.get("camera");
+    currAtom.position.set(...position);
 
     scene.add(currAtom);
 
@@ -35,7 +46,7 @@ function useAtom({ name, sceneName }: { name: string; sceneName: string }) {
     return () => {
       globalState.delete(name);
     };
-  }, [name, sceneName, setCube]);
+  }, [name, position, sceneName, setCube]);
 
   return [atom, setAtom];
 }
