@@ -21,7 +21,6 @@ const isTouchDevice = "ontouchstart" in window;
 
 class MainScene extends Scene3D {
   constructor() {
-    console.log("aaa");
     super("MainScene");
   }
 
@@ -128,14 +127,15 @@ class MainScene extends Scene3D {
        */
       // ad the box man's animation mixer to the animationMixers array (for auto updates)
       this.animationMixers.add(this.man.animation.mixer);
-console.log(this.man)
+
       object.animations.forEach((animation) => {
         console.log(animation.name)
         if (animation.name) {
           this.man.animation.add(animation.name, animation);
         }
       });
-      this.man.animation.play("BRANDO");
+      console.log("playing idle");
+      this.man.animation.play("idle");
 
       /**
        * Add the player to the scene with a body
@@ -317,8 +317,6 @@ console.log(this.man)
 
 function Enabled() {
   useEffect(() => {
-    console.log(PhysicsLoader);
-
     PhysicsLoader("./ammo/moz/", () => {
       const project = new Project({
         antialias: true,
