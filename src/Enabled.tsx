@@ -48,7 +48,8 @@ class MainScene extends Scene3D {
      * https://github.com/swift502/Sketchbook
      * CC-0 license 2018
      */
-    const man = this.load.preload("man", "/assets/glb/CatMac.glb");
+    const man = this.load.preload("CatMac", "/assets/glb/CatMac.glb");
+    // const man = this.load.preload("man", "/assets/glb/boxman.glb");
 
     await Promise.all([book, man]);
   }
@@ -103,7 +104,7 @@ class MainScene extends Scene3D {
       });
     };
     const addMan = async () => {
-      const object = await this.load.gltf("man");
+      const object = await this.load.gltf("CatMac");
       const man = object.scene.children[0];
 
       this.man = new ExtendedObject3D();
@@ -127,13 +128,14 @@ class MainScene extends Scene3D {
        */
       // ad the box man's animation mixer to the animationMixers array (for auto updates)
       this.animationMixers.add(this.man.animation.mixer);
-
+console.log(this.man)
       object.animations.forEach((animation) => {
+        console.log(animation.name)
         if (animation.name) {
           this.man.animation.add(animation.name, animation);
         }
       });
-      this.man.animation.play("idle");
+      this.man.animation.play("BRANDO");
 
       /**
        * Add the player to the scene with a body
@@ -161,7 +163,7 @@ class MainScene extends Scene3D {
         targetRadius: 3,
       });
       // set initial view to 90 deg theta
-      this.controls.theta = 0;
+      this.controls.theta = 180;
 
       /**
        * Add Pointer Lock and Pointer Drag
