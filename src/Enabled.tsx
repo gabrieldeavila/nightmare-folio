@@ -292,8 +292,12 @@ class MainScene extends Scene3D {
        * Player Move
        */
       if (this.keys.w.isDown || this.move) {
-        if (this.man.animation.current === "idle" && this.canJump)
-          this.man.animation.play("run");
+        console.log("aaaa");
+
+        // if (this.man.animation.current === "idle" && this.canJump)
+        if (this.man.animation.current === "idle"){
+          this.man.animation.play("running");
+        }
 
         const x = Math.sin(theta) * speed,
           y = this.man.body.velocity.y,
@@ -301,7 +305,7 @@ class MainScene extends Scene3D {
 
         this.man.body.setVelocity(x, y, z);
       } else {
-        if (this.man.animation.current === "run" && this.canJump)
+        if (this.man.animation.current === "running" && this.canJump)
           this.man.animation.play("idle");
       }
 
