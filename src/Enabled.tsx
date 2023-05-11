@@ -19,6 +19,14 @@ import "./global.css";
  */
 const isTouchDevice = "ontouchstart" in window;
 
+const animations = {
+  stop: ["idle", "hiphop"],
+  fall: ["falling", "falling_to_roll"],
+  walk: ["walking"],
+  jump: ["jumping"],
+  run: ["running"],
+};
+
 class MainScene extends Scene3D {
   constructor() {
     super("MainScene");
@@ -129,13 +137,13 @@ class MainScene extends Scene3D {
       this.animationMixers.add(this.man.animation.mixer);
 
       object.animations.forEach((animation) => {
-        console.log(animation.name)
+        console.log(animation.name);
         if (animation.name) {
           this.man.animation.add(animation.name, animation);
         }
       });
-      console.log("playing idle");
-      this.man.animation.play("idle");
+
+      this.man.animation.play("falling_to_roll");
 
       /**
        * Add the player to the scene with a body
@@ -295,7 +303,7 @@ class MainScene extends Scene3D {
         console.log("aaaa");
 
         // if (this.man.animation.current === "idle" && this.canJump)
-        if (this.man.animation.current === "idle"){
+        if (this.man.animation.current === "idle") {
           this.man.animation.play("running");
         }
 
