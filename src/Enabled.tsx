@@ -90,9 +90,9 @@ class MainScene extends Scene3D {
       // https://stackoverflow.com/a/48939256
       this.light.shadow.bias = -0.01;
 
-      // debug shadow
-      const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera);
-      this.scene.add(shadowHelper);
+      // // debug shadow
+      // const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera);
+      // this.scene.add(shadowHelper);
     }
     this.camera.position.set(5, 10, -20);
     this.camera.lookAt(0, 0, 0);
