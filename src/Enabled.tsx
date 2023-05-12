@@ -65,11 +65,37 @@ class MainScene extends Scene3D {
     const { lights } = await this.warpSpeed("-ground", "-orbitControls");
 
     const { hemisphereLight, ambientLight, directionalLight } = lights;
-    const intensity = 0.65;
+    console.log(lights)
+    const intensity = 1;
     hemisphereLight.intensity = intensity;
     ambientLight.intensity = intensity;
     directionalLight.intensity = intensity;
+    
+    hemisphereLight.receiveShadow = true;
+    directionalLight.receiveShadow = true;
 
+    if (lights) {
+      this.light = lights.directionalLight;
+      const d = 4;
+      this.light.shadow.camera.top = d;
+      this.light.shadow.camera.bottom = -d;
+      this.light.shadow.camera.left = -d;
+      this.light.shadow.camera.right = d;
+
+      this.light.shadow.mapSize.set(2048, 2048);
+
+      this.light.shadow.camera.near = 200;
+      this.light.shadow.camera.far = 240;
+
+      // https://stackoverflow.com/a/48939256
+      this.light.shadow.bias = -0.01;
+
+      // debug shadow
+      const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera);
+      this.scene.add(shadowHelper);
+    }
+    this.camera.position.set(5, 10, -20);
+    this.camera.lookAt(0, 0, 0);
     // this.physics.debug.enable()
 
     const addBook = async () => {
@@ -93,7 +119,7 @@ class MainScene extends Scene3D {
 
       book.traverse((child) => {
         if (child.isMesh) {
-          child.castShadow = child.receiveShadow = false;
+          child.castShadow = child.receiveShadow = true;
           child.material.metalness = 0;
           child.material.roughness = 1;
 
@@ -113,21 +139,29 @@ class MainScene extends Scene3D {
     const addMan = async () => {
       const object = await this.load.gltf("CatMac");
       const man = object.scene.children[0];
+      const scene = object.scene;
+
+      // scene.traverse((child) => {
+      //   if (child.isMesh) {
+      //     if (/window/gi.test(child.name)) {
+      //       console.log(child.name);
+      //       // child.material.transparent = true;
+      //       // child.material.opacity = 0.5;
+      //     }
+      //     // console.log(child.name);
+      //   }
+      // });
 
       this.man = new ExtendedObject3D();
       this.man.name = "man";
       this.man.rotateY(Math.PI + 0.1); // a hack
       this.man.add(man);
+
       this.man.rotation.set(0, Math.PI * 1.5, 0);
       this.man.position.set(35, 0, 0);
       // add shadow
       this.man.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = child.receiveShadow = false;
-          // https://discourse.threejs.org/t/cant-export-material-from-blender-gltf/12258
-          child.material.roughness = 1;
-          child.material.metalness = 0;
-        }
+        if (child.isMesh) child.castShadow = child.receiveShadow = true;
       });
 
       /**
@@ -137,13 +171,12 @@ class MainScene extends Scene3D {
       this.animationMixers.add(this.man.animation.mixer);
 
       object.animations.forEach((animation) => {
-        console.log(animation.name);
         if (animation.name) {
           this.man.animation.add(animation.name, animation);
         }
       });
 
-      this.man.animation.play("falling_to_roll");
+      this.man.animation.play("idle");
 
       /**
        * Add the player to the scene with a body
@@ -268,7 +301,18 @@ class MainScene extends Scene3D {
   }
 
   update(time, delta) {
+    // // adjust shadow
+    // this.light.position.x = this.car.chassis.position.x;
+    // this.light.position.y = this.car.chassis.position.y + 200;
+    // this.light.position.z = this.car.chassis.position.z + 100;
+    // this.light.target = this.car.chassis;
+
     if (this.man && this.man.body) {
+      this.light.position.x = this.man.position.x;
+      this.light.position.y = this.man.position.y + 200;
+      this.light.position.z = this.man.position.z + 100;
+      this.light.target = this.man;
+
       /**
        * Update Controls
        */
@@ -300,8 +344,6 @@ class MainScene extends Scene3D {
        * Player Move
        */
       if (this.keys.w.isDown || this.move) {
-        console.log("aaaa");
-
         // if (this.man.animation.current === "idle" && this.canJump)
         if (this.man.animation.current === "idle") {
           this.man.animation.play("running");
@@ -329,12 +371,13 @@ class MainScene extends Scene3D {
 
 function Enabled() {
   useEffect(() => {
-    PhysicsLoader("./ammo/moz/", () => {
+    PhysicsLoader("./ammo/kripken/", () => {
       const project = new Project({
         antialias: true,
         maxSubSteps: 10,
         fixedTimeStep: 1 / 120,
         scenes: [MainScene],
+        anisotropy: 1,
       });
       const destination = document.getElementById("welcome-game");
       destination.appendChild(project.canvas);
