@@ -13,6 +13,7 @@ import {
   PointerDrag,
 } from "enable3d";
 import "./global.css";
+import Enable3d from "./components/Enable";
 
 /**
  * Is touch device?
@@ -43,20 +44,9 @@ class MainScene extends Scene3D {
   }
 
   async preload() {
-    /**
-     * Medieval Fantasy Book by Pixel (https://sketchfab.com/stefan.lengyel1)
-     * https://sketchfab.com/3d-models/medieval-fantasy-book-06d5a80a04fc4c5ab552759e9a97d91a
-     * Attribution 4.0 International (CC BY 4.0)
-     */
     const book = this.load.preload("book", "/assets/glb/book.glb");
 
-    /**
-     * box_man.glb by Jan Bláha
-     * https://github.com/swift502/Sketchbook
-     * CC-0 license 2018
-     */
     const man = this.load.preload("CatMac", "/assets/glb/CatMac.glb");
-    // const man = this.load.preload("man", "/assets/glb/boxman.glb");
 
     await Promise.all([book, man]);
   }
@@ -65,18 +55,17 @@ class MainScene extends Scene3D {
     const { lights } = await this.warpSpeed("-ground", "-orbitControls");
 
     const { hemisphereLight, ambientLight, directionalLight } = lights;
-    console.log(lights)
-    const intensity = 1;
+    const intensity = 0.5;
     hemisphereLight.intensity = intensity;
     ambientLight.intensity = intensity;
     directionalLight.intensity = intensity;
-    
+
     hemisphereLight.receiveShadow = true;
     directionalLight.receiveShadow = true;
 
     if (lights) {
       this.light = lights.directionalLight;
-      const d = 4;
+      const d = 40;
       this.light.shadow.camera.top = d;
       this.light.shadow.camera.bottom = -d;
       this.light.shadow.camera.left = -d;
@@ -409,6 +398,8 @@ function Enabled() {
           <div id="welcome-game-placeholder-image">ha</div>
         </div>
       </div>
+      <Enable3d
+      ></Enable3d>
     </div>
   );
 }
