@@ -125,21 +125,11 @@ class MainScene extends Scene3D {
         }
       });
     };
+
     const addMan = async () => {
       const object = await this.load.gltf("CatMac");
       const man = object.scene.children[0];
       const scene = object.scene;
-
-      // scene.traverse((child) => {
-      //   if (child.isMesh) {
-      //     if (/window/gi.test(child.name)) {
-      //       console.log(child.name);
-      //       // child.material.transparent = true;
-      //       // child.material.opacity = 0.5;
-      //     }
-      //     // console.log(child.name);
-      //   }
-      // });
 
       this.man = new ExtendedObject3D();
       this.man.name = "man";
