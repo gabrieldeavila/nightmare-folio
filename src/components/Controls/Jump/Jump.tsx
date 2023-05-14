@@ -1,24 +1,27 @@
-import { memo, useEffect } from "react";
-import { useTriggerState } from "react-trigger-state";
+import { memo, useCallback, useEffect } from "react";
+import { stateStorage, useTriggerState } from "react-trigger-state";
 
 const Jump = memo(() => {
   const [scene] = useTriggerState({ name: "scene" });
 
-  useEffect(() => {
-    if (scene == null) return;
-    const { character, canJump } = scene;
+  const jump = useCallback(() => {
+    const { canJump } = scene;
+    const character = stateStorage.get("main_character");
 
-    if (character == null || canJump === false) return;
+    if (character == null || canJump) return;
 
     scene.canJump = false;
-    scene.character.animation.play("jump_running", 500, false);
-    setTimeout(() => {
-      scene.canJump = true;
-      scene.character.animation.play("idle", 500);
-    }, 500);
+    character.animation.play("jump", 500, false);
+    scene.isJumping = true;
 
     scene.character.body.applyForceY(6);
   }, [scene]);
+
+  useEffect(() => {
+    if (scene == null) return;
+
+    scene.jump = jump;
+  }, [jump, scene]);
 
   return null;
 });

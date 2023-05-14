@@ -29,5 +29,12 @@ module.exports = {
     "@typescript-eslint/space-before-function-paren": "off",
     "@typescript-eslint/comma-dangle": "off",
     "react/prop-types": 1,
+    "no-debugger": 0,
+    // disable strict-boolean-expressions when is boolean
+    "@typescript-eslint/strict-boolean-expressions": [
+      {
+        allowNullableBoolean: false,
+      },
+    ],
   },
 };

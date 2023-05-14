@@ -74,7 +74,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     // https://docs.panda3d.org/1.10/python/programming/physics/bullet/ccd
     scene.character.body.setCcdMotionThreshold(1e-7);
     scene.character.body.setCcdSweptSphereRadius(0.25);
-    if (isMainCharacter === true) {
+    if (isMainCharacter) {
       /**
        * Add 3rd Person Controls
        */
@@ -89,7 +89,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       /**
        * Add Pointer Lock and Pointer Drag
        */
-      if (isTouchDevice === false) {
+      if (isTouchDevice) {
         const pl = new PointerLock(canvas);
         const pd = new PointerDrag(canvas);
         pd.onMove((delta) => {
@@ -103,14 +103,9 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       stateStorage.set("controls", scene.controls);
       stateStorage.set("main_character", scene.character);
     }
-
-    console.log(stateStorage.get("all_characters"));
   }, [scene, asset, name, isMainCharacter, isTouchDevice]);
 
   useEffect(() => {
-    const currChars = stateStorage.get("all_characters");
-
-    console.log(currChars);
     handleCharacter().catch((err) => console.log(err));
   }, [handleCharacter, create]);
 

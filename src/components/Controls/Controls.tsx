@@ -41,7 +41,7 @@ const Controls = memo(() => {
        * Update Controls
        */
       controls.update(moveRight * 3, -moveTop * 3);
-      if (isTouchDevice === false) scene.moveRight = scene.moveTop = 0;
+      if (isTouchDevice) scene.moveRight = scene.moveTop = 0;
       /**
        * Player Turn
        */
@@ -64,10 +64,21 @@ const Controls = memo(() => {
         character.body.setAngularVelocityY(rotationSpeed);
       }
 
+      // detects if the character is on the ground
+      // if it's below 0.1 it means it's on the ground
+      if (character.body.velocity.y < 0.1 && character.body.velocity.y > -0.1) {
+        if (scene.isJumping) {
+          character.animation.play("falling_to_roll", 500, false);
+        }
+
+        scene.isJumping = false;
+        scene.canJump = true;
+      }
+
       /**
        * Player Move
        */
-      if (keys.w.isDown === true || move === true) {
+      if (keys.w.isDown || move) {
         // if (character.animation.current === "idle" && this.canJump)
         if (character.animation.current === "idle") {
           character.animation.play("running");
@@ -79,12 +90,12 @@ const Controls = memo(() => {
 
         character.body.setVelocity(x, y, z);
       } else {
-        if (character.animation.current === "running" && canJump != null) {
+        if (character.animation.current !== "idle" && canJump) {
           character.animation.play("idle");
         }
       }
 
-      if (keys.space.isDown === true && canJump === true) {
+      if (keys.space.isDown && canJump && scene.isJumping) {
         scene.jump();
       }
     }

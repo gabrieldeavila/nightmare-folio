@@ -42,7 +42,7 @@ function Enabled() {
         <Camera />
         <Ambient />
         <Character name="main" asset="cat" isMainCharacter />
-        <Character name="test" asset="cat" />
+        {/* <Character name="test" asset="cat" /> */}
         <Controls />
       </Enable3d>
     </div>
