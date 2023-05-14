@@ -109,13 +109,17 @@ const Controls = memo(() => {
       }
     };
 
-    document.addEventListener("keydown", (e) => press(e, true));
-    document.addEventListener("keyup", (e) => press(e, false));
+    const pressTrue = (e: any) => press(e, true);
+
+    const pressFalse = (e: any) => press(e, false);
+
+    document.addEventListener("keydown", pressTrue);
+    document.addEventListener("keyup", pressFalse);
     handleControls();
 
     return () => {
-      document.removeEventListener("keydown", (e) => press(e, true));
-      document.removeEventListener("keyup", (e) => press(e, false));
+      document.removeEventListener("keydown", pressTrue);
+      document.removeEventListener("keyup", pressFalse);
     };
   }, [handleControls, delta, update, time]);
 
