@@ -13,7 +13,15 @@ import {
   PointerDrag,
 } from "enable3d";
 import "./global.css";
-import Enable3d from "./components/Enable";
+import Enable3d from "./components/Enable/Enable";
+import Lights from "./components/Lights/Lights";
+import Preload from "./components/Preload/Preload";
+import { stateStorage } from "react-trigger-state";
+import Initial from "./components/Initial/Initial";
+import Camera from "./components/Camera/Camera";
+import Ambient from "./components/Ambient/Ambient";
+import Character from "./components/Character/Character";
+import Controls from "./components/Controls/Controls";
 
 /**
  * Is touch device?
@@ -44,8 +52,10 @@ class MainScene extends Scene3D {
   }
 
   async preload() {
+    // it shall be in the public folder!!
     const book = this.load.preload("book", "/assets/glb/book.glb");
 
+    // it shall be in the public folder!!
     const man = this.load.preload("CatMac", "/assets/glb/CatMac.glb");
 
     await Promise.all([book, man]);
@@ -350,46 +360,60 @@ class MainScene extends Scene3D {
 
 function Enabled() {
   useEffect(() => {
-    PhysicsLoader("./ammo/kripken/", () => {
-      const project = new Project({
-        antialias: true,
-        maxSubSteps: 10,
-        fixedTimeStep: 1 / 120,
-        scenes: [MainScene],
-        anisotropy: 1,
-      });
-      const destination = document.getElementById("welcome-game");
-      destination.appendChild(project.canvas);
-      project.canvas.style.marginTop = "0px !important";
-      const HEIGHT = window.innerHeight;
-      const WIDTH = window.innerWidth;
+    // PhysicsLoader("./ammo/kripken/", () => {
+    //   const project = new Project({
+    //     antialias: true,
+    //     maxSubSteps: 10,
+    //     fixedTimeStep: 1 / 120,
+    //     scenes: [MainScene],
+    //     anisotropy: 1,
+    //   });
+    //   const destination = document.getElementById("welcome-game");
+    //   destination.appendChild(project.canvas);
+    //   project.canvas.style.marginTop = "0px !important";
+    //   const HEIGHT = window.innerHeight;
+    //   const WIDTH = window.innerWidth;
+    //   const resize = () => {
+    //     const newWidth = window.innerWidth;
+    //     const newHeight = (HEIGHT / WIDTH) * newWidth;
+    //     destination.style.width = `${newWidth}px`;
+    //     destination.style.height = `${newHeight}px`;
+    //     project.renderer.setSize(newWidth, newHeight);
+    //     project.camera.aspect = newWidth / newHeight;
+    //     project.camera.updateProjectionMatrix();
+    //   };
+    //   window.onresize = resize;
+    //   resize();
+    // });
+  }, []);
 
-      const resize = () => {
-        const newWidth = window.innerWidth;
-        const newHeight = (HEIGHT / WIDTH) * newWidth;
-        destination.style.width = `${newWidth}px`;
-        destination.style.height = `${newHeight}px`;
-        project.renderer.setSize(newWidth, newHeight);
-        project.camera.aspect = newWidth / newHeight;
-        project.camera.updateProjectionMatrix();
-      };
-      window.onresize = resize;
-      resize();
-    });
+  const handlePreload = useCallback(async () => {
+    const { load } = stateStorage.get("scene");
+
+    // it shall be in the public folder!!
+    const book = load.preload("ambient", "/assets/glb/book.glb");
+
+    // it shall be in the public folder!!
+    const character = load.preload("character", "/assets/glb/CatMac.glb");
+
+    await Promise.all([book, character]);
   }, []);
 
   return (
     <div>
-      <div id="welcome-game">
-        <div id="welcome-game-placeholder">
-          <div id="welcome-game-placeholder-loader">
-            <div className="loader"></div>
-          </div>
-          <div id="welcome-game-placeholder-image">ha</div>
-        </div>
-      </div>
-      <Enable3d
-      ></Enable3d>
+      <Enable3d>
+        <Initial />
+        <Preload onPreload={handlePreload} />
+        <Lights />
+        <Camera />
+        <Ambient />
+        <Character />
+        <Character />
+        <Character />
+        <Character />
+        <Character />
+        <Controls />
+      </Enable3d>
     </div>
   );
 }

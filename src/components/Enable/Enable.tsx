@@ -1,12 +1,16 @@
 import { PhysicsLoader, Project } from "enable3d";
-import React, { useEffect, useRef } from "react";
-import MainScene from "./MainScene";
+import React, { memo, useEffect, useRef } from "react";
+import MainScene from "./MainScene/MainScene";
+import type { IEnable } from "./interface";
+import { stateStorage } from "react-trigger-state";
 
-function Enable3d() {
+const Enable3d = memo(({ children }: IEnable) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const destination = ref.current!;
+
+    stateStorage.set("is_touch_device", "ontouchstart" in window);
 
     PhysicsLoader("./ammo/kripken/", () => {
       const project = new Project({
@@ -41,7 +45,9 @@ function Enable3d() {
     };
   }, []);
 
-  return <div ref={ref}></div>;
-}
+  return <div ref={ref}>{children}</div>;
+});
+
+Enable3d.displayName = "Enable3d";
 
 export default Enable3d;
