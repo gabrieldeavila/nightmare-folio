@@ -89,7 +89,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       /**
        * Add Pointer Lock and Pointer Drag
        */
-      if (isTouchDevice) {
+      if (!isTouchDevice) {
         const pl = new PointerLock(canvas);
         const pd = new PointerDrag(canvas);
         pd.onMove((delta) => {

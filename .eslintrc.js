@@ -32,8 +32,10 @@ module.exports = {
     "no-debugger": 0,
     // disable strict-boolean-expressions when is boolean
     "@typescript-eslint/strict-boolean-expressions": [
+      "error",
       {
-        allowNullableBoolean: false,
+        allowNullableBoolean: true,
+        allowAny: true,
       },
     ],
   },

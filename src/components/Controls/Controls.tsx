@@ -41,7 +41,7 @@ const Controls = memo(() => {
        * Update Controls
        */
       controls.update(moveRight * 3, -moveTop * 3);
-      if (isTouchDevice) scene.moveRight = scene.moveTop = 0;
+      if (!isTouchDevice) scene.moveRight = scene.moveTop = 0;
       /**
        * Player Turn
        */
