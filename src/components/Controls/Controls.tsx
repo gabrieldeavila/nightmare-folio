@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { THREE } from "enable3d";
 import { memo, useCallback, useEffect, useMemo } from "react";
-import { globalState, useTriggerState } from "react-trigger-state";
+import {
+  globalState,
+  stateStorage,
+  useTriggerState,
+} from "react-trigger-state";
 import Jump from "./Jump/Jump";
 
 const Controls = memo(() => {
@@ -16,7 +20,7 @@ const Controls = memo(() => {
     [mainUpdate]
   );
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
-  const [character] = useTriggerState({ name: "character" });
+  const [character] = useTriggerState({ name: "main_character" });
   const [controls] = useTriggerState({ name: "controls" });
 
   const handleControls = useCallback(() => {
@@ -87,8 +91,32 @@ const Controls = memo(() => {
   }, [character, controls, isTouchDevice, scene]);
 
   useEffect(() => {
-    console.log("damn");
+    const press = (e: any, isDown: boolean) => {
+      e.preventDefault();
+
+      const keys = stateStorage.get("keys");
+      const { keyCode } = e;
+      switch (keyCode) {
+        case 87: // w
+          keys.w.isDown = isDown;
+          break;
+        case 38: // arrow up
+          keys.w.isDown = isDown;
+          break;
+        case 32: // space
+          keys.space.isDown = isDown;
+          break;
+      }
+    };
+
+    document.addEventListener("keydown", (e) => press(e, true));
+    document.addEventListener("keyup", (e) => press(e, false));
     handleControls();
+
+    return () => {
+      document.removeEventListener("keydown", (e) => press(e, true));
+      document.removeEventListener("keyup", (e) => press(e, false));
+    };
   }, [handleControls, delta, update, time]);
 
   return <Jump />;

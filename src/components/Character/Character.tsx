@@ -7,8 +7,9 @@ import {
 } from "enable3d";
 import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
+import type { ICharacter } from "./interface";
 
-const Character = memo(() => {
+const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   // TODO: add resize event to update the camera
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
@@ -16,14 +17,22 @@ const Character = memo(() => {
 
   const handleCharacter = useCallback(async () => {
     if (scene == null) return;
+    const currChars = stateStorage.get("all_characters");
 
+    // if the character already exists, don't create it again
+    if (currChars?.[name] != null) return;
+    // add the character to the all_characters object
+    stateStorage.set("all_characters", {
+      ...currChars,
+      [name]: true,
+    });
     const { load, add, camera, animationMixers, physics, canvas } = scene;
 
-    const object = await load.gltf("character");
+    const object = await load.gltf(asset);
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
-    scene.character.name = "man";
+    scene.character.name = name;
     scene.character.rotateY(Math.PI + 0.1); // a hack
     scene.character.add(characterObj);
 
@@ -65,64 +74,44 @@ const Character = memo(() => {
     // https://docs.panda3d.org/1.10/python/programming/physics/bullet/ccd
     scene.character.body.setCcdMotionThreshold(1e-7);
     scene.character.body.setCcdSweptSphereRadius(0.25);
-
-    /**
-     * Add 3rd Person Controls
-     */
-    scene.controls = new ThirdPersonControls(camera, scene.character, {
-      offset: new THREE.Vector3(0, 1, 0),
-      targetRadius: 3,
-    });
-
-    // set initial view to 90 deg theta
-    scene.controls.theta = 180;
-
-    /**
-     * Add Pointer Lock and Pointer Drag
-     */
-    if (isTouchDevice === false) {
-      const pl = new PointerLock(canvas);
-      const pd = new PointerDrag(canvas);
-      pd.onMove((delta) => {
-        if (pl.isLocked()) {
-          scene.moveTop = -delta.y;
-          scene.moveRight = delta.x;
-        }
+    if (isMainCharacter === true) {
+      /**
+       * Add 3rd Person Controls
+       */
+      scene.controls = new ThirdPersonControls(camera, scene.character, {
+        offset: new THREE.Vector3(0, 1, 0),
+        targetRadius: 3,
       });
+
+      // set initial view to 90 deg theta
+      scene.controls.theta = 180;
+
+      /**
+       * Add Pointer Lock and Pointer Drag
+       */
+      if (isTouchDevice === false) {
+        const pl = new PointerLock(canvas);
+        const pd = new PointerDrag(canvas);
+        pd.onMove((delta) => {
+          if (pl.isLocked()) {
+            scene.moveTop = -delta.y;
+            scene.moveRight = delta.x;
+          }
+        });
+      }
+
+      stateStorage.set("controls", scene.controls);
+      stateStorage.set("main_character", scene.character);
     }
 
-    stateStorage.set("controls", scene.controls);
-    stateStorage.set("character", scene.character);
-  }, [scene, isTouchDevice]);
+    console.log(stateStorage.get("all_characters"));
+  }, [scene, asset, name, isMainCharacter, isTouchDevice]);
 
   useEffect(() => {
+    const currChars = stateStorage.get("all_characters");
+
+    console.log(currChars);
     handleCharacter().catch((err) => console.log(err));
-
-    const press = (e: any, isDown: boolean) => {
-      e.preventDefault();
-
-      const keys = stateStorage.get("keys");
-      const { keyCode } = e;
-      switch (keyCode) {
-        case 87: // w
-          keys.w.isDown = isDown;
-          break;
-        case 38: // arrow up
-          keys.w.isDown = isDown;
-          break;
-        case 32: // space
-          keys.space.isDown = isDown;
-          break;
-      }
-    };
-
-    document.addEventListener("keydown", (e) => press(e, true));
-    document.addEventListener("keyup", (e) => press(e, false));
-
-    return () => {
-      document.removeEventListener("keydown", (e) => press(e, true));
-      document.removeEventListener("keyup", (e) => press(e, false));
-    };
   }, [handleCharacter, create]);
 
   return null;
