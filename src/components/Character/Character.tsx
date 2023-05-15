@@ -102,6 +102,10 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
       stateStorage.set("controls", scene.controls);
       stateStorage.set("main_character", scene.character);
+      setTimeout(() => {
+        scene.isFalling = true;
+        scene.isJumping = true;
+      });
     }
   }, [scene, asset, name, isMainCharacter, isTouchDevice]);
 

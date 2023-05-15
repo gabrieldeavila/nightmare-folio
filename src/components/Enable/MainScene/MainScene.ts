@@ -15,6 +15,16 @@ class MainScene extends Scene3D {
       d: { isDown: false },
       space: { isDown: false },
     };
+
+    // @ts-expect-error - should add a type for this
+    this.lastAnimationEndsIn = 0;
+    // @ts-expect-error - should add a type for this
+    this.isJumping = true;
+    // @ts-expect-error - should add a type for this
+    this.isFalling = true;
+    // @ts-expect-error - should add a type for this
+    this.initialFall = true;
+
     stateStorage.set("keys", keys);
 
     stateStorage.set("scene", this);

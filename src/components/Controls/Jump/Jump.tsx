@@ -8,13 +8,19 @@ const Jump = memo(() => {
     const { canJump } = scene;
     const character = stateStorage.get("main_character");
 
-    if (character == null || canJump) return;
+    if (character == null || !canJump) return;
 
     scene.canJump = false;
-    character.animation.play("jump", 500, false);
-    scene.isJumping = true;
+    character.animation.play("jump", 800, false);
 
-    scene.character.body.applyForceY(6);
+    // setTimeout(() => {
+    //   scene.isJumping = false;
+    //   scene.isFalling = true;
+    // }, 250);
+    setTimeout(() => {
+      scene.isJumping = true;
+      scene.character.body.applyForceY(60);
+    }, 800);
   }, [scene]);
 
   useEffect(() => {

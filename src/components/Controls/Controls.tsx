@@ -8,6 +8,8 @@ import {
 } from "react-trigger-state";
 import Jump from "./Jump/Jump";
 
+let clearJumpTimeout: any = null;
+
 const Controls = memo(() => {
   const [scene] = useTriggerState({ name: "scene" });
   const [mainUpdate] = useTriggerState({ name: "main_scene_update" });
@@ -64,15 +66,35 @@ const Controls = memo(() => {
         character.body.setAngularVelocityY(rotationSpeed);
       }
 
+      if (scene.isFalling && character.animation.current !== "falling") {
+        character.animation.play("falling");
+      }
+
       // detects if the character is on the ground
       // if it's below 0.1 it means it's on the ground
-      if (character.body.velocity.y < 0.1 && character.body.velocity.y > -0.1) {
-        if (scene.isJumping) {
-          character.animation.play("falling_to_roll", 500, false);
-        }
 
-        scene.isJumping = false;
-        scene.canJump = true;
+      const isFalling =
+        (scene.initialFall || scene.isJumping) &&
+        scene.lastPosition != null &&
+        scene.lastPosition?.y > character.position.y;
+
+      scene.lastPosition = character.position.clone();
+
+      if (isFalling) {
+        character.animation.play("falling", 250, false);
+        scene.lastAnimationEndsIn = Date.now() + 350;
+        console.log("ok");
+
+        scene.isFalling = false;
+
+        clearTimeout(clearJumpTimeout);
+
+        clearJumpTimeout = setTimeout(() => {
+          character.animation.play("idle");
+          scene.initialFall = false;
+          scene.isJumping = false;
+          scene.canJump = true;
+        }, 950);
       }
 
       /**
@@ -90,12 +112,23 @@ const Controls = memo(() => {
 
         character.body.setVelocity(x, y, z);
       } else {
-        if (character.animation.current !== "idle" && canJump) {
+        const now = Date.now();
+
+        if (
+          character.animation.current !== "idle" &&
+          character.animation.current !== "falling_to_roll" &&
+          !scene.isFalling &&
+          canJump &&
+          scene.lastAnimationEndsIn < now
+        ) {
+          // sees if a animation is playing and if the character is on the ground
+          const animation = character.animation.current;
+          console.log(scene.lastAnimationEndsIn, animation, "grr");
           character.animation.play("idle");
         }
       }
 
-      if (keys.space.isDown && canJump && scene.isJumping) {
+      if (keys.space.isDown && canJump && !scene.isJumping) {
         scene.jump();
       }
     }
