@@ -104,8 +104,13 @@ const Controls = memo(() => {
         scene.isFalling = false;
         character.animation.play("falling_to_roll", 1200, false);
         setTimeout(() => {
-          character.animation.play("idle", 1200, false);
-          console.log("parrouu");
+          const x = character.body.velocity.x - 0.4;
+          const y = character.body.velocity.y;
+          const z = character.body.velocity.z + 1.5;
+
+          character.body.setVelocity(x, y, z);
+
+          character.animation.play("idle");
         }, 1200);
       }
 
@@ -115,7 +120,7 @@ const Controls = memo(() => {
       if (keys.w.isDown || move) {
         // if (character.animation.current === "idle" && this.canJump)
         if (character.animation.current === "idle") {
-          character.animation.play("running");
+          character.animation.play("walking");
         }
 
         const x = Math.sin(theta) * speed;
