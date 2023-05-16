@@ -8,8 +8,6 @@ import {
 } from "react-trigger-state";
 import Jump from "./Jump/Jump";
 
-let clearJumpTimeout: any = null;
-
 const Controls = memo(() => {
   const [scene] = useTriggerState({ name: "scene" });
   const [mainUpdate] = useTriggerState({ name: "main_scene_update" });
@@ -70,31 +68,45 @@ const Controls = memo(() => {
         character.animation.play("falling");
       }
 
-      // detects if the character is on the ground
-      // if it's below 0.1 it means it's on the ground
-
       const isFalling =
         (scene.initialFall || scene.isJumping) &&
         scene.lastPosition != null &&
-        scene.lastPosition?.y > character.position.y;
+        scene.lastPosition?.y - 10 > character.position.y;
 
       scene.lastPosition = character.position.clone();
 
-      if (isFalling) {
+      if (isFalling && scene.startedFalling == null) {
+        scene.startedFalling = Date.now();
+      }
+
+      // if is following for more than 0.5 seconds
+      if (
+        isFalling &&
+        scene.startedFalling != null &&
+        Date.now() - scene.startedFalling > 500 &&
+        character.animation.current !== "falling"
+      ) {
+        console.log("noo...", scene.isJumping, scene.initialFall);
         character.animation.play("falling", 250, false);
-        scene.lastAnimationEndsIn = Date.now() + 350;
-        console.log("ok");
+        scene.lastAnimationEndsIn = Date.now() + 950;
+      }
+
+      if (
+        !isFalling &&
+        scene.isFalling &&
+        character.animation.current !== "running"
+      ) {
+        if (scene.initialFall) {
+          scene.initialFall = false;
+          return;
+        }
 
         scene.isFalling = false;
-
-        clearTimeout(clearJumpTimeout);
-
-        clearJumpTimeout = setTimeout(() => {
-          character.animation.play("idle");
-          scene.initialFall = false;
-          scene.isJumping = false;
-          scene.canJump = true;
-        }, 950);
+        character.animation.play("falling_to_roll", 1200, false);
+        setTimeout(() => {
+          character.animation.play("idle", 1200, false);
+          console.log("parrouu");
+        }, 1200);
       }
 
       /**

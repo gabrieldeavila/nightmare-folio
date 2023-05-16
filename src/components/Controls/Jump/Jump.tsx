@@ -11,12 +11,8 @@ const Jump = memo(() => {
     if (character == null || !canJump) return;
 
     scene.canJump = false;
-    character.animation.play("jump", 800, false);
+    character.animation.play("jump", 250, false);
 
-    // setTimeout(() => {
-    //   scene.isJumping = false;
-    //   scene.isFalling = true;
-    // }, 250);
     setTimeout(() => {
       scene.isJumping = true;
       scene.character.body.applyForceY(60);

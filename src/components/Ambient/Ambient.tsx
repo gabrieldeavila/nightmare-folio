@@ -13,6 +13,8 @@ const Ambient = memo(() => {
     const object = await load.gltf("ambient");
     const scene = object.scenes[0];
 
+    stateStorage.set("ambient", scene);
+
     const book = new ExtendedObject3D();
     book.name = "scene";
     book.add(scene);
