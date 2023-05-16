@@ -9,7 +9,10 @@ const Enable3d = memo(({ children }: IEnable) => {
 
   useEffect(() => {
     const destination = ref.current!;
-
+    stateStorage.set("changing_position", [
+      "running",
+      "walking",
+    ]);
     stateStorage.set("is_touch_device", "ontouchstart" in window);
 
     PhysicsLoader("./ammo/kripken/", () => {

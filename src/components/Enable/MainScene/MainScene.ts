@@ -13,6 +13,7 @@ class MainScene extends Scene3D {
       a: { isDown: false },
       s: { isDown: false },
       d: { isDown: false },
+      shift: { isDown: false },
       space: { isDown: false },
     };
 

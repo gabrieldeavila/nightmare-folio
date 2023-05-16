@@ -104,9 +104,9 @@ const Controls = memo(() => {
         scene.isFalling = false;
         character.animation.play("falling_to_roll", 1200, false);
         setTimeout(() => {
-          const x = character.body.velocity.x - 0.4;
+          const x = character.body.velocity.x;
           const y = character.body.velocity.y;
-          const z = character.body.velocity.z + 1.5;
+          const z = character.body.velocity.z + 3;
 
           character.body.setVelocity(x, y, z);
 
@@ -118,22 +118,31 @@ const Controls = memo(() => {
        * Player Move
        */
       if (keys.w.isDown || move) {
-        // if (character.animation.current === "idle" && this.canJump)
-        if (character.animation.current === "idle") {
-          character.animation.play("walking");
+        const shouldRun = keys.shift.isDown ? 2 : 1;
+
+        if (
+          character.animation.current === "idle" ||
+          scene.nowIs !== keys.shift.isDown
+        ) {
+          scene.nowIs = keys.shift.isDown;
+
+          if (keys.shift.isDown) {
+            character.animation.play("running");
+          } else {
+            character.animation.play("walking");
+          }
         }
 
-        const x = Math.sin(theta) * speed;
+        const x = Math.sin(theta) * speed * shouldRun;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta) * speed;
+        const z = Math.cos(theta) * speed * shouldRun;
 
         character.body.setVelocity(x, y, z);
       } else {
         const now = Date.now();
-
+        const changingPosition = stateStorage.get("changing_position");
         if (
-          character.animation.current !== "idle" &&
-          character.animation.current !== "falling_to_roll" &&
+          changingPosition.includes(character.animation.current) &&
           !scene.isFalling &&
           canJump &&
           scene.lastAnimationEndsIn < now
@@ -166,6 +175,9 @@ const Controls = memo(() => {
           break;
         case 32: // space
           keys.space.isDown = isDown;
+          break;
+        case 16: // shift
+          keys.shift.isDown = isDown;
           break;
       }
     };
