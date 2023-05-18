@@ -51,6 +51,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     object.animations.forEach((animation: any) => {
       if (animation.name != null) {
+        console.log(animation.name);
         scene.character.animation.add(animation.name, animation);
       }
     });

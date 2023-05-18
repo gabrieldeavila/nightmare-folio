@@ -187,6 +187,26 @@ const Controls = memo(() => {
           }
         }
         // also change the rotation of the character
+      } else if (keys.s.isDown) {
+        // walks backwards
+        const x = Math.sin(theta + Math.PI) * speed;
+        const y = character.body.velocity.y;
+        const z = Math.cos(theta + Math.PI) * speed;
+        character.body.setVelocity(x, y, z);
+        if (
+          !["running_backwards", "walking_backwards"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== keys.shift.isDown
+        ) {
+          scene.nowIs = keys.shift.isDown;
+
+          if (keys.shift.isDown) {
+            character.animation.play("running_backwards");
+          } else {
+            character.animation.play("walking_backwards");
+          }
+        }
       } else {
         const now = Date.now();
         const changingPosition = stateStorage.get("changing_position");
@@ -235,6 +255,12 @@ const Controls = memo(() => {
           break;
         case 65: // a
           keys.a.isDown = isDown;
+          break;
+        case 83: // s
+          keys.s.isDown = isDown;
+          break;
+        case 40: // arrow down
+          keys.s.isDown = isDown;
           break;
         case 16: // shift
           keys.shift.isDown = isDown;
