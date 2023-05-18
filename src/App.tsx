@@ -1,9 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import "./global.css";
 
@@ -34,11 +29,16 @@ function App() {
 
     // Create a camera and set its position
     camera.current = new THREE.PerspectiveCamera(
-      75,
+      45,
       canvasRef.current.clientWidth / canvasRef.current.clientHeight,
       0.1,
       1000
     );
+
+    const cameraTarget = new THREE.Object3D();
+    cameraTarget.position.set(0, 0, 0); // Set the initial position of the camera target
+    camera.current.position.set(0, 10, -20); // Set the initial position of the camera
+    camera.current.lookAt(cameraTarget.position);
   }, []);
 
   const cube = useRef<THREE.Mesh | null>(null);
@@ -105,6 +105,9 @@ function App() {
       requestAnimationFrame(animate);
       cube.current.rotation.x += 0.01;
       cube.current.rotation.y += 0.01;
+
+      if (scene.current == null) return;
+
       threeRender.current.render(scene.current, camera.current);
     };
     animate();
@@ -126,7 +129,7 @@ function App() {
     };
 
     window.addEventListener("resize", handleResize);
-  }, []);
+  }, [cameraPosition.x, cameraPosition.y, cameraPosition.z, setCamera, setCube, setScene, setThreeRender]);
 
   const mousePreviousPosition = useRef({ x: 0, y: 0 });
 

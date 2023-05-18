@@ -9,6 +9,7 @@ const Camera = memo(() => {
     if (scene == null) return;
 
     scene.camera.position.set(5, 10, -20);
+    console.log(scene.camera);
     scene.camera.lookAt(0, 0, 0);
   }, [scene, create]);
 

@@ -9,10 +9,7 @@ const Enable3d = memo(({ children }: IEnable) => {
 
   useEffect(() => {
     const destination = ref.current!;
-    stateStorage.set("changing_position", [
-      "running",
-      "walking",
-    ]);
+    stateStorage.set("changing_position", ["running", "walking"]);
     stateStorage.set("is_touch_device", "ontouchstart" in window);
 
     PhysicsLoader("./ammo/kripken/", () => {
@@ -26,10 +23,11 @@ const Enable3d = memo(({ children }: IEnable) => {
 
       destination.appendChild(project.canvas);
       project.canvas.style.marginTop = "0px !important";
-      const HEIGHT = window.innerHeight;
-      const WIDTH = window.innerWidth;
 
       const resize = () => {
+        const HEIGHT = window.innerHeight;
+        const WIDTH = window.innerWidth;
+
         const newWidth = window.innerWidth;
         const newHeight = (HEIGHT / WIDTH) * newWidth;
         destination.style.width = `${newWidth}px`;

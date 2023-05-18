@@ -45,7 +45,7 @@ const Controls = memo(() => {
       /**
        * Player Turn
        */
-      const speed = 4;
+      const speed = 2.5 * keys.shift.isDown ? 5 : 1;
       const v3 = new THREE.Vector3();
 
       const rotation = camera.getWorldDirection(v3);
@@ -118,10 +118,8 @@ const Controls = memo(() => {
        * Player Move
        */
       if (keys.w.isDown || move) {
-        const shouldRun = keys.shift.isDown ? 2 : 1;
-
         if (
-          character.animation.current === "idle" ||
+          !["running", "walking"].includes(character.animation.current) ||
           scene.nowIs !== keys.shift.isDown
         ) {
           scene.nowIs = keys.shift.isDown;
@@ -133,23 +131,73 @@ const Controls = memo(() => {
           }
         }
 
-        const x = Math.sin(theta) * speed * shouldRun;
+        const x = Math.sin(theta) * speed;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta) * speed * shouldRun;
+        const z = Math.cos(theta) * speed;
 
         character.body.setVelocity(x, y, z);
+      } else if (keys.d.isDown) {
+        // add a rotation to the left
+        const x = Math.sin(theta - Math.PI / 2) * speed;
+        const y = character.body.velocity.y;
+        const z = Math.cos(theta - Math.PI / 2) * speed;
+        character.body.setVelocity(x, y, z);
+        // add a transition to be smooth
+        // now the character is moving
+        // smoothly
+        const smooth = 0.1;
+        const x2 = character.position.x + x * smooth;
+        const y2 = character.position.y + y * smooth;
+        const z2 = character.position.z + z * smooth;
+        character.position.set(x2, y2, z2);
+
+        if (
+          !["walking_left", "running_right"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== keys.shift.isDown
+        ) {
+          scene.nowIs = keys.shift.isDown;
+
+          if (keys.shift.isDown) {
+            character.animation.play("running_right");
+          } else {
+            character.animation.play("walking_left");
+          }
+        }
+      } else if (keys.a.isDown) {
+        // add a rotation to the right
+        const x = Math.sin(theta + Math.PI / 2) * speed;
+        const y = character.body.velocity.y;
+        const z = Math.cos(theta + Math.PI / 2) * speed;
+        character.body.setVelocity(x, y, z);
+
+        if (
+          !["running_left", "walking_left"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== keys.shift.isDown
+        ) {
+          scene.nowIs = keys.shift.isDown;
+
+          if (keys.shift.isDown) {
+            character.animation.play("running_left");
+          } else {
+            character.animation.play("walking_left");
+          }
+        }
+        // also change the rotation of the character
       } else {
         const now = Date.now();
         const changingPosition = stateStorage.get("changing_position");
         if (
-          changingPosition.includes(character.animation.current) &&
+          changingPosition.some((i: string) =>
+            character.animation.current.includes(i)
+          ) &&
           !scene.isFalling &&
           canJump &&
           scene.lastAnimationEndsIn < now
         ) {
-          // sees if a animation is playing and if the character is on the ground
-          const animation = character.animation.current;
-          console.log(scene.lastAnimationEndsIn, animation, "grr");
           character.animation.play("idle");
         }
       }
@@ -175,6 +223,18 @@ const Controls = memo(() => {
           break;
         case 32: // space
           keys.space.isDown = isDown;
+          break;
+        case 68: // d
+          keys.d.isDown = isDown;
+          break;
+        case 39: // arrow right
+          keys.d.isDown = isDown;
+          break;
+        case 37: // arrow left
+          keys.a.isDown = isDown;
+          break;
+        case 65: // a
+          keys.a.isDown = isDown;
           break;
         case 16: // shift
           keys.shift.isDown = isDown;
