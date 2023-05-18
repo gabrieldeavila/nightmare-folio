@@ -20,7 +20,7 @@ class MainScene extends Scene3D {
     // @ts-expect-error - should add a type for this
     this.lastAnimationEndsIn = 0;
     // @ts-expect-error - should add a type for this
-    this.isJumping = true;
+    this.isJumping = false;
     // @ts-expect-error - should add a type for this
     this.isFalling = true;
     // @ts-expect-error - should add a type for this

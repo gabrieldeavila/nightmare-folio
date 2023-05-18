@@ -1,6 +1,4 @@
 {
-  "builds": [
-    { "src": "package.json", "use": "@vercel/node" }
-  ],
+  "builds": [{ "src": "package.json" }],
   "version": 2
 }

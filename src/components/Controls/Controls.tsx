@@ -117,7 +117,9 @@ const Controls = memo(() => {
       /**
        * Player Move
        */
-      if (keys.w.isDown || move) {
+      if (keys.space.isDown && canJump && !scene.isJumping) {
+        scene.jump();
+      } else if (keys.w.isDown || move) {
         if (
           !["running", "walking"].includes(character.animation.current) ||
           scene.nowIs !== keys.shift.isDown
@@ -220,10 +222,6 @@ const Controls = memo(() => {
         ) {
           character.animation.play("idle");
         }
-      }
-
-      if (keys.space.isDown && canJump && !scene.isJumping) {
-        scene.jump();
       }
     }
   }, [character, controls, isTouchDevice, scene]);

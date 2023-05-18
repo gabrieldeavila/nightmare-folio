@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "set DISABLE_ESLINT_PLUGIN=true && react-scripts start",
-    "build": "npm i --legacy-peer-deps",
+    "build": "npm install --legacy-peer-deps",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
