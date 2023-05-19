@@ -45,7 +45,7 @@ const Controls = memo(() => {
       /**
        * Player Turn
        */
-      const speed = 2.5 * keys.shift.isDown ? 5 : 1;
+      const speed = 3 * keys.shift.isDown ? 5 : 2;
       const v3 = new THREE.Vector3();
 
       const rotation = camera.getWorldDirection(v3);
@@ -67,23 +67,57 @@ const Controls = memo(() => {
       if (scene.isFalling && character.animation.current !== "falling") {
         character.animation.play("falling");
       }
+      const lastPosition = stateStorage.get("last_position");
 
       const isFalling =
         (scene.initialFall || scene.isJumping) &&
-        scene.lastPosition != null &&
-        scene.lastPosition?.y - 10 > character.position.y;
-
-      scene.lastPosition = character.position.clone();
+        lastPosition != null &&
+        lastPosition?.y > character.position.y;
 
       if (isFalling && scene.startedFalling == null) {
         scene.startedFalling = Date.now();
       }
 
+      if (isFalling && scene.isJumping) {
+        character.animation.play("falling");
+        scene.shouldFallToRoll = true;
+        scene.isJumping = false;
+      } else if (!scene.initialFall && scene.shouldFallToRoll) {
+        // add roll animation, only is falling for more than 0.5 seconds
+        if (
+          character.animation.current !== "falling_to_roll" &&
+          scene.startedFalling != null &&
+          Date.now() - scene.startedFalling > 500
+        ) {
+          character.animation.play("falling_to_roll", 250, false);
+          setTimeout(() => {
+            character.animation.play("idle");
+            const x = character.body.velocity.x;
+            const y = character.body.velocity.y;
+            const z = character.body.velocity.z + 3;
+
+            character.body.setVelocity(x, y, z);
+          }, 800);
+        } else if (character.animation.current !== "idle") {
+          character.animation.play("idle");
+        }
+
+        scene.shouldFallToRoll = false;
+        scene.canJump = true;
+      }
+
+      if (!isFalling) {
+        scene.startedFalling = null;
+      }
+
+      stateStorage.set("last_position", character.position.clone());
+      scene.lastPosition = character.position.clone();
+
       // if is following for more than 0.5 seconds
       if (
-        isFalling &&
+        scene.isFalling &&
         scene.startedFalling != null &&
-        Date.now() - scene.startedFalling > 500 &&
+        Date.now() - scene.startedFalling > 50 &&
         character.animation.current !== "falling"
       ) {
         console.log("noo...", scene.isJumping, scene.initialFall);
@@ -117,6 +151,9 @@ const Controls = memo(() => {
       /**
        * Player Move
        */
+
+      if (scene.isJumping) return;
+
       if (keys.space.isDown && canJump && !scene.isJumping) {
         scene.jump();
       } else if (keys.w.isDown || move) {

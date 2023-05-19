@@ -51,10 +51,12 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     object.animations.forEach((animation: any) => {
       if (animation.name != null) {
+        animation.timeScale = -0e55;
         scene.character.animation.add(animation.name, animation);
       }
     });
 
+    console.log(scene.character.animation.get("idle"));
     scene.character.animation.play("idle");
 
     /**

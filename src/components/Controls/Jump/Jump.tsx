@@ -11,12 +11,12 @@ const Jump = memo(() => {
     if (character == null || !canJump) return;
 
     scene.canJump = false;
-    character.animation.play("jump", 250, false);
+    character.animation.play("jump", 200, false);
 
     setTimeout(() => {
       scene.isJumping = true;
       scene.character.body.applyForceY(6);
-    }, 800);
+    }, 200);
   }, [scene]);
 
   useEffect(() => {
