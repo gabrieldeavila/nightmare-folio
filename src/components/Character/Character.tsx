@@ -113,16 +113,15 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       });
 
       for (const child of stateStorage.get("ambient_childs")) {
-        physics.add.collider(
-          scene.character,
-          child,
-          () => {
-            stateStorage.set("last_fall", false);
-            stateStorage.set("is_falling", false);
-          },
-          null,
-          scene
-        );
+        physics.add.collider(scene.character, child, () => {
+          stateStorage.set("last_fall", false);
+          stateStorage.set("is_falling", false);
+          stateStorage.set(
+            "last_body_vector",
+            child.geometry.boundingSphere.center
+          );
+          scene.isJumping = false;
+        });
       }
     }
   }, [scene, asset, name, isMainCharacter, isTouchDevice]);

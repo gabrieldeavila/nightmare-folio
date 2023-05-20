@@ -67,38 +67,54 @@ const Controls = memo(() => {
 
       const isFallingTrue = stateStorage.get("is_falling");
 
-      if (isFallingTrue && character.animation.current !== "falling") {
+      if (isFallingTrue) {
+        // if (isFallingTrue && character.animation.current !== "falling") {
         if (scene.startedFalling == null) {
           scene.startedFalling = Date.now();
+          scene.fallingFrom = character.position.y;
           return;
         }
 
-        if (Date.now() - scene.startedFalling > 500) {
-          console.log("eita", character.animation.current);
-          scene.prevAnimation = character.animation.current ?? "idle";
-          character.animation.play("falling");
-        }
-      } else if (!isFallingTrue && character.animation.current === "falling") {
-        scene.startedFalling = null;
-        scene.isJumping = false;
-
+        // if (Date.now() - scene.startedFalling > 500) {
+        //   scene.prevAnimation = character.animation.current ?? "idle";
+        //   character.animation.play("falling");
+        // }
+        // } else if (!isFallingTrue && character.animation.current === "falling") {
+      } else if (!isFallingTrue) {
         if (Date.now() - scene.startedFalling < 1000) {
           scene.canJump = true;
-          character.animation.play(scene.prevAnimation);
-        } else {
-          character.animation.play("falling_to_roll", 1200, false);
-          setTimeout(() => {
-            scene.canJump = true;
-            character.animation.play(scene.prevAnimation);
-          }, 1200);
+          scene.startedFalling = null;
+          //   character.animation.play(scene.prevAnimation);
+          //   scene.canJump = true;
         }
+        // } else {
+        // } else {
+        //   character.animation.play("falling_to_roll", 1200, false);
+        //   setTimeout(() => {
+        //     character.animation.play(scene.prevAnimation);
+        //     scene.canJump = true;
+        //   }, 1200);
+        // }
+      } else if (scene.startedFalling != null) {
+        scene.startedFalling = null;
+        scene.canJump = true;
+        scene.fallingFrom = null;
+      }
+
+      if (character.animation.current === "falling") {
+        console.log(stateStorage.get("last_body_vector"), character.position);
       }
 
       /**
        * Player Move
        */
-
-      if (scene.isJumping || isFallingTrue) return;
+      if (
+        scene.isJumping ||
+        isFallingTrue ||
+        character.animation.current === "falling_to_roll"
+      ) {
+        return;
+      }
 
       if (
         keys.space.isDown &&
@@ -198,15 +214,11 @@ const Controls = memo(() => {
           }
         }
       } else {
-        const now = Date.now();
         const changingPosition = stateStorage.get("changing_position");
         if (
           changingPosition.some((i: string) =>
             character.animation.current.includes(i)
-          ) &&
-          !scene.isFalling &&
-          canJump &&
-          scene.lastAnimationEndsIn < now
+          )
         ) {
           character.animation.play("idle");
         }
