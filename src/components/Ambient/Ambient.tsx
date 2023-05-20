@@ -34,6 +34,8 @@ const Ambient = memo(() => {
       book.action[i].play();
     });
 
+    const childs: any[] = [];
+
     book.traverse(
       // @ts-expect-error should be fixed in enable3d
       (child: {
@@ -53,18 +55,23 @@ const Ambient = memo(() => {
           child.material.roughness = 1;
 
           if (/mesh/i.test(child.name)) {
+            childs.push(child);
+
             physics.add.existing(child, {
               shape: "concave",
               mass: 0,
               collisionFlags: 1,
               autoCenter: false,
             });
+
             child.body.setAngularFactor(0, 0, 0);
             child.body.setLinearFactor(0, 0, 0);
           }
         }
       }
     );
+
+    stateStorage.set("ambient_childs", childs);
   }, []);
 
   useEffect(() => {

@@ -11,7 +11,7 @@ const Jump = memo(() => {
     if (character == null || !canJump) return;
 
     scene.canJump = false;
-    character.animation.play("jump", 200, false);
+    // character.animation.play("jump", 200, false);
 
     setTimeout(() => {
       scene.isJumping = true;

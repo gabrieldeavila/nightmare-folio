@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { THREE } from "enable3d";
 import { memo, useCallback, useEffect, useMemo } from "react";
@@ -64,50 +65,41 @@ const Controls = memo(() => {
         character.body.setAngularVelocityY(rotationSpeed);
       }
 
-      if (scene.isFalling && character.animation.current !== "falling") {
-        character.animation.play("falling");
-      }
       const lastPosition = stateStorage.get("last_position");
 
       const isFalling =
-        (scene.initialFall || scene.isJumping) &&
-        lastPosition != null &&
-        lastPosition?.y > character.position.y;
+        lastPosition != null && lastPosition?.y > character.position.y;
 
-      if (isFalling && scene.startedFalling == null) {
-        scene.startedFalling = Date.now();
+      const lastFall = stateStorage.get("last_fall");
+      const isFallingTrue = stateStorage.get("is_falling");
+
+      if (isFallingTrue && character.animation.current !== "falling") {
+        character.animation.play("falling");
+      } else if (character.animation.current === "falling") {
+        character.animation.play("falling_to_roll", 1200, false);
+
+        setTimeout(() => {
+          character.animation.play("idle");
+        }, 1200);
       }
 
-      if (isFalling && scene.isJumping) {
-        character.animation.play("falling");
-        scene.shouldFallToRoll = true;
-        scene.isJumping = false;
-      } else if (!scene.initialFall && scene.shouldFallToRoll) {
-        // add roll animation, only is falling for more than 0.5 seconds
-        if (
-          character.animation.current !== "falling_to_roll" &&
-          scene.startedFalling != null &&
-          Date.now() - scene.startedFalling > 500
-        ) {
-          character.animation.play("falling_to_roll", 250, false);
-          setTimeout(() => {
-            character.animation.play("idle");
-            const x = character.body.velocity.x;
-            const y = character.body.velocity.y;
-            const z = character.body.velocity.z + 3;
-
-            character.body.setVelocity(x, y, z);
-          }, 800);
-        } else if (character.animation.current !== "idle") {
-          character.animation.play("idle");
-        }
-
-        scene.shouldFallToRoll = false;
-        scene.canJump = true;
+      if (
+        lastPosition?.y > character.position.y &&
+        scene.startedFalling == null
+      ) {
+        scene.falllingAtX = character.position.x;
+        scene.startedFalling = Date.now();
       }
 
       if (!isFalling) {
         scene.startedFalling = null;
+        scene.falllingAtX = null;
+      }
+
+      if (!isFalling && !scene.initialFall) {
+        scene.canJump = true;
+        scene.isFalling = false;
+        scene.isJumping = false;
       }
 
       stateStorage.set("last_position", character.position.clone());
@@ -117,7 +109,7 @@ const Controls = memo(() => {
       if (
         scene.isFalling &&
         scene.startedFalling != null &&
-        Date.now() - scene.startedFalling > 50 &&
+        Date.now() - scene.startedFalling > 500 &&
         character.animation.current !== "falling"
       ) {
         console.log("noo...", scene.isJumping, scene.initialFall);
@@ -154,7 +146,12 @@ const Controls = memo(() => {
 
       if (scene.isJumping) return;
 
-      if (keys.space.isDown && canJump && !scene.isJumping) {
+      if (
+        keys.space.isDown &&
+        canJump &&
+        character.animation.current === "running" &&
+        !scene.isJumping
+      ) {
         scene.jump();
       } else if (keys.w.isDown || move) {
         if (

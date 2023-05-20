@@ -5,7 +5,7 @@ import {
   THREE,
   ThirdPersonControls,
 } from "enable3d";
-import { memo, useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { ICharacter } from "./interface";
 
@@ -14,6 +14,8 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
   const [scene] = useTriggerState({ name: "scene" });
+
+  const lastFall = useRef(0);
 
   const handleCharacter = useCallback(async () => {
     if (scene == null) return;
@@ -70,6 +72,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       width: 0.5,
       offset: { y: -0.25 },
     });
+
     scene.character.body.setFriction(1);
     scene.character.body.setAngularFactor(0, 0, 0);
 
@@ -106,9 +109,45 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       stateStorage.set("main_character", scene.character);
       setTimeout(() => {
         scene.isFalling = true;
+        scene.manFalling = true;
       });
+
+      for (const child of stateStorage.get("ambient_childs")) {
+        physics.add.collider(
+          scene.character,
+          child,
+          () => {
+            console.log("colefdiu");
+            stateStorage.set("last_fall", false);
+            stateStorage.set("is_falling", false);
+          },
+          null,
+          scene
+        );
+      }
     }
   }, [scene, asset, name, isMainCharacter, isTouchDevice]);
+
+  useEffect(() => {
+    // add setInterval to update the isFalling to false each 100ms
+    const interval = setInterval(() => {
+      const isFalling = stateStorage.get("is_falling");
+      const lastFall = stateStorage.get("last_fall");
+
+      if (scene == null) return;
+
+      if (!isFalling && lastFall) {
+        if (Date.now() - lastFall > 500) {
+          console.log("chega aqui?");
+          stateStorage.set("is_falling", true);
+        }
+      } else {
+        stateStorage.set("last_fall", Date.now());
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [scene]);
 
   useEffect(() => {
     handleCharacter().catch((err) => console.log(err));
