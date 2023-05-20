@@ -117,7 +117,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
           scene.character,
           child,
           () => {
-            console.log("colefdiu");
             stateStorage.set("last_fall", false);
             stateStorage.set("is_falling", false);
           },
@@ -138,7 +137,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
       if (!isFalling && lastFall) {
         if (Date.now() - lastFall > 500) {
-          console.log("chega aqui?");
           stateStorage.set("is_falling", true);
         }
       } else {
