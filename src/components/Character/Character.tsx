@@ -14,11 +14,10 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
   const [scene] = useTriggerState({ name: "scene" });
-
-  const lastFall = useRef(0);
+  const [ambientChilds] = useTriggerState({ name: "ambient_childs" });
 
   const handleCharacter = useCallback(async () => {
-    if (scene == null) return;
+    if (scene == null || ambientChilds == null) return;
     const currChars = stateStorage.get("all_characters");
 
     // if the character already exists, don't create it again
@@ -58,7 +57,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     });
 
-    console.log(scene.character.animation.get("idle"));
     scene.character.animation.play("idle");
 
     /**
@@ -111,8 +109,8 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         scene.isFalling = true;
         scene.manFalling = true;
       });
-
-      for (const child of stateStorage.get("ambient_childs")) {
+      console.log(ambientChilds, "huum");
+      for (const child of stateStorage.get("ambient_childs") || []) {
         physics.add.collider(scene.character, child, () => {
           stateStorage.set("last_fall", false);
           stateStorage.set("is_falling", false);
@@ -124,7 +122,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         });
       }
     }
-  }, [scene, asset, name, isMainCharacter, isTouchDevice]);
+  }, [scene, name, asset, isMainCharacter, isTouchDevice, ambientChilds]);
 
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms
@@ -148,7 +146,11 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
   useEffect(() => {
     handleCharacter().catch((err) => console.log(err));
-  }, [handleCharacter, create]);
+  }, [handleCharacter, ambientChilds, create]);
+
+  useEffect(() => {
+    console.log(ambientChilds);
+  }, [ambientChilds]);
 
   return null;
 });

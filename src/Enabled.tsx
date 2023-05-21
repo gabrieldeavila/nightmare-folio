@@ -25,7 +25,7 @@ function Enabled() {
     const { load } = stateStorage.get("scene");
 
     // it shall be in the public folder!!
-    const ambient = load.preload("ambient", "/assets/glb/book.glb");
+    const ambient = load.preload("ambient", "/assets/glb/ambient.glb");
 
     // it shall be in the public folder!!
     const character = load.preload("cat", "/assets/glb/CatMac.glb");

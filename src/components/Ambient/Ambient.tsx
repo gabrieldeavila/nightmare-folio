@@ -54,23 +54,21 @@ const Ambient = memo(() => {
           child.material.metalness = 0;
           child.material.roughness = 1;
 
-          if (/mesh/i.test(child.name)) {
-            childs.push(child);
+          childs.push(child);
 
-            physics.add.existing(child, {
-              shape: "concave",
-              mass: 0,
-              collisionFlags: 1,
-              autoCenter: false,
-            });
+          physics.add.existing(child, {
+            shape: "concave",
+            mass: 0,
+            collisionFlags: 1,
+            autoCenter: false,
+          });
 
-            child.body.setAngularFactor(0, 0, 0);
-            child.body.setLinearFactor(0, 0, 0);
-          }
+          child.body.setAngularFactor(0, 0, 0);
+          child.body.setLinearFactor(0, 0, 0);
         }
       }
     );
-
+    console.log(childs);
     stateStorage.set("ambient_childs", childs);
   }, []);
 
