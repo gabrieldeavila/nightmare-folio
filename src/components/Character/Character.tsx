@@ -39,7 +39,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     scene.character.add(characterObj);
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
-    scene.character.position.set(35, 0, 0);
+    scene.character.position.set(5, 5, 0);
     // add shadow
     scene.character.traverse((child: any) => {
       if (child.isMesh != null) child.castShadow = child.receiveShadow = true;
