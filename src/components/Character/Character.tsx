@@ -14,11 +14,12 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
   const [scene] = useTriggerState({ name: "scene" });
+  const [ambient] = useTriggerState({ name: "ambient_childs" });
 
   const lastFall = useRef(0);
 
   const handleCharacter = useCallback(async () => {
-    if (scene == null) return;
+    if (scene == null || ambient == null) return;
     const currChars = stateStorage.get("all_characters");
 
     // if the character already exists, don't create it again
@@ -53,12 +54,10 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     object.animations.forEach((animation: any) => {
       if (animation.name != null) {
-        animation.timeScale = -0e55;
         scene.character.animation.add(animation.name, animation);
       }
     });
 
-    console.log(scene.character.animation.get("idle"));
     scene.character.animation.play("idle");
 
     /**
@@ -112,7 +111,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         scene.manFalling = true;
       });
 
-      for (const child of stateStorage.get("ambient_childs")) {
+      for (const child of ambient) {
         physics.add.collider(scene.character, child, () => {
           stateStorage.set("last_fall", false);
           stateStorage.set("is_falling", false);
@@ -124,7 +123,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         });
       }
     }
-  }, [scene, asset, name, isMainCharacter, isTouchDevice]);
+  }, [scene, name, asset, isMainCharacter, isTouchDevice, ambient]);
 
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms
@@ -148,7 +147,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
   useEffect(() => {
     handleCharacter().catch((err) => console.log(err));
-  }, [handleCharacter, create]);
+  }, [handleCharacter, ambient, create]);
 
   return null;
 });

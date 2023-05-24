@@ -25,10 +25,10 @@ function Enabled() {
     const { load } = stateStorage.get("scene");
 
     // it shall be in the public folder!!
-    const ambient = load.preload("ambient", "/assets/glb/platform.glb");
+    const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
 
     // it shall be in the public folder!!
-    const character = load.preload("cat", "/assets/glb/CatMac.glb");
+    const character = load.preload("mario", "/assets/glb/mario.glb");
 
     await Promise.all([ambient, character]);
   }, []);
@@ -41,7 +41,7 @@ function Enabled() {
         <Lights />
         <Camera />
         <Ambient />
-        <Character name="main" asset="cat" isMainCharacter />
+        <Character name="main" asset="mario" isMainCharacter />
         {/* <Character name="test" asset="cat" /> */}
         <Controls />
       </Enable3d>
