@@ -14,10 +14,13 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
   const [scene] = useTriggerState({ name: "scene" });
-  const [ambientChilds] = useTriggerState({ name: "ambient_childs" });
+  const [ambient] = useTriggerState({ name: "ambient_childs" });
+
+  const lastFall = useRef(0);
 
   const handleCharacter = useCallback(async () => {
-    if (scene == null || ambientChilds == null) return;
+    if (scene == null || ambient == null) return;
+
     const currChars = stateStorage.get("all_characters");
 
     // if the character already exists, don't create it again
@@ -38,7 +41,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     scene.character.add(characterObj);
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
-    scene.character.position.set(35, 0, 0);
+    scene.character.position.set(5, 5, 0);
     // add shadow
     scene.character.traverse((child: any) => {
       if (child.isMesh != null) child.castShadow = child.receiveShadow = true;
@@ -52,7 +55,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     object.animations.forEach((animation: any) => {
       if (animation.name != null) {
-        animation.timeScale = -0e55;
         scene.character.animation.add(animation.name, animation);
       }
     });
@@ -109,8 +111,9 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         scene.isFalling = true;
         scene.manFalling = true;
       });
-      console.log(ambientChilds, "huum");
-      for (const child of stateStorage.get("ambient_childs") || []) {
+
+      for (const child of ambient) {
+
         physics.add.collider(scene.character, child, () => {
           stateStorage.set("last_fall", false);
           stateStorage.set("is_falling", false);
@@ -122,7 +125,8 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         });
       }
     }
-  }, [scene, name, asset, isMainCharacter, isTouchDevice, ambientChilds]);
+  }, [scene, name, asset, isMainCharacter, isTouchDevice, ambient]);
+
 
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms
@@ -146,11 +150,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
   useEffect(() => {
     handleCharacter().catch((err) => console.log(err));
-  }, [handleCharacter, ambientChilds, create]);
-
-  useEffect(() => {
-    console.log(ambientChilds);
-  }, [ambientChilds]);
+  }, [handleCharacter, ambient, create]);
 
   return null;
 });
