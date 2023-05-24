@@ -27,6 +27,7 @@ function Enabled() {
     // it shall be in the public folder!!
     const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
 
+
     // it shall be in the public folder!!
     const character = load.preload("mario", "/assets/glb/mario.glb");
 

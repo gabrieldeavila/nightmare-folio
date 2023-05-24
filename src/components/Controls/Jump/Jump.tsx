@@ -15,7 +15,7 @@ const Jump = memo(() => {
 
     setTimeout(() => {
       scene.isJumping = true;
-      scene.character.body.applyForceY(6);
+      scene.character.body.applyForceY(6.5);
     }, 200);
   }, [scene]);
 
