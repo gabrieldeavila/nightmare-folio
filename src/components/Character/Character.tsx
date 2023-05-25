@@ -33,6 +33,9 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     const { load, add, camera, animationMixers, physics, canvas } = scene;
 
     const object = await load.gltf(asset);
+    const marioIdle = await load.gltf("mario-idle");
+    // object.scene = marioIdle.scene;
+    // console.log(object.scene);
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
@@ -54,6 +57,13 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     animationMixers.add(scene.character.animation.mixer);
 
     object.animations.forEach((animation: any) => {
+      if (animation.name != null) {
+        scene.character.animation.add(animation.name, animation);
+      }
+    });
+
+    console.log(object, marioIdle.scene);
+    marioIdle.animations.forEach((animation: any) => {
       if (animation.name != null) {
         scene.character.animation.add(animation.name, animation);
       }
