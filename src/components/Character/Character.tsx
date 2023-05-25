@@ -20,6 +20,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
   const handleCharacter = useCallback(async () => {
     if (scene == null || ambient == null) return;
+
     const currChars = stateStorage.get("all_characters");
 
     // if the character already exists, don't create it again
@@ -122,6 +123,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       });
 
       for (const child of ambient) {
+
         physics.add.collider(scene.character, child, () => {
           stateStorage.set("last_fall", false);
           stateStorage.set("is_falling", false);
@@ -134,6 +136,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     }
   }, [scene, name, asset, isMainCharacter, isTouchDevice, ambient]);
+
 
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms
