@@ -34,8 +34,36 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     const object = await load.gltf(asset);
     const marioIdle = await load.gltf("mario-idle");
+
+    // textures in marioIdle: marioIdle.scene.children[0].children[1 - Infinity].geometry.material.map
+    // textures in object: object.parser.associations[{material: map}]
+
+    // name in marioIdle: marioIdle.scene.children[0].children[1 - Infinity].name
+    // name in object: object.parser.associations[{material: name}]
+
+    // find names in marioIdle
+    const marioIdleInfo = [];
+
+    const objectInfo = {};
+
+    for (const child of object.parser.associations.entries()) {
+      if (child[0].isMesh) {
+        // @ts-expect-error - pretty sure this is a mesh
+        objectInfo[child[0].name] = child[0].material.map;
+      }
+    }
+
+    for (const child of marioIdle.scene.children[0].children) {
+      if (child.isMesh) {
+        // @ts-expect-error - pretty sure this is a mesh ^2
+        child.material.map = objectInfo[child.name];
+        marioIdleInfo.push(child);
+      }
+    }
+
     // object.scene = marioIdle.scene;
     // console.log(object.scene);
+    object.scene = marioIdle.scene;
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
@@ -62,7 +90,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     });
 
-    console.log(object, marioIdle.scene);
     marioIdle.animations.forEach((animation: any) => {
       if (animation.name != null) {
         scene.character.animation.add(animation.name, animation);
@@ -123,7 +150,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       });
 
       for (const child of ambient) {
-
         physics.add.collider(scene.character, child, () => {
           stateStorage.set("last_fall", false);
           stateStorage.set("is_falling", false);
@@ -136,7 +162,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     }
   }, [scene, name, asset, isMainCharacter, isTouchDevice, ambient]);
-
 
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms

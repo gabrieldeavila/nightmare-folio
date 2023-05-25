@@ -68,7 +68,7 @@ const Ambient = memo(() => {
         }
       }
     );
-    console.log(childs);
+
     stateStorage.set("ambient_childs", childs);
   }, []);
 
