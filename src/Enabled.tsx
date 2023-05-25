@@ -28,7 +28,9 @@ function Enabled() {
     const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
 
     // it shall be in the public folder!!
-    const character = load.preload("mario", "/assets/glb/mario.glb");
+    const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
+
+    const characterIdle = load.preload("mario-idle", "/assets/glb/mario.glb");
 
     await Promise.all([ambient, character]);
   }, []);
