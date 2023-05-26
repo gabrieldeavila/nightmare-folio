@@ -53,17 +53,37 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     }
 
+    let index = 0;
+
     for (const child of marioIdle.scene.children[0].children) {
-      if (child.isMesh) {
-        // @ts-expect-error - pretty sure this is a mesh ^2
-        child.material.map = objectInfo[child.name];
-        marioIdleInfo.push(child);
+      if (index < 5) {
+        if (child.isMesh) {
+          // child.material.map = objectInfo[child.name];
+          // @ts-expect-error - pretty sure this is a mesh ^2
+          // objectInfo.Object_4 -> eyes
+          // objectInfo.Object_5 -> face
+          // objectInfo.Object_6 -> foot
+          // objectInfo.Object_7 -> hand
+          // objectInfo.Object_12 -> eyebrows
+          child.material.map = objectInfo[child.name];
+          marioIdle.scene.children[0].children[index].material.map =
+            objectInfo[child.name];
+          console.log(marioIdle.scene.children[0].children);
+          // console.log(objectInfo[child.name], child.name);
+          marioIdleInfo.push(child);
+        }
       }
+
+      index++;
     }
 
     // object.scene = marioIdle.scene;
     // console.log(object.scene);
     object.scene = marioIdle.scene;
+    object.scene = marioIdle.scene;
+
+    marioIdle.scene.children[0].castShadow = true;
+    marioIdle.scene.children[0].receiveShadow = true;
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
@@ -73,10 +93,24 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
     scene.character.position.set(5, 5, 0);
-    // add shadow
-    scene.character.traverse((child: any) => {
-      if (child.isMesh != null) child.castShadow = child.receiveShadow = true;
-    });
+    console.log(objectInfo, marioIdleInfo);
+
+    // // add shadow
+    // const nice = [];
+    // let index2 = 0;
+    // scene.character.traverse((child: any) => {
+    //   index2++;
+    //   const isEven = index2 % 2 === 0;
+
+    //   if (child.isMesh != null) {
+    //     child.castShadow = child.receiveShadow = true;
+    //     child.material.map = isEven ? objectInfo.Object_5 : objectInfo.Object_4;
+    //     console.log(child.material.map.uuid);
+    //     nice.push(child.material.map.uuid);
+    //   }
+    // });
+
+    // console.log(nice, scene.character.children[0].children);
 
     /**
      * Animations
