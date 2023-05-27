@@ -5,18 +5,15 @@ import {
   THREE,
   ThirdPersonControls,
 } from "enable3d";
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { ICharacter } from "./interface";
 
 const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
-  // TODO: add resize event to update the camera
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [create] = useTriggerState({ name: "main_scene_create" });
   const [scene] = useTriggerState({ name: "scene" });
   const [ambient] = useTriggerState({ name: "ambient_childs" });
-
-  const lastFall = useRef(0);
 
   const handleCharacter = useCallback(async () => {
     if (scene == null || ambient == null) return;
@@ -35,12 +32,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     const object = await load.gltf(asset);
     const marioIdle = await load.gltf("mario-idle");
 
-    // textures in marioIdle: marioIdle.scene.children[0].children[1 - Infinity].geometry.material.map
-    // textures in object: object.parser.associations[{material: map}]
-
-    // name in marioIdle: marioIdle.scene.children[0].children[1 - Infinity].name
-    // name in object: object.parser.associations[{material: name}]
-
     // find names in marioIdle
     const marioIdleInfo = [];
 
@@ -48,40 +39,27 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     for (const child of object.parser.associations.entries()) {
       if (child[0].isMesh) {
-        // @ts-expect-error - pretty sure this is a mesh
-        objectInfo[child[0].name] = child[0].material.map;
+        // @ts-expect-error - yeah this works
+        objectInfo[child[0].name] = child[0];
       }
     }
 
     let index = 0;
 
     for (const child of marioIdle.scene.children[0].children) {
-      if (child.isMesh) {
-        // child.material.map = objectInfo[child.name];
-        // objectInfo.Object_4 -> eyes
-        // objectInfo.Object_5 -> face
-        // objectInfo.Object_6 -> foot
-        // objectInfo.Object_7 -> hand
-        // objectInfo.Object_12 -> eyebrows
-        // child.material.map = objectInfo[child.name];
-        marioIdle.scene.children[0].children[index].material.map =
-          // @ts-expect-error - pretty sure this is a mesh ^2
-          objectInfo[child.name];
-        // console.log(objectInfo[child.name]);
-        // console.log(objectInfo[child.name], child.name);
+      // @ts-expect-error - yeah this works
+      const charInfo = objectInfo[child.name];
+
+      if (child.isMesh && charInfo) {
+        marioIdle.scene.children[0].children[index].material =
+          charInfo.material;
         marioIdleInfo.push(child);
       }
 
       index++;
     }
-    console.log(marioIdleInfo, objectInfo);
-    // object.scene = marioIdle.scene;
-    // console.log(object.scene);
-    // object.scene = marioIdle.scene;
     object.scene = marioIdle.scene;
 
-    // // marioIdle.scene.children[0].castShadow = true;
-    // // marioIdle.scene.children[0].receiveShadow = true;
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
@@ -91,24 +69,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
     scene.character.position.set(5, 5, 0);
-    // console.log(objectInfo, marioIdleInfo);
-
-    // // add shadow
-    // const nice = [];
-    // let index2 = 0;
-    // scene.character.traverse((child: any) => {
-    //   index2++;
-    //   const isEven = index2 % 2 === 0;
-
-    //   if (child.isMesh != null) {
-    //     child.castShadow = child.receiveShadow = true;
-    //     child.material.map = isEven ? objectInfo.Object_5 : objectInfo.Object_4;
-    //     console.log(child.material.map.uuid);
-    //     nice.push(child.material.map.uuid);
-    //   }
-    // });
-
-    // console.log(nice, scene.character.children[0].children);
 
     /**
      * Animations
