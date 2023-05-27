@@ -158,7 +158,7 @@ const Controls = memo(() => {
         character.position.set(x2, y2, z2);
 
         if (
-          !["walking_left", "running_right"].includes(
+          !["walking_right", "running_right"].includes(
             character.animation.current
           ) ||
           scene.nowIs !== keys.shift.isDown
@@ -168,7 +168,7 @@ const Controls = memo(() => {
           if (keys.shift.isDown) {
             character.animation.play("running_right");
           } else {
-            character.animation.play("walking_left");
+            character.animation.play("walking_right");
           }
         }
       } else if (keys.a.isDown) {

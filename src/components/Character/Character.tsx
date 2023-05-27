@@ -30,35 +30,51 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     const { load, add, camera, animationMixers, physics, canvas } = scene;
 
     const object = await load.gltf(asset);
-    const marioIdle = await load.gltf("mario-idle");
+    let animations: any = [];
+    const options = [
+      "idle",
+      "walking",
+      "running",
+      "walking_backwards",
+      "running_backwards",
+      "walking_left",
+      "walking_right",
+    ];
+    const objectInfo: any = {};
 
-    // find names in marioIdle
-    const marioIdleInfo = [];
+    for (const opt of options) {
+      const charOpt = await load
+        .gltf(`${asset}-${opt}`)
+        .catch(() => console.log("error"));
 
-    const objectInfo = {};
+      if (charOpt == null) return;
 
+      animations = [...animations, ...charOpt.animations];
+    }
+
+    console.log(animations);
+
+    const armature = await load.gltf(`${asset}-idle`);
+
+    // get asset texture
     for (const child of object.parser.associations.entries()) {
       if (child[0].isMesh) {
-        // @ts-expect-error - yeah this works
         objectInfo[child[0].name] = child[0];
       }
     }
 
     let index = 0;
-
-    for (const child of marioIdle.scene.children[0].children) {
-      // @ts-expect-error - yeah this works
+    // adds the texture to the armature
+    for (const child of armature.scene.children[0].children) {
       const charInfo = objectInfo[child.name];
 
       if (child.isMesh && charInfo) {
-        marioIdle.scene.children[0].children[index].material =
-          charInfo.material;
-        marioIdleInfo.push(child);
+        armature.scene.children[0].children[index].material = charInfo.material;
       }
 
       index++;
     }
-    object.scene = marioIdle.scene;
+    object.scene = armature.scene;
 
     const characterObj = object.scene.children[0];
 
@@ -82,7 +98,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       }
     });
 
-    marioIdle.animations.forEach((animation: any) => {
+    animations.forEach((animation: any) => {
       if (animation.name != null) {
         scene.character.animation.add(animation.name, animation);
       }

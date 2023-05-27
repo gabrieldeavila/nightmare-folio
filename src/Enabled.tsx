@@ -31,7 +31,19 @@ function Enabled() {
     // it shall be in the public folder!!
     const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
 
-    const characterIdle = load.preload("mario-idle", "/assets/glb/mario.glb");
+    load.preload("mario-idle", "/assets/glb/mario.glb");
+
+    load.preload("mario-walking", "/assets/glb/mario-walking.glb");
+
+    load.preload("mario-running", "/assets/glb/mario-running.glb");
+
+    load.preload("mario-walking_backwards", "/assets/glb/mario-walking_backwards.glb");
+
+    load.preload("mario-running_backwards", "/assets/glb/mario-running_backwards.glb");
+
+    load.preload("mario-walking_left", "/assets/glb/mario-walking_left.glb");
+
+    load.preload("mario-walking_right", "/assets/glb/mario-walking_right.glb");
 
     await Promise.all([ambient, character]);
   }, []);
