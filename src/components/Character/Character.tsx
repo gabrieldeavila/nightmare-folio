@@ -56,34 +56,32 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     let index = 0;
 
     for (const child of marioIdle.scene.children[0].children) {
-      if (index < 5) {
-        if (child.isMesh) {
-          // child.material.map = objectInfo[child.name];
+      if (child.isMesh) {
+        // child.material.map = objectInfo[child.name];
+        // objectInfo.Object_4 -> eyes
+        // objectInfo.Object_5 -> face
+        // objectInfo.Object_6 -> foot
+        // objectInfo.Object_7 -> hand
+        // objectInfo.Object_12 -> eyebrows
+        // child.material.map = objectInfo[child.name];
+        marioIdle.scene.children[0].children[index].material.map =
           // @ts-expect-error - pretty sure this is a mesh ^2
-          // objectInfo.Object_4 -> eyes
-          // objectInfo.Object_5 -> face
-          // objectInfo.Object_6 -> foot
-          // objectInfo.Object_7 -> hand
-          // objectInfo.Object_12 -> eyebrows
-          child.material.map = objectInfo[child.name];
-          marioIdle.scene.children[0].children[index].material.map =
-            objectInfo[child.name];
-          console.log(marioIdle.scene.children[0].children);
-          // console.log(objectInfo[child.name], child.name);
-          marioIdleInfo.push(child);
-        }
+          objectInfo[child.name];
+        // console.log(objectInfo[child.name]);
+        // console.log(objectInfo[child.name], child.name);
+        marioIdleInfo.push(child);
       }
 
       index++;
     }
-
+    console.log(marioIdleInfo, objectInfo);
     // object.scene = marioIdle.scene;
     // console.log(object.scene);
-    object.scene = marioIdle.scene;
+    // object.scene = marioIdle.scene;
     object.scene = marioIdle.scene;
 
-    marioIdle.scene.children[0].castShadow = true;
-    marioIdle.scene.children[0].receiveShadow = true;
+    // // marioIdle.scene.children[0].castShadow = true;
+    // // marioIdle.scene.children[0].receiveShadow = true;
     const characterObj = object.scene.children[0];
 
     scene.character = new ExtendedObject3D();
@@ -93,7 +91,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
     scene.character.position.set(5, 5, 0);
-    console.log(objectInfo, marioIdleInfo);
+    // console.log(objectInfo, marioIdleInfo);
 
     // // add shadow
     // const nice = [];
