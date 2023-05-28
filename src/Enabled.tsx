@@ -1,6 +1,6 @@
 // disable eslint
 /* eslint-disable */
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { stateStorage } from "react-trigger-state";
 import Ambient from "./components/Ambient/Ambient";
 import Camera from "./components/Camera/Camera";
@@ -27,7 +27,6 @@ function Enabled() {
     // it shall be in the public folder!!
     const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
 
-
     // it shall be in the public folder!!
     const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
 
@@ -37,9 +36,15 @@ function Enabled() {
 
     load.preload("mario-running", "/assets/glb/mario-running.glb");
 
-    load.preload("mario-walking_backwards", "/assets/glb/mario-walking_backwards.glb");
+    load.preload(
+      "mario-walking_backwards",
+      "/assets/glb/mario-walking_backwards.glb"
+    );
 
-    load.preload("mario-running_backwards", "/assets/glb/mario-running_backwards.glb");
+    load.preload(
+      "mario-running_backwards",
+      "/assets/glb/mario-running_backwards.glb"
+    );
 
     load.preload("mario-walking_left", "/assets/glb/mario-walking_left.glb");
 
@@ -50,6 +55,34 @@ function Enabled() {
     load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
 
     await Promise.all([ambient, character]);
+  }, []);
+
+  useEffect(() => {
+    const handleListener = () => {
+      if (stateStorage.get("is_playing")) return;
+
+      // add song
+      const song = new Audio("/assets/mp3/theme_song.mp3");
+
+      // make it volume to 0.25
+      song.volume = 0.25;
+
+      song.loop = true;
+      song
+        .play()
+        .then(() => {
+          stateStorage.set("is_playing", true);
+          console.log("success");
+        })
+        .catch((err) => console.log(err));
+    };
+
+    // when there's a mouse move, add song
+    document.addEventListener("mousemove", handleListener);
+
+    return () => {
+      document.removeEventListener("mousemove", handleListener);
+    };
   }, []);
 
   return (
