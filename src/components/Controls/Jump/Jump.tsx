@@ -13,10 +13,8 @@ const Jump = memo(() => {
     scene.canJump = false;
     // character.animation.play("jump", 200, false);
 
-    setTimeout(() => {
-      scene.isJumping = true;
-      scene.character.body.applyForceY(6.5);
-    }, 200);
+    scene.isJumping = true;
+    scene.character.body.applyForceY(4);
   }, [scene]);
 
   useEffect(() => {

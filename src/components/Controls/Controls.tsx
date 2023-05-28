@@ -66,62 +66,23 @@ const Controls = memo(() => {
       }
 
       const isFallingTrue = stateStorage.get("is_falling");
+      // console.log(isFallingTrue);
 
       if (isFallingTrue) {
-        // if (isFallingTrue && character.animation.current !== "falling") {
-        if (scene.startedFalling == null) {
-          scene.startedFalling = Date.now();
-          scene.fallingFrom = character.position.y;
-          return;
-        }
-
-        // if (Date.now() - scene.startedFalling > 500) {
-        //   scene.prevAnimation = character.animation.current ?? "idle";
-        //   character.animation.play("falling");
-        // }
-        // } else if (!isFallingTrue && character.animation.current === "falling") {
-      } else if (!isFallingTrue) {
-        if (Date.now() - scene.startedFalling < 1000) {
-          scene.canJump = true;
-          scene.startedFalling = null;
-          //   character.animation.play(scene.prevAnimation);
-          //   scene.canJump = true;
-        }
-        // } else {
-        // } else {
-        //   character.animation.play("falling_to_roll", 1200, false);
-        //   setTimeout(() => {
-        //     character.animation.play(scene.prevAnimation);
-        //     scene.canJump = true;
-        //   }, 1200);
-        // }
-      } else if (scene.startedFalling != null) {
+        scene.startedFalling = Date.now();
+        scene.fallingFrom = character.position.y;
+        return;
+      } else if (!scene.isJumping) {
         scene.startedFalling = null;
-        scene.canJump = true;
         scene.fallingFrom = null;
-      }
-
-      if (character.animation.current === "falling") {
-        console.log(stateStorage.get("last_body_vector"), character.position);
+        scene.canJump = true;
       }
 
       /**
        * Player Move
        */
-      if (
-        scene.isJumping ||
-        isFallingTrue ||
-        character.animation.current === "falling_to_roll"
-      ) {
-        return;
-      }
 
-      if (
-        keys.space.isDown &&
-        canJump &&
-        character.animation.current === "running" &&
-        !scene.isJumping
-      ) {
+      if (keys.space.isDown && canJump && !scene.isJumping) {
         scene.jump();
       } else if (keys.w.isDown || move) {
         if (

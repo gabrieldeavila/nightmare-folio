@@ -54,8 +54,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       animations = [...animations, ...charOpt.animations];
     }
 
-    console.log(animations);
-
     const armature = await load.gltf(`${asset}-idle`);
 
     // get asset texture
@@ -86,7 +84,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     scene.character.add(characterObj);
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
-    scene.character.position.set(10, 5, 5);
+    scene.character.position.set(100, 5, 3.75);
 
     /**
      * Animations
@@ -161,13 +159,28 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
       for (const child of ambient) {
         physics.add.collider(scene.character, child, () => {
-          stateStorage.set("last_fall", false);
+          // console.log("guarda", scene.startedFalling);
+          // console.log("hoho", scene.startedFalling);
+          if (
+            Date.now() - scene.startedFalling > 1000 &&
+            scene.startedFalling != null
+          ) {
+            setTimeout(() => {
+              console.log("bruh");
+              scene.startedFalling = null;
+              scene.fallingFrom = null;
+              scene.canJump = true;
+            });
+          }
+
           stateStorage.set("is_falling", false);
           stateStorage.set(
             "last_body_vector",
             child.geometry.boundingSphere.center
           );
           scene.isJumping = false;
+
+          stateStorage.set("last_check", Date.now());
         });
       }
     }
@@ -176,17 +189,12 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
   useEffect(() => {
     // add setInterval to update the isFalling to false each 100ms
     const interval = setInterval(() => {
-      const isFalling = stateStorage.get("is_falling");
-      const lastFall = stateStorage.get("last_fall");
+      const lastCheck = stateStorage.get("last_check");
 
       if (scene == null) return;
 
-      if (!isFalling && lastFall) {
-        if (Date.now() - lastFall > 500) {
-          stateStorage.set("is_falling", true);
-        }
-      } else {
-        stateStorage.set("last_fall", Date.now());
+      if (Date.now() - lastCheck > 500) {
+        stateStorage.set("is_falling", true);
       }
     }, 100);
 
