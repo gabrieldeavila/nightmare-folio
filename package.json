@@ -13,7 +13,7 @@
     "@types/react": "^18.2.5",
     "@types/react-dom": "^18.2.3",
     "@types/three": "^0.152.0",
-    "enable3d": "^0.25.3",
+    "enable3d": "0.25.3",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
