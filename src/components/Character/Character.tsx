@@ -35,6 +35,8 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
       "idle",
       "walking",
       "running",
+      "running_right",
+      "running_left",
       "walking_backwards",
       "running_backwards",
       "walking_left",

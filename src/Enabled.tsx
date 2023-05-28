@@ -45,6 +45,10 @@ function Enabled() {
 
     load.preload("mario-walking_right", "/assets/glb/mario-walking_right.glb");
 
+    load.preload("mario-running_left", "/assets/glb/mario-running_left.glb");
+
+    load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
+
     await Promise.all([ambient, character]);
   }, []);
 
