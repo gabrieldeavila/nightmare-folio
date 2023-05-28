@@ -84,7 +84,7 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
     scene.character.add(characterObj);
 
     scene.character.rotation.set(0, Math.PI * 1.5, 0);
-    scene.character.position.set(100, 5, 3.75);
+    scene.character.position.set(-60, 5, 3.75);
 
     /**
      * Animations
