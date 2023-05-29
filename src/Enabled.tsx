@@ -22,6 +22,7 @@ const animations = {
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
+    console.log("!@#");
     const { load } = stateStorage.get("scene");
 
     // it shall be in the public folder!!
