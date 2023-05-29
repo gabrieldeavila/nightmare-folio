@@ -21,9 +21,6 @@ const animations = {
 };
 
 function Enabled() {
-  console.log("!@#");
-  debugger;
-  return null;
   // const handlePreload = useCallback(async () => {
   //   const { load } = stateStorage.get("scene");
 
@@ -60,33 +57,36 @@ function Enabled() {
   //   await Promise.all([ambient, character]);
   // }, []);
 
-  // useEffect(() => {
-  //   const handleListener = () => {
-  //     if (stateStorage.get("is_playing")) return;
+  useEffect(() => {
+    const handleListener = () => {
+      console.log("is it magic?")
+      if (stateStorage.get("is_playing")) return;
 
-  //     // add song
-  //     const song = new Audio("/assets/mp3/theme_song.mp3");
+      // add song
+      const song = new Audio("/assets/mp3/theme_song.mp3");
 
-  //     // make it volume to 0.25
-  //     song.volume = 0.25;
+      // make it volume to 0.25
+      song.volume = 0.25;
 
-  //     song.loop = true;
-  //     song
-  //       .play()
-  //       .then(() => {
-  //         stateStorage.set("is_playing", true);
-  //         console.log("success");
-  //       })
-  //       .catch((err) => console.log(err));
-  //   };
+      song.loop = true;
+      song
+        .play()
+        .then(() => {
+          stateStorage.set("is_playing", true);
+          console.log("success");
+        })
+        .catch((err) => console.log(err));
+    };
 
-  //   // when there's a mouse move, add song
-  //   document.addEventListener("mousemove", handleListener);
+    // when there's a mouse move, add song
+    document.addEventListener("mousemove", handleListener);
 
-  //   return () => {
-  //     document.removeEventListener("mousemove", handleListener);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener("mousemove", handleListener);
+    };
+  }, []);
+
+  return null;
 
   // return (
   //   <div>
