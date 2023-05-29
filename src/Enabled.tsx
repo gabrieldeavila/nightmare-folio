@@ -21,45 +21,46 @@ const animations = {
 };
 
 function Enabled() {
-  // const handlePreload = useCallback(async () => {
-  //   const { load } = stateStorage.get("scene");
+  const handlePreload = useCallback(async () => {
+    const { load } = stateStorage.get("scene");
+    console.log(load);
 
-  //   // it shall be in the public folder!!
-  //   const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
+    // // it shall be in the public folder!!
+    // const ambient = load.preload("ambient", "/assets/glb/mario_level_1.glb");
 
-  //   // it shall be in the public folder!!
-  //   const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
+    // // it shall be in the public folder!!
+    // const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
 
-  //   load.preload("mario-idle", "/assets/glb/mario.glb");
+    // load.preload("mario-idle", "/assets/glb/mario.glb");
 
-  //   load.preload("mario-walking", "/assets/glb/mario-walking.glb");
+    // load.preload("mario-walking", "/assets/glb/mario-walking.glb");
 
-  //   load.preload("mario-running", "/assets/glb/mario-running.glb");
+    // load.preload("mario-running", "/assets/glb/mario-running.glb");
 
-  //   load.preload(
-  //     "mario-walking_backwards",
-  //     "/assets/glb/mario-walking_backwards.glb"
-  //   );
+    // load.preload(
+    //   "mario-walking_backwards",
+    //   "/assets/glb/mario-walking_backwards.glb"
+    // );
 
-  //   load.preload(
-  //     "mario-running_backwards",
-  //     "/assets/glb/mario-running_backwards.glb"
-  //   );
+    // load.preload(
+    //   "mario-running_backwards",
+    //   "/assets/glb/mario-running_backwards.glb"
+    // );
 
-  //   load.preload("mario-walking_left", "/assets/glb/mario-walking_left.glb");
+    // load.preload("mario-walking_left", "/assets/glb/mario-walking_left.glb");
 
-  //   load.preload("mario-walking_right", "/assets/glb/mario-walking_right.glb");
+    // load.preload("mario-walking_right", "/assets/glb/mario-walking_right.glb");
 
-  //   load.preload("mario-running_left", "/assets/glb/mario-running_left.glb");
+    // load.preload("mario-running_left", "/assets/glb/mario-running_left.glb");
 
-  //   load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
+    // load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
 
-  //   await Promise.all([ambient, character]);
-  // }, []);
+    // await Promise.all([ambient, character]);
+  }, []);
 
   useEffect(() => {
     const handleListener = () => {
-      console.log("is it magic?")
+      console.log("is it magic?");
       if (stateStorage.get("is_playing")) return;
 
       // add song
@@ -86,22 +87,22 @@ function Enabled() {
     };
   }, []);
 
-  return null;
+  // return null;
 
-  // return (
-  //   <div>
-  //     <Enable3d>
-  //       <Initial />
-  //       <Preload onPreload={handlePreload} />
-  //       <Lights />
-  //       <Camera />
-  //       <Ambient />
-  //       <Character name="main" asset="mario" isMainCharacter />
-  //       {/* <Character name="test" asset="cat" /> */}
-  //       <Controls />
-  //     </Enable3d>
-  //   </div>
-  // );
+  return (
+    <div>
+      <Enable3d>
+        <Initial />
+        <Preload onPreload={handlePreload} />
+        {/* <Lights /> */}
+        {/* <Camera /> */}
+        {/* <Ambient /> */}
+        {/* <Character name="main" asset="mario" isMainCharacter /> */}
+        {/* <Character name="test" asset="cat" /> */}
+        {/* <Controls /> */}
+      </Enable3d>
+    </div>
+  );
 }
 
 export default Enabled;
