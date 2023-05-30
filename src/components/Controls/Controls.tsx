@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import { THREE } from "enable3d";
+import { JoyStick, THREE } from "enable3d";
 import { memo, useCallback, useEffect, useMemo } from "react";
 import {
   globalState,
@@ -81,6 +81,33 @@ const Controls = memo(() => {
       /**
        * Player Move
        */
+      if (isTouchDevice) {
+        const joystick = new JoyStick();
+        const axis = joystick.add.axis({
+          styles: { left: 35, bottom: 35, size: 100 },
+        });
+
+        axis.onMove((event) => {
+          /**
+           * Update Camera
+           */
+          // @ts-expect-error FIXME
+          const { top, right } = event;
+          scene.moveTop = top * 3;
+          scene.moveRight = right * 3;
+        });
+        const buttonA = joystick.add.button({
+          letter: "A",
+          styles: { right: 35, bottom: 110, size: 80 },
+        });
+        buttonA.onClick(() => scene.jump());
+        const buttonB = joystick.add.button({
+          letter: "B",
+          styles: { right: 110, bottom: 35, size: 80 },
+        });
+        buttonB.onClick(() => (scene.move = true));
+        buttonB.onRelease(() => (scene.move = false));
+      }
 
       if (keys.space.isDown && canJump && !scene.isJumping) {
         scene.jump();
