@@ -159,16 +159,25 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
         scene.manFalling = true;
       });
 
+      const groundZero = stateStorage.get("ground_zero");
+
+      physics.add.collider(scene.character, groundZero, () => {
+        // it moves the character to the zero position
+        console.log("o");
+        scene.isJumping = false;
+        stateStorage.set("is_falling", false);
+        stateStorage.set("last_check", Date.now());
+        // remove the collision
+        scene.character.position.set(-60, 50, 3.75);
+      });
+
       for (const child of ambient) {
         physics.add.collider(scene.character, child, () => {
-          // console.log("guarda", scene.startedFalling);
-          // console.log("hoho", scene.startedFalling);
           if (
             Date.now() - scene.startedFalling > 1000 &&
             scene.startedFalling != null
           ) {
             setTimeout(() => {
-              console.log("bruh");
               scene.startedFalling = null;
               scene.fallingFrom = null;
               scene.canJump = true;
@@ -176,10 +185,6 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
           }
 
           stateStorage.set("is_falling", false);
-          stateStorage.set(
-            "last_body_vector",
-            child.geometry.boundingSphere.center
-          );
           scene.isJumping = false;
 
           stateStorage.set("last_check", Date.now());

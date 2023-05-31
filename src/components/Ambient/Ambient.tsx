@@ -5,7 +5,7 @@ import { stateStorage, useTriggerState } from "react-trigger-state";
 const Ambient = memo(() => {
   const [trigger] = useTriggerState({ name: "scene" });
 
-  const addBook = useCallback(async () => {
+  const addAmbient = useCallback(async () => {
     const { load, add, animationMixers, physics } = stateStorage.get("scene");
 
     if (load == null) return;
@@ -15,28 +15,28 @@ const Ambient = memo(() => {
 
     stateStorage.set("ambient", scene);
 
-    const book = new ExtendedObject3D();
-    book.name = "scene";
-    book.add(scene);
-    add.existing(book);
+    const ambient = new ExtendedObject3D();
+    ambient.name = "scene";
+    ambient.add(scene);
+    add.existing(ambient);
 
     // add animations
     // sadly only the flags animations works
     object.animations.forEach((anim: any, i: any) => {
       // @ts-expect-error should be fixed in enable3d
-      book.mixer = animationMixers.create(book);
+      ambient.mixer = animationMixers.create(ambient);
       // overwrite the action to be an array of actions
       // @ts-expect-error should be fixed in enable3d
-      book.action = [];
+      ambient.action = [];
       // @ts-expect-error should be fixed in enable3d
-      book.action[i] = book.mixer.clipAction(anim);
+      ambient.action[i] = ambient.mixer.clipAction(anim);
       // @ts-expect-error should be fixed in enable3d
-      book.action[i].play();
+      ambient.action[i].play();
     });
 
     const childs: any[] = [];
 
-    book.traverse(
+    ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
       (child: {
         isMesh: any;
@@ -49,6 +49,16 @@ const Ambient = memo(() => {
           setLinearFactor: (arg0: number, arg1: number, arg2: number) => void;
         };
       }) => {
+        if (child.name === "ground-zero") {
+          // (async () => {
+          //   const textures = await Promise.all([
+          //     load.texture("/assets/water/Water_1_M_Normal.jpg"),
+          //     load.texture("/assets/water/Water_2_M_Normal.jpg"),
+          //   ]);
+          // })().catch((err) => console.error(err));
+          stateStorage.set("ground_zero", child);
+        }
+
         if (child.isMesh != null) {
           child.castShadow = child.receiveShadow = true;
           child.material.metalness = 0;
@@ -73,8 +83,8 @@ const Ambient = memo(() => {
   }, []);
 
   useEffect(() => {
-    addBook().catch((err) => console.error(err));
-  }, [addBook, trigger]);
+    addAmbient().catch((err) => console.error(err));
+  }, [addAmbient, trigger]);
 
   return null;
 });
