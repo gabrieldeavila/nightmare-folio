@@ -49,22 +49,16 @@ const Ambient = memo(() => {
           setLinearFactor: (arg0: number, arg1: number, arg2: number) => void;
         };
       }) => {
-        if (child.name === "ground-zero") {
-          // (async () => {
-          //   const textures = await Promise.all([
-          //     load.texture("/assets/water/Water_1_M_Normal.jpg"),
-          //     load.texture("/assets/water/Water_2_M_Normal.jpg"),
-          //   ]);
-          // })().catch((err) => console.error(err));
-          stateStorage.set("ground_zero", child);
-        }
-
         if (child.isMesh != null) {
           child.castShadow = child.receiveShadow = true;
           child.material.metalness = 0;
           child.material.roughness = 1;
 
-          childs.push(child);
+          if (child.name === "ground-zero") {
+            stateStorage.set("ground_zero", child);
+          } else {
+            childs.push(child);
+          }
 
           physics.add.existing(child, {
             shape: "concave",

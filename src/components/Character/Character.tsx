@@ -163,12 +163,27 @@ const Character = memo(({ name, isMainCharacter, asset }: ICharacter) => {
 
       physics.add.collider(scene.character, groundZero, () => {
         // it moves the character to the zero position
-        console.log("o");
-        scene.isJumping = false;
         stateStorage.set("is_falling", false);
+        scene.isJumping = false;
+
         stateStorage.set("last_check", Date.now());
         // remove the collision
-        scene.character.position.set(-60, 50, 3.75);
+        // set body to be kinematic
+        scene.character.body.setCollisionFlags(2);
+
+        // set the new position
+        scene.character.position.set(-60, 5, 3.75);
+        scene.character.body.needUpdate = true;
+
+        // this will run only on the next update if body.needUpdate = true
+        scene.character.body.once.update(() => {
+          // set body back to dynamic
+          scene.character.body.setCollisionFlags(0);
+
+          // if you do not reset the velocity and angularVelocity, the object will keep it
+          scene.character.body.setVelocity(0, 0, 0);
+          scene.character.body.setAngularVelocity(0, 0, 0);
+        });
       });
 
       for (const child of ambient) {
