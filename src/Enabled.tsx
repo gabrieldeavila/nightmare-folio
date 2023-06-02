@@ -54,6 +54,8 @@ function Enabled() {
 
     load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
 
+    load.preload("goomba", "/assets/glb/goomba.glb");
+
     await Promise.all([ambient, character]);
   }, []);
 
@@ -72,9 +74,9 @@ function Enabled() {
         .play()
         .then(() => {
           stateStorage.set("is_playing", true);
-          console.log("success");
+          // console.log("success");
         })
-        .catch((err) => console.log(err));
+        .catch(() => console.log());
     };
 
     // when there's a mouse move, add song
@@ -83,6 +85,10 @@ function Enabled() {
     return () => {
       document.removeEventListener("mousemove", handleListener);
     };
+  }, []);
+
+  const handleDefaultAnimation = useCallback(() => {
+    return "Take 001";
   }, []);
 
   return (
@@ -94,7 +100,11 @@ function Enabled() {
         <Camera />
         <Ambient />
         <Character name="main" asset="mario" isMainCharacter />
-        {/* <Character name="test" asset="cat" /> */}
+        <Character
+          name="goomba"
+          asset="goomba"
+          onDefaultAnimation={handleDefaultAnimation}
+        />
         <Controls />
       </Enable3d>
     </div>
