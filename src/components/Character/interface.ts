@@ -3,4 +3,5 @@ export interface ICharacter {
   asset: string;
   isMainCharacter?: boolean;
   onDefaultAnimation?: () => void;
+  onDefaultPosition?: () => [x: number, y: number, z: number];
 }

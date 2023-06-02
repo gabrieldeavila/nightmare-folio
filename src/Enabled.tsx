@@ -91,6 +91,10 @@ function Enabled() {
     return "Take 001";
   }, []);
 
+  const handleDefaultPosition = useCallback(() => {
+    return [-40, 4, 4];
+  }, []);
+
   return (
     <div>
       <Enable3d>
@@ -104,6 +108,8 @@ function Enabled() {
           name="goomba"
           asset="goomba"
           onDefaultAnimation={handleDefaultAnimation}
+          // @ts-expect-error FIXME
+          onDefaultPosition={handleDefaultPosition}
         />
         <Controls />
       </Enable3d>

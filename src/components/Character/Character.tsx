@@ -10,7 +10,7 @@ import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { ICharacter } from "./interface";
 
 const Character = memo(
-  ({ name, isMainCharacter, asset, onDefaultAnimation }: ICharacter) => {
+  ({ name, isMainCharacter, asset, onDefaultAnimation, onDefaultPosition }: ICharacter) => {
     const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
     const [create] = useTriggerState({ name: "main_scene_create" });
     const [scene] = useTriggerState({ name: "scene" });
@@ -91,7 +91,10 @@ const Character = memo(
       scene.character.add(characterObj);
 
       scene.character.rotation.set(0, Math.PI * 1.5, 0);
-      scene.character.position.set(-60, 5, 3.75);
+
+      const position = onDefaultPosition?.() ?? [-60, 5, 3.75];
+
+      scene.character.position.set(...position);
 
       /**
        * Animations
