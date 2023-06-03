@@ -8,7 +8,7 @@ const Camera = memo(() => {
   useEffect(() => {
     if (scene == null) return;
 
-    scene.camera.position.set(5, 10, -20);
+    scene.camera.position.set(-60, 5, 3.75);
     scene.camera.lookAt(0, 0, 0);
   }, [scene, create]);
 

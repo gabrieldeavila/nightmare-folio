@@ -8,8 +8,9 @@ import {
   useTriggerState,
 } from "react-trigger-state";
 import Jump from "./Jump/Jump";
+import type { IControl } from "./interface";
 
-const Controls = memo(() => {
+const Controls = memo(({ onUpdate }: IControl) => {
   const [scene] = useTriggerState({ name: "scene" });
   const [mainUpdate] = useTriggerState({ name: "main_scene_update" });
   const { delta, time, update } = useMemo(
@@ -261,7 +262,7 @@ const Controls = memo(() => {
     document.addEventListener("keydown", pressTrue);
     document.addEventListener("keyup", pressFalse);
     handleControls();
-
+    onUpdate?.(delta, time);
     return () => {
       document.removeEventListener("keydown", pressTrue);
       document.removeEventListener("keyup", pressFalse);

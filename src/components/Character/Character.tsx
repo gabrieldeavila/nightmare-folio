@@ -10,7 +10,14 @@ import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { ICharacter } from "./interface";
 
 const Character = memo(
-  ({ name, isMainCharacter, asset, onDefaultAnimation, onDefaultPosition }: ICharacter) => {
+  ({
+    name,
+    isMainCharacter,
+    asset,
+    onDefaultAnimation,
+    onDefaultPosition,
+    onAddMovement,
+  }: ICharacter) => {
     const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
     const [create] = useTriggerState({ name: "main_scene_create" });
     const [scene] = useTriggerState({ name: "scene" });
@@ -134,6 +141,8 @@ const Character = memo(
       // https://docs.panda3d.org/1.10/python/programming/physics/bullet/ccd
       scene.character.body.setCcdMotionThreshold(1e-7);
       scene.character.body.setCcdSweptSphereRadius(0.25);
+
+      onAddMovement?.(scene.character);
       if (isMainCharacter) {
         /**
          * Add 3rd Person Controls
@@ -141,10 +150,15 @@ const Character = memo(
         scene.controls = new ThirdPersonControls(camera, scene.character, {
           offset: new THREE.Vector3(0, 1, 0),
           targetRadius: 3,
+          theta: 270,
+          // @ts-expect-error - no types
+          sensitivity: {
+            x: 0.15,
+            y: 0.15,
+          },
         });
 
-        // set initial view to 90 deg theta
-        scene.controls.theta = 180;
+        console.log(scene.controls);
 
         /**
          * Add Pointer Lock and Pointer Drag
@@ -214,7 +228,17 @@ const Character = memo(
           });
         }
       }
-    }, [scene, name, asset, isMainCharacter, isTouchDevice, ambient]);
+    }, [
+      scene,
+      ambient,
+      name,
+      asset,
+      isMainCharacter,
+      onDefaultPosition,
+      onAddMovement,
+      onDefaultAnimation,
+      isTouchDevice,
+    ]);
 
     useEffect(() => {
       // add setInterval to update the isFalling to false each 100ms

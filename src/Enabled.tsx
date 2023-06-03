@@ -1,7 +1,7 @@
 // disable eslint
 /* eslint-disable */
 import { useCallback, useEffect } from "react";
-import { stateStorage } from "react-trigger-state";
+import { globalState, stateStorage } from "react-trigger-state";
 import Ambient from "./components/Ambient/Ambient";
 import Camera from "./components/Camera/Camera";
 import Character from "./components/Character/Character";
@@ -11,6 +11,7 @@ import Initial from "./components/Initial/Initial";
 import Lights from "./components/Lights/Lights";
 import Preload from "./components/Preload/Preload";
 import "./global.css";
+import { debug } from "console";
 
 const animations = {
   stop: ["idle", "hiphop"],
@@ -92,7 +93,27 @@ function Enabled() {
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [-40, 4, 4];
+    return [-40, 2.5, 4];
+  }, []);
+
+  const handleAddMovement = useCallback((goomba: any) => {
+    globalState.set("goomba", goomba);
+  }, []);
+
+  const handleUpdate = useCallback(() => {
+    const goomba = globalState.get("goomba");
+    const scene = globalState.get("scene");
+    if (goomba == null) return;
+
+    const x = globalState.get("x") ?? 0;
+
+    if (goomba.position.x < -62.660186767578125) {
+      // should rotate!! rotates the goomba in 180 degrees
+    }
+
+    goomba.body.setVelocity(x, 0, 0);
+    globalState.set("x", x - 0.01);
+    // globalState.set("x", x - 0.1);
   }, []);
 
   return (
@@ -110,8 +131,9 @@ function Enabled() {
           onDefaultAnimation={handleDefaultAnimation}
           // @ts-expect-error FIXME
           onDefaultPosition={handleDefaultPosition}
+          onAddMovement={handleAddMovement}
         />
-        <Controls />
+        <Controls onUpdate={handleUpdate} />
       </Enable3d>
     </div>
   );

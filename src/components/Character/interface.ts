@@ -4,4 +4,5 @@ export interface ICharacter {
   isMainCharacter?: boolean;
   onDefaultAnimation?: () => void;
   onDefaultPosition?: () => [x: number, y: number, z: number];
+  onAddMovement?: (e: any) => void;
 }
