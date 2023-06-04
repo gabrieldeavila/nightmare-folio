@@ -153,8 +153,8 @@ const Character = memo(
           theta: 270,
           // @ts-expect-error - no types
           sensitivity: {
-            x: 0.15,
-            y: 0.15,
+            x: isTouchDevice ? 1 : 0.15,
+            y: isTouchDevice ? 1 : 0.15,
           },
         });
 
