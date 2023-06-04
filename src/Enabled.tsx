@@ -115,7 +115,7 @@ function Enabled() {
   const handleUpdate = useCallback(() => {
     const charName = "goomba_0";
     if (
-      checkDirection(charName, GOOMBA.position, -62.660186767578125, "right")
+      checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
     ) {
       return;
     }
