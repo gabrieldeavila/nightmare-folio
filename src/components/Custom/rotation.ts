@@ -2,7 +2,7 @@ import { THREE } from "enable3d";
 import { globalState } from "react-trigger-state";
 
 export const changeRotation = (char: string, customSpeed?: number) => {
-  const speed = customSpeed ?? 10;
+  const speed = customSpeed ?? 4;
   const charObj = globalState.get(char);
 
   if (charObj == null) return;

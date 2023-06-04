@@ -57,7 +57,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
       character.body.setAngularVelocityY(0);
 
       const l = Math.abs(theta - thetaMan);
-      let rotationSpeed = isTouchDevice != null ? 6 : 4;
+      let rotationSpeed = isTouchDevice ? 6 : 1;
       const d = Math.PI / 24;
 
       if (l > d) {
