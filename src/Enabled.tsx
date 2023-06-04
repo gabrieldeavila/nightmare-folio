@@ -1,17 +1,19 @@
 // disable eslint
-/* eslint-disable */
+import { THREE } from "enable3d";
 import { useCallback, useEffect } from "react";
 import { globalState, stateStorage } from "react-trigger-state";
 import Ambient from "./components/Ambient/Ambient";
 import Camera from "./components/Camera/Camera";
 import Character from "./components/Character/Character";
 import Controls from "./components/Controls/Controls";
+import GOOMBA from "./components/Custom/goomba";
 import Enable3d from "./components/Enable/Enable";
 import Initial from "./components/Initial/Initial";
 import Lights from "./components/Lights/Lights";
 import Preload from "./components/Preload/Preload";
 import "./global.css";
-import { debug } from "console";
+import { checkDirection } from "./components/Custom/direction";
+import { changeRotation } from "./components/Custom/rotation";
 
 const animations = {
   stop: ["idle", "hiphop"],
@@ -93,27 +95,36 @@ function Enabled() {
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [-40, 2.5, 4];
+    return GOOMBA.position;
+  }, []);
+
+  const handleTraverse = useCallback((object: any) => {
+    // if (object.name.includes("limit")) {
+    //   console.log(object.name);
+    //   const currLimits = globalState.get("limits") || [];
+    //   currLimits.push(object);
+    //   globalState.set("limits", currLimits);
+    // }
   }, []);
 
   const handleAddMovement = useCallback((goomba: any) => {
-    globalState.set("goomba", goomba);
+    globalState.set("goomba_0", goomba);
+    globalState.set("goomba_0_direction", "right");
   }, []);
 
   const handleUpdate = useCallback(() => {
-    const goomba = globalState.get("goomba");
-    const scene = globalState.get("scene");
-    if (goomba == null) return;
-
-    const x = globalState.get("x") ?? 0;
-
-    if (goomba.position.x < -62.660186767578125) {
-      // should rotate!! rotates the goomba in 180 degrees
+    const charName = "goomba_0";
+    if (
+      checkDirection(charName, GOOMBA.position, -62.660186767578125, "right")
+    ) {
+      return;
     }
 
-    goomba.body.setVelocity(x, 0, 0);
-    globalState.set("x", x - 0.01);
-    // globalState.set("x", x - 0.1);
+    if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
+      return;
+    }
+
+    changeRotation(charName);
   }, []);
 
   return (
@@ -123,13 +134,12 @@ function Enabled() {
         <Preload onPreload={handlePreload} />
         <Lights />
         <Camera />
-        <Ambient />
+        <Ambient onTraverse={handleTraverse} />
         <Character name="main" asset="mario" isMainCharacter />
         <Character
           name="goomba"
           asset="goomba"
           onDefaultAnimation={handleDefaultAnimation}
-          // @ts-expect-error FIXME
           onDefaultPosition={handleDefaultPosition}
           onAddMovement={handleAddMovement}
         />

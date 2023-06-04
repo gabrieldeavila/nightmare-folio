@@ -158,8 +158,6 @@ const Character = memo(
           },
         });
 
-        console.log(scene.controls);
-
         /**
          * Add Pointer Lock and Pointer Drag
          */

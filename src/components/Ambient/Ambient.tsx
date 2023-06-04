@@ -1,8 +1,9 @@
 import { ExtendedObject3D } from "enable3d";
 import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
+import type { IAmbient } from "./interface";
 
-const Ambient = memo(() => {
+const Ambient = memo(({ onTraverse }: IAmbient) => {
   const [trigger] = useTriggerState({ name: "scene" });
 
   const addAmbient = useCallback(async () => {
@@ -53,6 +54,8 @@ const Ambient = memo(() => {
           child.castShadow = child.receiveShadow = true;
           child.material.metalness = 0;
           child.material.roughness = 1;
+
+          onTraverse?.(child);
 
           if (child.name === "ground-zero") {
             stateStorage.set("ground_zero", child);
