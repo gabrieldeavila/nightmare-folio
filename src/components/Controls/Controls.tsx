@@ -110,9 +110,11 @@ const Controls = memo(({ onUpdate }: IControl) => {
         buttonB.onRelease(() => (scene.move = false));
       }
 
+      const { lastDown } = keys;
+
       if (keys.space.isDown && canJump && !scene.isJumping) {
         scene.jump();
-      } else if (keys.w.isDown || move) {
+      } else if ((keys.w.isDown && lastDown === "w") || move) {
         if (
           !["running", "walking"].includes(character.animation.current) ||
           scene.nowIs !== keys.shift.isDown
@@ -131,7 +133,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
         const z = Math.cos(theta) * speed;
 
         character.body.setVelocity(x, y, z);
-      } else if (keys.d.isDown) {
+      } else if (keys.d.isDown && lastDown === "d") {
         // add a rotation to the left
         const x = Math.sin(theta - Math.PI / 2) * speed;
         const y = character.body.velocity.y;
@@ -160,7 +162,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
             character.animation.play("walking_right");
           }
         }
-      } else if (keys.a.isDown) {
+      } else if (keys.a.isDown && lastDown === "a") {
         // add a rotation to the right
         const x = Math.sin(theta + Math.PI / 2) * speed;
         const y = character.body.velocity.y;
@@ -182,7 +184,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
           }
         }
         // also change the rotation of the character
-      } else if (keys.s.isDown) {
+      } else if (keys.s.isDown && lastDown === "s") {
         // walks backwards
         const x = Math.sin(theta + Math.PI) * speed;
         const y = character.body.velocity.y;
@@ -216,42 +218,45 @@ const Controls = memo(({ onUpdate }: IControl) => {
   }, [character, controls, isTouchDevice, scene]);
 
   useEffect(() => {
+    const options = {
+      87: "w",
+      38: "w",
+      32: "space",
+      68: "d",
+      39: "d",
+      37: "a",
+      65: "a",
+      83: "s",
+      40: "s",
+      16: "shift",
+    };
+
     const press = (e: any, isDown: boolean) => {
       e.preventDefault();
 
       const keys = stateStorage.get("keys");
       const { keyCode } = e;
-      switch (keyCode) {
-        case 87: // w
-          keys.w.isDown = isDown;
-          break;
-        case 38: // arrow up
-          keys.w.isDown = isDown;
-          break;
-        case 32: // space
-          keys.space.isDown = isDown;
-          break;
-        case 68: // d
-          keys.d.isDown = isDown;
-          break;
-        case 39: // arrow right
-          keys.d.isDown = isDown;
-          break;
-        case 37: // arrow left
-          keys.a.isDown = isDown;
-          break;
-        case 65: // a
-          keys.a.isDown = isDown;
-          break;
-        case 83: // s
-          keys.s.isDown = isDown;
-          break;
-        case 40: // arrow down
-          keys.s.isDown = isDown;
-          break;
-        case 16: // shift
-          keys.shift.isDown = isDown;
-          break;
+      // @ts-expect-error FIXME
+      const currOption = options[keyCode];
+      if (!currOption) return;
+
+      keys[currOption].isDown = isDown;
+
+      if (isDown && !["space", "shift"].includes(currOption)) {
+        keys.lastDown = currOption;
+      }
+
+      // if it's now down, but there is an option that is down
+      // and it's not the same as the current option
+      // the lastDown is going to be that
+      if (!isDown) {
+        // search for the last down
+        const lastDown = Object.keys(keys).find((key) => {
+          if (key === "lastDown") return false;
+          return keys[key].isDown;
+        });
+
+        keys.lastDown = lastDown;
       }
     };
 
@@ -267,7 +272,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
       document.removeEventListener("keydown", pressTrue);
       document.removeEventListener("keyup", pressFalse);
     };
-  }, [handleControls, delta, update, time]);
+  }, [handleControls, delta, update, time, onUpdate]);
 
   return <Jump />;
 });
