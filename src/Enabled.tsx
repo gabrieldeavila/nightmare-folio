@@ -1,7 +1,9 @@
-// disable eslint
-import { THREE } from "enable3d";
 import { useCallback, useEffect } from "react";
-import { globalState, stateStorage } from "react-trigger-state";
+import {
+  globalState,
+  stateStorage,
+  useTriggerState,
+} from "react-trigger-state";
 import Ambient from "./components/Ambient/Ambient";
 import Camera from "./components/Camera/Camera";
 import Character from "./components/Character/Character";
@@ -14,6 +16,9 @@ import Preload from "./components/Preload/Preload";
 import "./global.css";
 import { checkDirection } from "./components/Custom/direction";
 import { changeRotation } from "./components/Custom/rotation";
+import { AudioManager } from "@yandeu/audio";
+import { GTBasic } from "@geavila/gt-design";
+import Header from "./components/Welcome/Header/Header";
 
 const animations = {
   stop: ["idle", "hiphop"],
@@ -62,33 +67,33 @@ function Enabled() {
     await Promise.all([ambient, character]);
   }, []);
 
-  useEffect(() => {
-    const handleListener = () => {
-      if (stateStorage.get("is_playing")) return;
+  // useEffect(() => {
+  //   const handleListener = () => {
+  //     if (stateStorage.get("is_playing")) return;
 
-      // add song
-      const song = new Audio("/assets/mp3/theme_song.mp3");
+  //     // add song
+  //     const song = new Audio("/assets/mp3/theme_song.mp3");
 
-      // make it volume to 0.25
-      song.volume = 0.25;
+  //     // make it volume to 0.25
+  //     song.volume = 0.25;
 
-      song.loop = true;
-      song
-        .play()
-        .then(() => {
-          stateStorage.set("is_playing", true);
-          // console.log("success");
-        })
-        .catch(() => console.log());
-    };
+  //     song.loop = true;
+  //     song
+  //       .play()
+  //       .then(() => {
+  //         stateStorage.set("is_playing", true);
+  //         // console.log("success");
+  //       })
+  //       .catch(() => console.log());
+  //   };
 
-    // when there's a mouse move, add song
-    document.addEventListener("mousemove", handleListener);
+  //   // when there's a mouse move, add song
+  //   document.addEventListener("mousemove", handleListener);
 
-    return () => {
-      document.removeEventListener("mousemove", handleListener);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("mousemove", handleListener);
+  //   };
+  // }, []);
 
   const handleDefaultAnimation = useCallback(() => {
     return "Take 001";
@@ -127,25 +132,42 @@ function Enabled() {
     changeRotation(charName);
   }, []);
 
+  const [hideHeader, setHideHeader] = useTriggerState({
+    name: "hide_header",
+    initial: false,
+  });
+
+  const handleInitialSounds = useCallback(async () => {
+    const audio = new AudioManager();
+    await audio.load("mario_song", "/assets/mp3/theme_song", "mp3");
+    const sound = await audio.add("mario_song");
+    sound.play();
+
+    setHideHeader(true);
+  }, [setHideHeader]);
+
   return (
-    <div>
-      <Enable3d>
-        <Initial />
-        <Preload onPreload={handlePreload} />
-        <Lights />
-        <Camera />
-        <Ambient onTraverse={handleTraverse} />
-        <Character name="main" asset="mario" isMainCharacter />
-        <Character
-          name="goomba"
-          asset="goomba"
-          onDefaultAnimation={handleDefaultAnimation}
-          onDefaultPosition={handleDefaultPosition}
-          onAddMovement={handleAddMovement}
-        />
-        <Controls onUpdate={handleUpdate} />
-      </Enable3d>
-    </div>
+    <>
+      {!hideHeader && <Header onClick={handleInitialSounds} />}
+      <div>
+        <Enable3d>
+          <Initial />
+          <Preload onPreload={handlePreload} />
+          <Lights />
+          <Camera />
+          <Ambient onTraverse={handleTraverse} />
+          <Character name="main" asset="mario" isMainCharacter />
+          <Character
+            name="goomba"
+            asset="goomba"
+            onDefaultAnimation={handleDefaultAnimation}
+            onDefaultPosition={handleDefaultPosition}
+            onAddMovement={handleAddMovement}
+          />
+          <Controls onUpdate={handleUpdate} />
+        </Enable3d>
+      </div>
+    </>
   );
 }
 
