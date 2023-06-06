@@ -5,13 +5,30 @@ const Jump = memo(() => {
   const [scene] = useTriggerState({ name: "scene" });
 
   const jump = useCallback(() => {
-    const { canJump } = scene;
+    const { canJump, isDoubleJumping } = scene;
     const character = stateStorage.get("main_character");
 
-    if (character == null || !canJump) return;
+    if ((character == null || !canJump) && isDoubleJumping) return;
 
     scene.canJump = false;
     // character.animation.play("jump", 200, false);
+    const isJumpingNow = stateStorage.get("is_jumping_now");
+
+    // se a diferença for menor dq 200 ms, então não pula
+    if (
+      isJumpingNow != null &&
+      new Date().getTime() - isJumpingNow?.getTime?.() < 200
+    ) {
+      return;
+    }
+
+    if (isJumpingNow) {
+      scene.isDoubleJumping = true;
+      scene.character.body.applyForceY(2.5);
+      return;
+    }
+
+    stateStorage.set("is_jumping_now", new Date());
 
     scene.isJumping = true;
     scene.character.body.applyForceY(4);

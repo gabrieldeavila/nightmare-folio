@@ -67,12 +67,10 @@ const Controls = memo(({ onUpdate }: IControl) => {
       }
 
       const isFallingTrue = stateStorage.get("is_falling");
-      // console.log(isFallingTrue);
 
       if (isFallingTrue) {
         scene.startedFalling = Date.now();
         scene.fallingFrom = character.position.y;
-        return;
       } else if (!scene.isJumping) {
         scene.startedFalling = null;
         scene.fallingFrom = null;
@@ -112,7 +110,10 @@ const Controls = memo(({ onUpdate }: IControl) => {
 
       const { lastDown } = keys;
 
-      if (keys.space.isDown && canJump && !scene.isJumping) {
+      if (
+        keys.space.isDown &&
+        ((canJump && !scene.isJumping) || !scene.isDoubleJumping)
+      ) {
         scene.jump();
       } else if ((keys.w.isDown && lastDown === "w") || move) {
         if (

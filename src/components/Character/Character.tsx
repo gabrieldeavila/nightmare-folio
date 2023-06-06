@@ -220,8 +220,10 @@ const Character = memo(
             }
 
             stateStorage.set("is_falling", false);
-            scene.isJumping = false;
+            stateStorage.set("is_jumping_now", false);
 
+            scene.isJumping = false;
+            scene.isDoubleJumping = false;
             stateStorage.set("last_check", Date.now());
           });
         }
