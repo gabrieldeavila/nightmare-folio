@@ -54,3 +54,22 @@ export const checkDirection = (
     return true;
   }
 };
+
+export const updateZ = (char: string, newPosition: number[]) => {
+  const charObj = globalState.get(char);
+
+  charObj.body.setCollisionFlags(2);
+
+  charObj.position.set(...newPosition);
+  charObj.body.needUpdate = true;
+
+  // this will run only on the next update if body.needUpdate = true
+  charObj.body.once.update(() => {
+    // set body back to dynamic
+    charObj.body.setCollisionFlags(0);
+
+    // if you do not reset the velocity and angularVelocity, the object will keep it
+    charObj.body.setVelocity(0, 0, 0);
+    charObj.body.setAngularVelocity(0, 0, 0);
+  });
+};

@@ -67,49 +67,12 @@ function Enabled() {
     await Promise.all([ambient, character]);
   }, []);
 
-  // useEffect(() => {
-  //   const handleListener = () => {
-  //     if (stateStorage.get("is_playing")) return;
-
-  //     // add song
-  //     const song = new Audio("/assets/mp3/theme_song.mp3");
-
-  //     // make it volume to 0.25
-  //     song.volume = 0.25;
-
-  //     song.loop = true;
-  //     song
-  //       .play()
-  //       .then(() => {
-  //         stateStorage.set("is_playing", true);
-  //         // console.log("success");
-  //       })
-  //       .catch(() => console.log());
-  //   };
-
-  //   // when there's a mouse move, add song
-  //   document.addEventListener("mousemove", handleListener);
-
-  //   return () => {
-  //     document.removeEventListener("mousemove", handleListener);
-  //   };
-  // }, []);
-
   const handleDefaultAnimation = useCallback(() => {
     return "Take 001";
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
     return GOOMBA.position;
-  }, []);
-
-  const handleTraverse = useCallback((object: any) => {
-    // if (object.name.includes("limit")) {
-    //   console.log(object.name);
-    //   const currLimits = globalState.get("limits") || [];
-    //   currLimits.push(object);
-    //   globalState.set("limits", currLimits);
-    // }
   }, []);
 
   const handleAddMovement = useCallback((goomba: any) => {
@@ -155,7 +118,7 @@ function Enabled() {
           <Preload onPreload={handlePreload} />
           <Lights />
           <Camera />
-          <Ambient onTraverse={handleTraverse} />
+          <Ambient />
           <Character name="main" asset="mario" isMainCharacter />
           <Character
             name="goomba"
