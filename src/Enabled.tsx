@@ -76,8 +76,9 @@ function Enabled() {
   }, []);
 
   const handleAddMovement = useCallback((goomba: any) => {
-    globalState.set("goomba_0", goomba);
+    stateStorage.set("goomba_0", goomba);
     globalState.set("goomba_0_direction", "right");
+    const scene = stateStorage.get("scene");
   }, []);
 
   const handleUpdate = useCallback(() => {
@@ -108,6 +109,29 @@ function Enabled() {
 
     setHideHeader(true);
   }, [setHideHeader]);
+
+  const [mainChar, setMainChar] = useTriggerState({
+    name: "main_character",
+  });
+
+  const [goomba, setGoomba] = useTriggerState({ name: "goomba_0" });
+
+  useEffect(() => {
+    if (!mainChar || !goomba) return;
+
+    const scene = stateStorage.get("scene");
+    // add collision detection
+    scene.physics.add.collider(mainChar, goomba, () => {
+      // apply force X to the other direction of the main character
+      const lastApplied = stateStorage.get("last_applied_force");
+      if (lastApplied == null || new Date().getTime() - lastApplied > 1000) {
+        stateStorage.set("last_applied_force", new Date());
+        mainChar.body.applyForceX(-10);
+        // mainChar.body.applyForceZ(23);
+        mainChar.body.applyForceY(23);
+      }
+    });
+  }, [mainChar, goomba]);
 
   return (
     <>
