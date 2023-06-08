@@ -111,7 +111,7 @@ function Enabled() {
 
     const sound = await audio.add("mario_song");
 
-    sound.setLoopStart(1111);
+    sound.setLoop(true);
 
     sound.play();
 
