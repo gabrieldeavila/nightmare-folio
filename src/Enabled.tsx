@@ -104,7 +104,15 @@ function Enabled() {
   const handleInitialSounds = useCallback(async () => {
     const audio = new AudioManager();
     await audio.load("mario_song", "/assets/mp3/theme_song", "mp3");
+    await audio.load("mamma_mia", "/assets/mp3/mamma_mia", "mp3");
+    await audio.load("jump", "/assets/mp3/jump", "mp3");
+
+    stateStorage.set("audio", audio);
+
     const sound = await audio.add("mario_song");
+
+    sound.setLoopStart(1111);
+
     sound.play();
 
     setStartedPlaying(true);
@@ -121,17 +129,38 @@ function Enabled() {
 
     const scene = stateStorage.get("scene");
     // add collision detection
-    scene.physics.add.collider(mainChar, goomba, () => {
+    scene.physics.add.collider(mainChar, goomba, async () => {
       // apply force X to the other direction of the main character
       const lastApplied = stateStorage.get("last_applied_force");
       if (lastApplied == null || new Date().getTime() - lastApplied > 1000) {
         stateStorage.set("last_applied_force", new Date());
-        mainChar.body.applyForceX(-10);
-        // mainChar.body.applyForceZ(23);
-        mainChar.body.applyForceY(23);
+        // min 1 - max 5
+        const randomForce = Math.random() * 1.5 + 1;
+
+        // if is left, apply force to the right and vice versa
+        const current = globalState.get("goomba_0_direction");
+        const xForce = current === "left" ? 10 : -10;
+        console.log(xForce);
+
+        mainChar.body.applyForceX(xForce * randomForce);
+        mainChar.body.applyForceZ(randomForce);
+        mainChar.body.applyForceY(20 * randomForce);
+
+        const audio = stateStorage.get("audio");
+
+        const sound = await audio.add("mamma_mia");
+        sound.play();
       }
     });
   }, [mainChar, goomba]);
+
+  const handleJump = useCallback(async () => {
+    const audio = stateStorage.get("audio");
+
+    const sound = await audio.add("jump");
+    sound.setVolume(0.05);
+    sound.play();
+  }, []);
 
   return (
     <>
@@ -157,7 +186,7 @@ function Enabled() {
             onDefaultPosition={handleDefaultPosition}
             onAddMovement={handleAddMovement}
           />
-          <Controls onUpdate={handleUpdate} />
+          <Controls onUpdate={handleUpdate} onJump={handleJump} />
         </Enable3d>
       </div>
     </>

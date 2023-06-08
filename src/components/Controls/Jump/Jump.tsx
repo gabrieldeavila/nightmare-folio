@@ -1,7 +1,8 @@
 import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
+import type { IControl } from "../interface";
 
-const Jump = memo(() => {
+const Jump = memo(({ onJump }: IControl) => {
   const [scene] = useTriggerState({ name: "scene" });
 
   const jump = useCallback(() => {
@@ -28,11 +29,13 @@ const Jump = memo(() => {
       return;
     }
 
+    onJump?.();
+
     stateStorage.set("is_jumping_now", new Date());
 
     scene.isJumping = true;
     scene.character.body.applyForceY(4);
-  }, [scene]);
+  }, [onJump, scene]);
 
   useEffect(() => {
     if (scene == null) return;

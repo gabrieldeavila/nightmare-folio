@@ -236,9 +236,10 @@ const Character = memo(
       name,
       asset,
       isMainCharacter,
+      characterRotationPI,
       onDefaultPosition,
-      onAddMovement,
       onDefaultAnimation,
+      onAddMovement,
       isTouchDevice,
     ]);
 

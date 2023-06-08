@@ -10,7 +10,7 @@ import {
 import Jump from "./Jump/Jump";
 import type { IControl } from "./interface";
 
-const Controls = memo(({ onUpdate }: IControl) => {
+const Controls = memo(({ onUpdate, onJump }: IControl) => {
   const [scene] = useTriggerState({ name: "scene" });
   const [mainUpdate] = useTriggerState({ name: "main_scene_update" });
   const { delta, time, update } = useMemo(
@@ -275,7 +275,7 @@ const Controls = memo(({ onUpdate }: IControl) => {
     };
   }, [handleControls, delta, update, time, onUpdate]);
 
-  return <Jump />;
+  return <Jump onJump={onJump} />;
 });
 
 Controls.displayName = "Controls";
