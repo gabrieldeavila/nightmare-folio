@@ -78,11 +78,17 @@ function Enabled() {
   const handleAddMovement = useCallback((goomba: any) => {
     stateStorage.set("goomba_0", goomba);
     globalState.set("goomba_0_direction", "right");
-    const scene = stateStorage.get("scene");
   }, []);
+
+  const [startedPlaying, setStartedPlaying] = useTriggerState({
+    name: "started_playing",
+    initial: false,
+  });
 
   const handleUpdate = useCallback(() => {
     const charName = "goomba_0";
+    if (!startedPlaying) return;
+
     if (
       checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
     ) {
@@ -94,12 +100,7 @@ function Enabled() {
     }
 
     changeRotation(charName);
-  }, []);
-
-  const [hideHeader, setHideHeader] = useTriggerState({
-    name: "hide_header",
-    initial: false,
-  });
+  }, [startedPlaying]);
 
   const handleInitialSounds = useCallback(async () => {
     const audio = new AudioManager();
@@ -107,14 +108,14 @@ function Enabled() {
     const sound = await audio.add("mario_song");
     sound.play();
 
-    setHideHeader(true);
-  }, [setHideHeader]);
+    setStartedPlaying(true);
+  }, [setStartedPlaying]);
 
-  const [mainChar, setMainChar] = useTriggerState({
+  const [mainChar] = useTriggerState({
     name: "main_character",
   });
 
-  const [goomba, setGoomba] = useTriggerState({ name: "goomba_0" });
+  const [goomba] = useTriggerState({ name: "goomba_0" });
 
   useEffect(() => {
     if (!mainChar || !goomba) return;
@@ -135,7 +136,7 @@ function Enabled() {
 
   return (
     <>
-      {!hideHeader && <Header onClick={handleInitialSounds} />}
+      {!startedPlaying && <Header onClick={handleInitialSounds} />}
       <div>
         <Enable3d>
           <Initial />
