@@ -13,6 +13,7 @@ const Character = memo(
   ({
     name,
     isMainCharacter,
+    characterRotationPI,
     asset,
     onDefaultAnimation,
     onDefaultPosition,
@@ -97,7 +98,7 @@ const Character = memo(
       scene.character.rotateY(Math.PI + 0.1); // a hack
       scene.character.add(characterObj);
 
-      scene.character.rotation.set(0, Math.PI * 1.5, 0);
+      scene.character.rotation.set(0, Math.PI * characterRotationPI, 0);
 
       const position = onDefaultPosition?.() ?? [-60, 5, 3.75];
 
@@ -151,6 +152,7 @@ const Character = memo(
           offset: new THREE.Vector3(0, 1, 0),
           targetRadius: 3,
           theta: 270,
+          phi: 15,
           // @ts-expect-error - no types
           sensitivity: {
             x: 0.15,

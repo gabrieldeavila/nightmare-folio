@@ -1,6 +1,7 @@
 export interface ICharacter {
   name: string;
   asset: string;
+  characterRotationPI: number;
   isMainCharacter?: boolean;
   onDefaultAnimation?: () => void;
   onDefaultPosition?: () => [x: number, y: number, z: number];

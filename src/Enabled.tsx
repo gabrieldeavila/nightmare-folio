@@ -1,3 +1,4 @@
+import { AudioManager } from "@yandeu/audio";
 import { useCallback, useEffect } from "react";
 import {
   globalState,
@@ -8,17 +9,15 @@ import Ambient from "./components/Ambient/Ambient";
 import Camera from "./components/Camera/Camera";
 import Character from "./components/Character/Character";
 import Controls from "./components/Controls/Controls";
+import { checkDirection } from "./components/Custom/direction";
 import GOOMBA from "./components/Custom/goomba";
+import { changeRotation } from "./components/Custom/rotation";
 import Enable3d from "./components/Enable/Enable";
 import Initial from "./components/Initial/Initial";
 import Lights from "./components/Lights/Lights";
 import Preload from "./components/Preload/Preload";
-import "./global.css";
-import { checkDirection } from "./components/Custom/direction";
-import { changeRotation } from "./components/Custom/rotation";
-import { AudioManager } from "@yandeu/audio";
-import { GTBasic } from "@geavila/gt-design";
 import Header from "./components/Welcome/Header/Header";
+import "./global.css";
 
 const animations = {
   stop: ["idle", "hiphop"],
@@ -144,8 +143,14 @@ function Enabled() {
           <Lights />
           <Camera />
           <Ambient />
-          <Character name="main" asset="mario" isMainCharacter />
           <Character
+            characterRotationPI={0.8}
+            name="main"
+            asset="mario"
+            isMainCharacter
+          />
+          <Character
+            characterRotationPI={1.5}
             name="goomba"
             asset="goomba"
             onDefaultAnimation={handleDefaultAnimation}
