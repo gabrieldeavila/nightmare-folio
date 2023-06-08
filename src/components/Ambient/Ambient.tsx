@@ -58,11 +58,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
           onTraverse?.(child);
 
-          if (child.name === "ground-zero") {
-            stateStorage.set("ground_zero", child);
-          } else {
-            childs.push(child);
-          }
+          childs.push(child);
 
           physics.add.existing(child, {
             shape: "concave",

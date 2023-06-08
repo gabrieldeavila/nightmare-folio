@@ -33,6 +33,32 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const keys = globalState.get("keys");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
+    console.log(scene.character.position.y);
+
+    if (scene.character.position.y < -13.2 || scene.character.position.y > 40) {
+      // it moves the character to the zero position
+      stateStorage.set("is_falling", false);
+      scene.isJumping = false;
+
+      stateStorage.set("last_check", Date.now());
+      // remove the collision
+      // set body to be kinematic
+      scene.character.body.setCollisionFlags(2);
+
+      // set the new position
+      scene.character.position.set(-60, 5, 3.75);
+      scene.character.body.needUpdate = true;
+
+      // this will run only on the next update if body.needUpdate = true
+      scene.character.body.once.update(() => {
+        // set body back to dynamic
+        scene.character.body.setCollisionFlags(0);
+
+        // if you do not reset the velocity and angularVelocity, the object will keep it
+        scene.character.body.setVelocity(0, 0, 0);
+        scene.character.body.setAngularVelocity(0, 0, 0);
+      });
+    }
 
     if (character != null ?? character.body) {
       scene.light.position.x = character.position.x;
