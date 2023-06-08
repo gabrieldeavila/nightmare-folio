@@ -21,6 +21,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     }),
     [mainUpdate]
   );
+
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [character] = useTriggerState({ name: "main_character" });
   const [controls] = useTriggerState({ name: "controls" });
@@ -38,11 +39,20 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       scene.light.position.y = character.position.y + 200;
       scene.light.position.z = character.position.z + 100;
       scene.light.target = character;
+      let updateMoveTop = moveTop;
 
       /**
        * Update Controls
        */
-      controls.update(moveRight * 3, -moveTop * 3);
+      // prevents from moving the camera to the ground
+      if (camera.position.y - 0.25 > scene.character.position.y) {
+        updateMoveTop *= -3;
+      } else {
+        updateMoveTop = 3;
+      }
+
+      controls.update(moveRight * 3, updateMoveTop);
+
       if (!isTouchDevice) scene.moveRight = scene.moveTop = 0;
       /**
        * Player Turn
@@ -92,8 +102,8 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
            */
           // @ts-expect-error FIXME
           const { top, right } = event;
-          scene.moveTop = top * 3;
-          scene.moveRight = right * 3;
+          scene.moveTop = top * 10;
+          scene.moveRight = right * 10;
         });
         const buttonA = joystick.add.button({
           letter: "A",
@@ -268,7 +278,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     document.addEventListener("keydown", pressTrue);
     document.addEventListener("keyup", pressFalse);
     handleControls();
-    onUpdate?.(delta, time);
+    void onUpdate?.(delta, time);
     return () => {
       document.removeEventListener("keydown", pressTrue);
       document.removeEventListener("keyup", pressFalse);

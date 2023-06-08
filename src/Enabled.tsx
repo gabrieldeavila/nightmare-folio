@@ -28,6 +28,8 @@ const animations = {
 };
 
 function Enabled() {
+  const [scene] = useTriggerState({ name: "scene" });
+
   const handlePreload = useCallback(async () => {
     const { load } = stateStorage.get("scene");
 
@@ -162,6 +164,13 @@ function Enabled() {
     sound.play();
   }, []);
 
+  const handleStart = useCallback(
+    (childs: any) => {
+      // add collision detection between the camera and the childs
+    },
+    [scene]
+  );
+
   return (
     <>
       {!startedPlaying && <Header onClick={handleInitialSounds} />}
@@ -171,7 +180,7 @@ function Enabled() {
           <Preload onPreload={handlePreload} />
           <Lights />
           <Camera />
-          <Ambient />
+          <Ambient onStart={handleStart} />
           <Character
             characterRotationPI={0.8}
             name="main"

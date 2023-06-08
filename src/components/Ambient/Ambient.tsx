@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { ExtendedObject3D } from "enable3d";
 import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { IAmbient } from "./interface";
 
-const Ambient = memo(({ onTraverse }: IAmbient) => {
+const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
   const [trigger] = useTriggerState({ name: "scene" });
 
   const addAmbient = useCallback(async () => {
@@ -77,7 +78,8 @@ const Ambient = memo(({ onTraverse }: IAmbient) => {
     );
 
     stateStorage.set("ambient_childs", childs);
-  }, []);
+    onStart?.(childs);
+  }, [onStart, onTraverse]);
 
   useEffect(() => {
     addAmbient().catch((err) => console.error(err));

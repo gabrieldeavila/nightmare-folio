@@ -159,7 +159,6 @@ const Character = memo(
             y: 0.15,
           },
         });
-
         /**
          * Add Pointer Lock and Pointer Drag
          */
