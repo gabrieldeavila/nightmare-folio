@@ -83,6 +83,9 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
           end: -2.87,
           height: 6.09,
         },
+      ];
+
+      const breakViewPoints = [
         {
           start: 78.5,
           end: 88,
@@ -99,20 +102,40 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
       console.log(character.position.x, character.position.y);
 
-      controls.offset.x = 0;
       if (isBetween) controls.offset.x = 3.3;
 
-      /**
-       * Update Controls
-       */
-      // prevents from moving the camera to the ground
-      if (camera.position.y - 0.25 > scene.character.position.y) {
-        updateMoveTop *= -3;
-      } else {
-        updateMoveTop = 3;
-      }
+      const isBetweenView = breakViewPoints.some(
+        (point) =>
+          character.position.x > point.start &&
+          character.position.x < point.end &&
+          character.position.y < point.height
+      );
 
-      controls.update(moveRight * 3, updateMoveTop);
+      if (isBetweenView) {
+        controls.offset.x = 5;
+        controls.offset.y = 15;
+        controls.offset.z = 20;
+
+        camera.position.x = character.position.x + 5;
+        camera.position.y = character.position.x + 5;
+        camera.position.z = character.position.x + 5;
+
+        controls.update(0, 0);
+      } else {
+        controls.offset.x = 0;
+        controls.offset.y = 1;
+        controls.offset.z = 0;
+        /**
+         * Update Controls
+         */
+        // prevents from moving the camera to the ground
+        if (camera.position.y - 0.25 > scene.character.position.y) {
+          updateMoveTop *= -3;
+        } else {
+          updateMoveTop = 3;
+        }
+        controls.update(moveRight * 3, updateMoveTop);
+      }
 
       if (!isTouchDevice) scene.moveRight = scene.moveTop = 0;
       /**
