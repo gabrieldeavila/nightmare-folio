@@ -33,7 +33,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const keys = globalState.get("keys");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
-    console.log(scene.character.position.y);
 
     if (scene.character.position.y < -13.2 || scene.character.position.y > 40) {
       // it moves the character to the zero position
@@ -66,6 +65,42 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       scene.light.position.z = character.position.z + 100;
       scene.light.target = character;
       let updateMoveTop = moveTop;
+
+      const breakPoints = [
+        { start: -35.5, end: -32.2, height: 4.1 },
+        {
+          start: -24.95,
+          end: -22.2,
+          height: 5.07,
+        },
+        {
+          start: -16.7,
+          end: -13.6,
+          height: 6.09,
+        },
+        {
+          start: -5.4,
+          end: -2.87,
+          height: 6.09,
+        },
+        {
+          start: 78.5,
+          end: 88,
+          height: 6.02,
+        },
+      ];
+
+      const isBetween = breakPoints.some(
+        (point) =>
+          character.position.x > point.start &&
+          character.position.x < point.end &&
+          character.position.y < point.height
+      );
+
+      console.log(character.position.x, character.position.y);
+
+      controls.offset.x = 0;
+      if (isBetween) controls.offset.x = 3.3;
 
       /**
        * Update Controls

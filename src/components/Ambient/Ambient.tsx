@@ -37,6 +37,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     });
 
     const childs: any[] = [];
+    const limits: any[] = [];
 
     ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
@@ -58,6 +59,10 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
           onTraverse?.(child);
 
+          if (child.name.includes("limit")) {
+            limits.push(child);
+          }
+
           childs.push(child);
 
           physics.add.existing(child, {
@@ -74,6 +79,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     );
 
     stateStorage.set("ambient_childs", childs);
+    stateStorage.set("limits", limits);
     onStart?.(childs);
   }, [onStart, onTraverse]);
 
