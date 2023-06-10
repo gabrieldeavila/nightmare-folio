@@ -12,7 +12,7 @@ const Jump = memo(({ onJump }: IControl) => {
     if ((character == null || !canJump) && isDoubleJumping) return;
 
     scene.canJump = false;
-    // character.animation.play("jump", 200, false);
+
     const isJumpingNow = stateStorage.get("is_jumping_now");
 
     // se a diferença for menor dq 200 ms, então não pula
@@ -25,16 +25,16 @@ const Jump = memo(({ onJump }: IControl) => {
 
     if (isJumpingNow) {
       scene.isDoubleJumping = true;
-      scene.character.body.applyForceY(2.5);
+      scene.character.body.applyForceY(3.5);
       return;
     }
 
-    onJump?.();
+    void onJump?.();
 
     stateStorage.set("is_jumping_now", new Date());
 
     scene.isJumping = true;
-    scene.character.body.applyForceY(4);
+    scene.character.body.applyForceY(5);
   }, [onJump, scene]);
 
   useEffect(() => {

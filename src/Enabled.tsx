@@ -88,19 +88,19 @@ function Enabled() {
 
   const handleUpdate = useCallback(() => {
     const charName = "goomba_0";
-    if (!startedPlaying) return;
+    // if (!startedPlaying) return;
 
-    if (
-      checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
-    ) {
-      return;
-    }
+    // if (
+    //   checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
+    // ) {
+    //   return;
+    // }
 
-    if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
-      return;
-    }
+    // if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
+    //   return;
+    // }
 
-    changeRotation(charName);
+    // changeRotation(charName);
   }, [startedPlaying]);
 
   const handleInitialSounds = useCallback(async () => {

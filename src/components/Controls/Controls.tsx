@@ -67,78 +67,52 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       let updateMoveTop = moveTop;
 
       const breakPoints = [
-        { start: -35.5, end: -32.2, height: 4.1 },
-        {
-          start: -24.95,
-          end: -22.2,
-          height: 5.07,
-        },
-        {
-          start: -16.7,
-          end: -13.6,
-          height: 6.09,
-        },
-        {
-          start: -5.4,
-          end: -2.87,
-          height: 6.09,
-        },
-      ];
-
-      const breakViewPoints = [
-        {
-          start: 78.5,
-          end: 88,
-          height: 6.02,
-        },
+        { start: -35.5, end: -2.87 },
+        { start: 76, end: 140, minHeight: 2 },
       ];
 
       const isBetween = breakPoints.some(
         (point) =>
           character.position.x > point.start &&
           character.position.x < point.end &&
-          character.position.y < point.height
+          (point.minHeight == null || character.position.y > point.minHeight)
       );
 
-      console.log(character.position.x, character.position.y);
+      /**
+       * Update Controls
+       */
+      // prevents from moving the camera to the ground
+      if (camera.position.y - 0.25 > scene.character.position.y) {
+        updateMoveTop *= -3;
+      } else {
+        updateMoveTop = 3;
+      }
 
-      if (isBetween) controls.offset.x = 3.3;
-      else controls.offset.x = 0;
+      if (isBetween) {
+        controls.offset.x = 0;
+        controls.offset.y = 10;
+        controls.offset.z = 0;
+        controls.theta = 270;
+        controls.phi = 100;
 
-      const isBetweenView = breakViewPoints.some(
-        (point) =>
-          character.position.x > point.start &&
-          character.position.x < point.end &&
-          character.position.y < point.height
-      );
+        scene.camera.position.set(-60, 15, 3.75);
 
-      if (isBetweenView) {
-        controls.offset.x = 5;
-        controls.offset.y = 15;
-        controls.offset.z = 20;
-
-        camera.position.x = character.position.x + 5;
-        camera.position.y = character.position.x + 5;
-        camera.position.z = character.position.x + 5;
+        camera.position.x = 40;
+        camera.position.y = 10;
+        camera.position.z = 100;
+        controls.update(0, 0);
 
         stateStorage.set("is_view", true);
-
-        controls.update(0, 0);
       } else {
         if (stateStorage.get("is_view")) {
           controls.offset.x = 0;
           controls.offset.y = 1;
           controls.offset.z = 0;
+          controls.phi = 15;
+
+          stateStorage.set("is_view", false);
         }
-        /**
-         * Update Controls
-         */
-        // prevents from moving the camera to the ground
-        if (camera.position.y - 0.25 > scene.character.position.y) {
-          updateMoveTop *= -3;
-        } else {
-          updateMoveTop = 3;
-        }
+
         controls.update(moveRight * 3, updateMoveTop);
       }
 
