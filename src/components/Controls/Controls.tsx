@@ -103,6 +103,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       console.log(character.position.x, character.position.y);
 
       if (isBetween) controls.offset.x = 3.3;
+      else controls.offset.x = 0;
 
       const isBetweenView = breakViewPoints.some(
         (point) =>
@@ -120,11 +121,15 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         camera.position.y = character.position.x + 5;
         camera.position.z = character.position.x + 5;
 
+        stateStorage.set("is_view", true);
+
         controls.update(0, 0);
       } else {
-        controls.offset.x = 0;
-        controls.offset.y = 1;
-        controls.offset.z = 0;
+        if (stateStorage.get("is_view")) {
+          controls.offset.x = 0;
+          controls.offset.y = 1;
+          controls.offset.z = 0;
+        }
         /**
          * Update Controls
          */
