@@ -34,7 +34,10 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
 
-    if (scene.character.position.y < -13.2 || scene.character.position.y > 40) {
+    if (
+      scene.character.position.y < -13.2 ||
+      scene.character.position.y > 200
+    ) {
       // it moves the character to the zero position
       stateStorage.set("is_falling", false);
       scene.isJumping = false;
@@ -71,12 +74,14 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         { start: 76, end: 140, minHeight: 2 },
       ];
 
-      const isBetween = breakPoints.some(
-        (point) =>
-          character.position.x > point.start &&
-          character.position.x < point.end &&
-          (point.minHeight == null || character.position.y > point.minHeight)
-      );
+      // const isBetween = breakPoints.some(
+      //   (point) =>
+      //     character.position.x > point.start &&
+      //     character.position.x < point.end &&
+      //     (point.minHeight == null || character.position.y > point.minHeight)
+      // );
+
+      const isBetween = true;
 
       /**
        * Update Controls
@@ -90,19 +95,22 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
       if (isBetween) {
         controls.offset.x = 0;
-        controls.offset.y = 10;
-        controls.offset.z = 0;
-        controls.theta = 270;
-        controls.phi = 100;
+        controls.offset.y = 0;
+        controls.offset.z = 10;
+        controls.theta = 0;
+        controls.phi = 0;
 
-        scene.camera.position.set(-60, 15, 3.75);
+        if (!stateStorage.get("is_view")) {
+          console.log("at least once");
+          stateStorage.set("is_view", true);
+        }
+        scene.character.rotation.set(0, Math.PI * 0.5, 0);
+        // character.body.setAngularVelocityY(2);
 
-        camera.position.x = 40;
-        camera.position.y = 10;
-        camera.position.z = 100;
+        setTimeout(() => {
+          // character.body.setAngularVelocityY(0);
+        }, 2000);
         controls.update(0, 0);
-
-        stateStorage.set("is_view", true);
       } else {
         if (stateStorage.get("is_view")) {
           controls.offset.x = 0;
@@ -124,10 +132,11 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       const v3 = new THREE.Vector3();
 
       const rotation = camera.getWorldDirection(v3);
-      const theta = Math.atan2(rotation.x, rotation.z);
+      // const theta = Math.atan2(rotation.x, rotation.z);
+      const theta = 1.5629423451609217;
       const rotationMan = character.getWorldDirection(v3);
       const thetaMan = Math.atan2(rotationMan.x, rotationMan.z);
-      character.body.setAngularVelocityY(0);
+      // character.body.setAngularVelocityY(0);
 
       const l = Math.abs(theta - thetaMan);
       let rotationSpeed = isTouchDevice ? 6 : 1;
@@ -136,7 +145,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       if (l > d) {
         if (l > Math.PI - d) rotationSpeed *= -1;
         if (theta < thetaMan) rotationSpeed *= -1;
-        character.body.setAngularVelocityY(rotationSpeed);
+        // character.body.setAngularVelocityY(rotationSpeed);
       }
 
       const isFallingTrue = stateStorage.get("is_falling");
@@ -205,6 +214,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         const x = Math.sin(theta) * speed;
         const y = character.body.velocity.y;
         const z = Math.cos(theta) * speed;
+        // console.log(theta);
 
         character.body.setVelocity(x, y, z);
       } else if (keys.d.isDown && lastDown === "d") {

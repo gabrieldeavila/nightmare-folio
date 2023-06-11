@@ -1,3 +1,13 @@
 {
-  "MADE_BY": "Made by Gabriel Ávila"
+  "MADE_BY": "Made by Gabriel Ávila",
+  "PLAY": "Play",
+  "3D_VIEW": "3D View",
+  "MODAL_CONFIRM": "Confirm",
+  "CHANGE_LANGUAGE": "Change to Portuguese",
+  "TRANSLATE": {
+    "LANGUAGE": "Language"
+  },
+  "HEADER": {
+    "TITLE": "Settings"
+  }
 }

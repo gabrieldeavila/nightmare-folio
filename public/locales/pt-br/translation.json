@@ -1,3 +1,13 @@
 {
-  "MADE_BY": "Feito por Gabriel Ávila"
+  "MADE_BY": "Feito por Gabriel Ávila",
+  "PLAY": "Jogar!",
+  "3D_VIEW": "Visualização 3D",
+  "MODAL_CONFIRM": "Confirmar",
+  "CHANGE_LANGUAGE": "Mudar para Inglês",
+  "TRANSLATE": {
+    "LANGUAGE": "Idioma"
+  },
+  "HEADER": {
+    "TITLE": "Configurações"
+  }
 }
