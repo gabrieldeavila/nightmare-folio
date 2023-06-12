@@ -132,6 +132,7 @@ function Enabled() {
 
   useEffect(() => {
     if (!mainChar || !goomba) return;
+    const view3d = globalState.get("3d_view");
 
     const scene = stateStorage.get("scene");
     // add collision detection
@@ -146,11 +147,11 @@ function Enabled() {
         // if is left, apply force to the right and vice versa
         const current = globalState.get("goomba_0_direction");
         const xForce = current === "left" ? 10 : -10;
-        console.log(xForce);
 
         mainChar.body.applyForceX(xForce * randomForce);
         mainChar.body.applyForceZ(randomForce);
-        mainChar.body.applyForceY(20 * randomForce);
+        const force = view3d ? 20 : 5;
+        mainChar.body.applyForceY(force * randomForce);
 
         const audio = stateStorage.get("audio");
 
