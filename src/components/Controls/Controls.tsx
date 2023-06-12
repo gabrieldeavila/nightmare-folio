@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { JoyStick, THREE } from "enable3d";
 import { memo, useCallback, useEffect, useMemo } from "react";
+import _ from "lodash";
 import {
   globalState,
   stateStorage,
@@ -83,7 +84,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       let theta = 1.56;
       const speed = 3 * keys.shift.isDown ? 5 : 2;
 
-      if (view3D) {
+      if (!view3D && view3D != null) {
         controls.offset.x = 0;
         controls.offset.y = 0;
         controls.offset.z = 10;
@@ -91,15 +92,10 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         controls.phi = 0;
 
         if (!stateStorage.get("is_view")) {
-          console.log("at least once");
           stateStorage.set("is_view", true);
         }
         scene.character.rotation.set(0, Math.PI * 0.5, 0);
-        // character.body.setAngularVelocityY(2);
 
-        setTimeout(() => {
-          // character.body.setAngularVelocityY(0);
-        }, 2000);
         controls.update(0, 0);
       } else {
         if (stateStorage.get("is_view")) {
@@ -179,21 +175,38 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         buttonB.onRelease(() => (scene.move = false));
       }
 
-      const { lastDown } = keys;
+      // if is not using 3d view, it's 2d, therefore the w and s keys are used to move the character, so the w becomes a and s becomes d
+      const clonedKeys = _.cloneDeep(keys);
+
+      if (!view3D && view3D != null) {
+        clonedKeys.w = keys.d;
+        clonedKeys.s = keys.a;
+        clonedKeys.space = keys.w.isDown ? keys.w : keys.space;
+
+        // removes the w and s keys
+        clonedKeys.a.isDown = false;
+        clonedKeys.d.isDown = false;
+
+        // gets which key is down
+        if (clonedKeys.lastDown === "d") clonedKeys.lastDown = "w";
+        else if (clonedKeys.lastDown === "a") clonedKeys.lastDown = "s";
+      }
+
+      const { lastDown } = clonedKeys;
 
       if (
-        keys.space.isDown &&
+        clonedKeys.space.isDown &&
         ((canJump && !scene.isJumping) || !scene.isDoubleJumping)
       ) {
         scene.jump();
-      } else if ((keys.w.isDown && lastDown === "w") || move) {
+      } else if ((clonedKeys.w.isDown && lastDown === "w") || move) {
         if (
           !["running", "walking"].includes(character.animation.current) ||
-          scene.nowIs !== keys.shift.isDown
+          scene.nowIs !== clonedKeys.shift.isDown
         ) {
-          scene.nowIs = keys.shift.isDown;
+          scene.nowIs = clonedKeys.shift.isDown;
 
-          if (keys.shift.isDown) {
+          if (clonedKeys.shift.isDown) {
             character.animation.play("running");
           } else {
             character.animation.play("walking");
@@ -206,7 +219,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         // console.log(theta);
 
         character.body.setVelocity(x, y, z);
-      } else if (keys.d.isDown && lastDown === "d") {
+      } else if (clonedKeys.d.isDown && lastDown === "d") {
         // add a rotation to the left
         const x = Math.sin(theta - Math.PI / 2) * speed;
         const y = character.body.velocity.y;
@@ -225,17 +238,17 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
           !["walking_right", "running_right"].includes(
             character.animation.current
           ) ||
-          scene.nowIs !== keys.shift.isDown
+          scene.nowIs !== clonedKeys.shift.isDown
         ) {
-          scene.nowIs = keys.shift.isDown;
+          scene.nowIs = clonedKeys.shift.isDown;
 
-          if (keys.shift.isDown) {
+          if (clonedKeys.shift.isDown) {
             character.animation.play("running_right");
           } else {
             character.animation.play("walking_right");
           }
         }
-      } else if (keys.a.isDown && lastDown === "a") {
+      } else if (clonedKeys.a.isDown && lastDown === "a") {
         // add a rotation to the right
         const x = Math.sin(theta + Math.PI / 2) * speed;
         const y = character.body.velocity.y;
@@ -246,18 +259,18 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
           !["running_left", "walking_left"].includes(
             character.animation.current
           ) ||
-          scene.nowIs !== keys.shift.isDown
+          scene.nowIs !== clonedKeys.shift.isDown
         ) {
-          scene.nowIs = keys.shift.isDown;
+          scene.nowIs = clonedKeys.shift.isDown;
 
-          if (keys.shift.isDown) {
+          if (clonedKeys.shift.isDown) {
             character.animation.play("running_left");
           } else {
             character.animation.play("walking_left");
           }
         }
         // also change the rotation of the character
-      } else if (keys.s.isDown && lastDown === "s") {
+      } else if (clonedKeys.s.isDown && lastDown === "s") {
         // walks backwards
         const x = Math.sin(theta + Math.PI) * speed;
         const y = character.body.velocity.y;
@@ -267,11 +280,11 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
           !["running_backwards", "walking_backwards"].includes(
             character.animation.current
           ) ||
-          scene.nowIs !== keys.shift.isDown
+          scene.nowIs !== clonedKeys.shift.isDown
         ) {
-          scene.nowIs = keys.shift.isDown;
+          scene.nowIs = clonedKeys.shift.isDown;
 
-          if (keys.shift.isDown) {
+          if (clonedKeys.shift.isDown) {
             character.animation.play("running_backwards");
           } else {
             character.animation.play("walking_backwards");
