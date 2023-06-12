@@ -88,22 +88,26 @@ function Enabled() {
 
   const handleUpdate = useCallback(() => {
     const charName = "goomba_0";
-    // if (!startedPlaying) return;
+    if (!startedPlaying) return;
 
-    // if (
-    //   checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
-    // ) {
-    //   return;
-    // }
+    if (
+      checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
+    ) {
+      return;
+    }
 
-    // if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
-    //   return;
-    // }
+    if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
+      return;
+    }
 
-    // changeRotation(charName);
+    changeRotation(charName);
   }, [startedPlaying]);
 
   const handleInitialSounds = useCallback(async () => {
+    const isUsing3dView = globalState.get("header-form")?.switch ?? true;
+
+    globalState.set("3d_view", isUsing3dView);
+
     const audio = new AudioManager();
     await audio.load("mario_song", "/assets/mp3/theme_song", "mp3");
     await audio.load("mamma_mia", "/assets/mp3/mamma_mia", "mp3");

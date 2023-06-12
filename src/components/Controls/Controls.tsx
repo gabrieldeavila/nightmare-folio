@@ -31,6 +31,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       return;
     }
     const keys = globalState.get("keys");
+    const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
 
@@ -69,20 +70,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       scene.light.target = character;
       let updateMoveTop = moveTop;
 
-      const breakPoints = [
-        { start: -35.5, end: -2.87 },
-        { start: 76, end: 140, minHeight: 2 },
-      ];
-
-      // const isBetween = breakPoints.some(
-      //   (point) =>
-      //     character.position.x > point.start &&
-      //     character.position.x < point.end &&
-      //     (point.minHeight == null || character.position.y > point.minHeight)
-      // );
-
-      const isBetween = true;
-
       /**
        * Update Controls
        */
@@ -93,7 +80,10 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         updateMoveTop = 3;
       }
 
-      if (isBetween) {
+      let theta = 1.56;
+      const speed = 3 * keys.shift.isDown ? 5 : 2;
+
+      if (view3D) {
         controls.offset.x = 0;
         controls.offset.y = 0;
         controls.offset.z = 10;
@@ -121,6 +111,24 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
           stateStorage.set("is_view", false);
         }
 
+        const v3 = new THREE.Vector3();
+
+        const rotation = camera.getWorldDirection(v3);
+        theta = Math.atan2(rotation.x, rotation.z);
+        const rotationMan = character.getWorldDirection(v3);
+        const thetaMan = Math.atan2(rotationMan.x, rotationMan.z);
+        character.body.setAngularVelocityY(0);
+
+        const l = Math.abs(theta - thetaMan);
+        let rotationSpeed = isTouchDevice ? 6 : 1;
+        const d = Math.PI / 24;
+
+        if (l > d) {
+          if (l > Math.PI - d) rotationSpeed *= -1;
+          if (theta < thetaMan) rotationSpeed *= -1;
+          character.body.setAngularVelocityY(rotationSpeed);
+        }
+
         controls.update(moveRight * 3, updateMoveTop);
       }
 
@@ -128,25 +136,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       /**
        * Player Turn
        */
-      const speed = 3 * keys.shift.isDown ? 5 : 2;
-      const v3 = new THREE.Vector3();
-
-      const rotation = camera.getWorldDirection(v3);
-      // const theta = Math.atan2(rotation.x, rotation.z);
-      const theta = 1.5629423451609217;
-      const rotationMan = character.getWorldDirection(v3);
-      const thetaMan = Math.atan2(rotationMan.x, rotationMan.z);
-      // character.body.setAngularVelocityY(0);
-
-      const l = Math.abs(theta - thetaMan);
-      let rotationSpeed = isTouchDevice ? 6 : 1;
-      const d = Math.PI / 24;
-
-      if (l > d) {
-        if (l > Math.PI - d) rotationSpeed *= -1;
-        if (theta < thetaMan) rotationSpeed *= -1;
-        // character.body.setAngularVelocityY(rotationSpeed);
-      }
 
       const isFallingTrue = stateStorage.get("is_falling");
 

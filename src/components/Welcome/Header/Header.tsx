@@ -88,8 +88,6 @@ const Modal = memo(() => {
   });
 
   const handleLanguageChange = useCallback(() => {
-    console.log(i18n.language);
-
     void i18n.changeLanguage(i18n.language === "en" ? "pt-br" : "en");
   }, []);
 
