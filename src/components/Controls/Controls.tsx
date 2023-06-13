@@ -37,7 +37,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const { camera, moveTop, moveRight, move, canJump } = scene;
 
     if (
-      scene.character.position.y < -13.2 ||
+      scene.character.position.y < -15.2 ||
       scene.character.position.y > 200
     ) {
       // it moves the character to the zero position
@@ -82,7 +82,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       }
 
       let theta = 1.56;
-      const speed = 3 * keys.shift.isDown ? 5 : 2;
+      const speed = 100 * keys.shift.isDown ? 5 : 2;
 
       if (!view3D && view3D != null) {
         controls.offset.x = 0;

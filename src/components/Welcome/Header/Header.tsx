@@ -5,7 +5,6 @@ import {
   Space,
   Text,
   EasyState,
-  GTTranslate,
   GTInput,
 } from "@geavila/gt-design";
 import { memo, useCallback } from "react";
