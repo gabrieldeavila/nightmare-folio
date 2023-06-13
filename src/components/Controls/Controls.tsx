@@ -35,6 +35,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
+    // console.log(scene.character.position.x);
 
     if (
       scene.character.position.y < -15.2 ||
@@ -216,7 +217,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         const x = Math.sin(theta) * speed;
         const y = character.body.velocity.y;
         const z = Math.cos(theta) * speed;
-        // console.log(theta);
 
         character.body.setVelocity(x, y, z);
       } else if (clonedKeys.d.isDown && lastDown === "d") {

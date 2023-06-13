@@ -10,7 +10,7 @@ import Camera from "./components/Camera/Camera";
 import Character from "./components/Character/Character";
 import Controls from "./components/Controls/Controls";
 import { checkDirection } from "./components/Custom/direction";
-import GOOMBA from "./components/Custom/goomba";
+import GOOMBA, { type TGoomba, goombaArray } from "./components/Custom/goomba";
 import { changeRotation } from "./components/Custom/rotation";
 import Enable3d from "./components/Enable/Enable";
 import Initial from "./components/Initial/Initial";
@@ -18,14 +18,6 @@ import Lights from "./components/Lights/Lights";
 import Preload from "./components/Preload/Preload";
 import Header from "./components/Welcome/Header/Header";
 import "./global.css";
-
-const animations = {
-  stop: ["idle", "hiphop"],
-  fall: ["falling", "falling_to_roll"],
-  walk: ["walking"],
-  jump: ["jumping"],
-  run: ["running"],
-};
 
 function Enabled() {
   const [scene] = useTriggerState({ name: "scene" });
@@ -72,13 +64,13 @@ function Enabled() {
     return "Take 001";
   }, []);
 
-  const handleDefaultPosition = useCallback(() => {
-    return GOOMBA.position;
+  const handleDefaultPosition = useCallback((name: TGoomba) => {
+    return GOOMBA[name].position;
   }, []);
 
-  const handleAddMovement = useCallback((goomba: any) => {
-    stateStorage.set("goomba_0", goomba);
-    globalState.set("goomba_0_direction", "right");
+  const handleAddMovement = useCallback((goomba: any, name: string) => {
+    stateStorage.set(name, goomba);
+    globalState.set(`${name}_direction`, "right");
   }, []);
 
   const [startedPlaying, setStartedPlaying] = useTriggerState({
@@ -87,20 +79,35 @@ function Enabled() {
   });
 
   const handleUpdate = useCallback(() => {
-    const charName = "goomba_0";
+    const charNames = goombaArray;
+
     if (!startedPlaying) return;
 
-    if (
-      checkDirection(charName, GOOMBA.position, -63.660186767578125, "right")
-    ) {
-      return;
-    }
+    for (const charName of charNames) {
+      if (
+        checkDirection(
+          charName,
+          GOOMBA[charName].position,
+          GOOMBA[charName].left_limit,
+          "right"
+        )
+      ) {
+        return;
+      }
 
-    if (checkDirection(charName, GOOMBA.position, -37.60713577270508, "left")) {
-      return;
-    }
+      if (
+        checkDirection(
+          charName,
+          GOOMBA[charName].position,
+          GOOMBA[charName].right_limit,
+          "left"
+        )
+      ) {
+        return;
+      }
 
-    changeRotation(charName);
+      changeRotation(charName);
+    }
   }, [startedPlaying]);
 
   const handleInitialSounds = useCallback(async () => {
@@ -128,37 +135,41 @@ function Enabled() {
     name: "main_character",
   });
 
+  // only gets the last goomba to add physics to all of `em
   const [goomba] = useTriggerState({ name: "goomba_0" });
 
   useEffect(() => {
     if (!mainChar || !goomba) return;
     const view3d = globalState.get("3d_view");
 
-    const scene = stateStorage.get("scene");
-    // add collision detection
-    scene.physics.add.collider(mainChar, goomba, async () => {
-      // apply force X to the other direction of the main character
-      const lastApplied = stateStorage.get("last_applied_force");
-      if (lastApplied == null || new Date().getTime() - lastApplied > 1000) {
-        stateStorage.set("last_applied_force", new Date());
-        // min 1 - max 5
-        const randomForce = Math.random() * 1.5 + 1;
+    const scene = globalState.get("scene");
+    for (const charName of goombaArray) {
+      const goombaObj = globalState.get(charName);
+      // add collision detection
+      scene.physics.add.collider(mainChar, goombaObj, async () => {
+        // apply force X to the other direction of the main character
+        const lastApplied = stateStorage.get("last_applied_force");
+        if (lastApplied == null || new Date().getTime() - lastApplied > 1000) {
+          const audio = stateStorage.get("audio");
 
-        // if is left, apply force to the right and vice versa
-        const current = globalState.get("goomba_0_direction");
-        const xForce = current === "left" ? 10 : -10;
+          const sound = await audio.add("mamma_mia");
+          sound.play();
 
-        mainChar.body.applyForceX(xForce * randomForce);
-        mainChar.body.applyForceZ(randomForce);
-        const force = view3d ? 20 : 5;
-        mainChar.body.applyForceY(force * randomForce);
+          stateStorage.set("last_applied_force", new Date());
+          // min 1 - max 5
+          const randomForce = Math.random() * 1.5 + 1;
 
-        const audio = stateStorage.get("audio");
+          // if is left, apply force to the right and vice versa
+          const current = globalState.get("goomba_0_direction");
+          const xForce = current === "left" ? 10 : -10;
 
-        const sound = await audio.add("mamma_mia");
-        sound.play();
-      }
-    });
+          mainChar.body.applyForceX(xForce * randomForce);
+          mainChar.body.applyForceZ(randomForce);
+          const force = view3d ? 20 : 5;
+          mainChar.body.applyForceY(force * randomForce);
+        }
+      });
+    }
   }, [mainChar, goomba]);
 
   const handleJump = useCallback(async () => {
@@ -194,9 +205,19 @@ function Enabled() {
           />
           <Character
             characterRotationPI={1.5}
-            name="goomba"
+            name="goomba_1"
             asset="goomba"
             onDefaultAnimation={handleDefaultAnimation}
+            // @ts-expect-error in a hurry
+            onDefaultPosition={handleDefaultPosition}
+            onAddMovement={handleAddMovement}
+          />
+          <Character
+            characterRotationPI={1.5}
+            name="goomba_0"
+            asset="goomba"
+            onDefaultAnimation={handleDefaultAnimation}
+            // @ts-expect-error in a hurry
             onDefaultPosition={handleDefaultPosition}
             onAddMovement={handleAddMovement}
           />

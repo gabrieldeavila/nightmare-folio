@@ -4,6 +4,6 @@ export interface ICharacter {
   characterRotationPI: number;
   isMainCharacter?: boolean;
   onDefaultAnimation?: () => void;
-  onDefaultPosition?: () => [x: number, y: number, z: number];
-  onAddMovement?: (e: any) => void;
+  onDefaultPosition?: (name: string) => [x: number, y: number, z: number];
+  onAddMovement?: (e: any, name: string) => void;
 }
