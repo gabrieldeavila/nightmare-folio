@@ -203,24 +203,20 @@ function Enabled() {
             asset="mario"
             isMainCharacter
           />
-          <Character
-            characterRotationPI={1.5}
-            name="goomba_1"
-            asset="goomba"
-            onDefaultAnimation={handleDefaultAnimation}
-            // @ts-expect-error in a hurry
-            onDefaultPosition={handleDefaultPosition}
-            onAddMovement={handleAddMovement}
-          />
-          <Character
-            characterRotationPI={1.5}
-            name="goomba_0"
-            asset="goomba"
-            onDefaultAnimation={handleDefaultAnimation}
-            // @ts-expect-error in a hurry
-            onDefaultPosition={handleDefaultPosition}
-            onAddMovement={handleAddMovement}
-          />
+
+          {goombaArray.map((name) => (
+            <Character
+              key={name}
+              characterRotationPI={1.5}
+              name={name}
+              asset="goomba"
+              onDefaultAnimation={handleDefaultAnimation}
+              // @ts-expect-error in a hurry
+              onDefaultPosition={handleDefaultPosition}
+              onAddMovement={handleAddMovement}
+            />
+          ))}
+
           <Controls onUpdate={handleUpdate} onJump={handleJump} />
         </Enable3d>
       </div>

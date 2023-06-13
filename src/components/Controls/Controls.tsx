@@ -35,7 +35,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
-    // console.log(scene.character.position.x);
+    console.log(scene.character.position.x);
 
     if (
       scene.character.position.y < -15.2 ||

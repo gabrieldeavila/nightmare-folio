@@ -12,9 +12,14 @@ const GOOMBA = {
     right_limit: -19.4,
     left_limit: -24.8,
   },
+  goomba_2: {
+    position: goombaPosition1,
+    right_limit: -7.9,
+    left_limit: -16,
+  },
 };
 
 export default GOOMBA;
 
-export type TGoomba = "goomba_0" | "goomba_1";
+export type TGoomba = "goomba_0" | "goomba_1" | "goomba_2";
 export const goombaArray = Object.keys(GOOMBA) as TGoomba[];
