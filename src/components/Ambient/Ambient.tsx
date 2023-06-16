@@ -38,6 +38,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
     const childs: any[] = [];
     const limits: any[] = [];
+    console.log(ambient);
 
     ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
@@ -53,9 +54,14 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
         };
       }) => {
         if (child.isMesh != null) {
+          if (child.name === "surprise_box") {
+            child.material.metalness = 0.5;
+          } else {
+            child.material.metalness = 0;
+            child.material.roughness = 1;
+          }
+
           child.castShadow = child.receiveShadow = true;
-          child.material.metalness = 0;
-          child.material.roughness = 1;
 
           onTraverse?.(child);
 
