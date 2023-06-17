@@ -38,7 +38,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
     const childs: any[] = [];
     const limits: any[] = [];
-    console.log(ambient);
+    const supriseBoxes: any[] = [];
 
     ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
@@ -54,7 +54,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
         };
       }) => {
         if (child.isMesh != null) {
-          if (child.name === "surprise_box") {
+          if (child.name.includes("surprise_box")) {
             child.material.metalness = 0.5;
           } else {
             child.material.metalness = 0;
@@ -73,19 +73,24 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
           physics.add.existing(child, {
             shape: "concave",
-            mass: 0,
+            mass: 2,
             collisionFlags: 1,
             autoCenter: false,
           });
 
           child.body.setAngularFactor(0, 0, 0);
           child.body.setLinearFactor(0, 0, 0);
+
+          if (child.name.includes("surprise_box")) {
+            supriseBoxes.push(child);
+          }
         }
       }
     );
 
     stateStorage.set("ambient_childs", childs);
     stateStorage.set("limits", limits);
+    stateStorage.set("surprise_boxes", supriseBoxes);
     onStart?.(childs);
   }, [onStart, onTraverse]);
 

@@ -193,13 +193,20 @@ const Character = memo(
                 scene.canJump = true;
               });
             }
-
             stateStorage.set("is_falling", false);
             stateStorage.set("is_jumping_now", false);
 
             scene.isJumping = false;
             scene.isDoubleJumping = false;
             stateStorage.set("last_check", Date.now());
+          });
+        }
+
+        const surpiseBoxes = stateStorage.get("surprise_boxes");
+
+        for (const box of surpiseBoxes) {
+          physics.add.collider(newChar, box, () => {
+            console.log("collided with box");
           });
         }
       }
