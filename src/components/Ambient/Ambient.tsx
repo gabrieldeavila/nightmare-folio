@@ -39,6 +39,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     const childs: any[] = [];
     const limits: any[] = [];
     const supriseBoxes: any[] = [];
+    const coins: any[] = [];
 
     ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
@@ -69,6 +70,10 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
             limits.push(child);
           }
 
+          if (child.name.includes("coin")) {
+            coins.push(child);
+          }
+
           childs.push(child);
 
           physics.add.existing(child, {
@@ -91,6 +96,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     stateStorage.set("ambient_childs", childs);
     stateStorage.set("limits", limits);
     stateStorage.set("surprise_boxes", supriseBoxes);
+    stateStorage.set("coins", coins);
     onStart?.(childs);
   }, [onStart, onTraverse]);
 

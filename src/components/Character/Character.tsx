@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import {
   ExtendedObject3D,
   PointerDrag,
@@ -203,10 +205,70 @@ const Character = memo(
         }
 
         const surpiseBoxes = stateStorage.get("surprise_boxes");
+        const coins = stateStorage.get("coins");
+        const ambient2 = stateStorage.get("ambient");
 
         for (const box of surpiseBoxes) {
           physics.add.collider(newChar, box, () => {
-            console.log("collided with box");
+            const alreadyCollided = stateStorage.get(
+              `already_collided_${box.name}`
+            );
+
+            if (alreadyCollided) return;
+            const index = box.name.split("surprise_box")[1];
+
+            const coinCollider = coins.find(
+              (coin: any) => coin.name === `coin${index}`
+            );
+
+            // changes the coin's position to the box's position
+            let yMagic = 0.5;
+
+            const clearMagic = setInterval(() => {
+              coinCollider.position.set(
+                box.position.x,
+                box.position.y + yMagic,
+                box.position.z
+              );
+
+              // makes it flip
+              coinCollider.rotation.z += 0.1;
+
+              yMagic += 0.01;
+            }, 10);
+
+            let yMagic2 = 0;
+
+            // after 1 second, clear the interval
+            setTimeout(() => {
+              clearInterval(clearMagic);
+
+              // // now go down
+              const clearMagic2 = setInterval(() => {
+                coinCollider.position.set(
+                  box.position.x,
+                  box.position.y + yMagic - yMagic2,
+                  box.position.z
+                );
+
+                // makes it flip
+                coinCollider.rotation.z += 0.1;
+
+                yMagic2 += 0.01;
+              }, 10);
+
+              // // after 1 second, clear the interval
+              setTimeout(() => {
+                clearInterval(clearMagic2);
+                // changes the box metalness to 0
+                box.material.metalness = 0.8;
+              }, 2500);
+            }, 2000);
+
+            // after 1 second, clear the interval
+
+            stateStorage.set(`already_collided_${box.name}`, true);
+            console.log(coinCollider, "collided with box");
           });
         }
       }
