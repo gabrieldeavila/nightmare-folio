@@ -68,7 +68,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
     if (
       !view3D &&
-      (scene.character.position.z > 4 || scene.character.position.z < -3.5)
+      (scene.character.position.z > 4 || scene.character.position.z < -3.72)
     ) {
       scene.character.position.set(
         scene.character.position.x,
