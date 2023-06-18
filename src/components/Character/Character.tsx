@@ -101,7 +101,7 @@ const Character = memo(
 
       newChar.rotation.set(0, Math.PI * characterRotationPI, 0);
 
-      const position = onDefaultPosition?.(name) ?? [-60, 5, 3.75];
+      const position = onDefaultPosition?.(name) ?? [95, -4, 3.75];
 
       newChar.position.set(...position);
 
@@ -220,6 +220,10 @@ const Character = memo(
               (coin: any) => coin.name === `coin${index}`
             );
 
+            stateStorage.set(
+              "coins_collected",
+              (stateStorage.get("coins_collected") || 0) + 1
+            );
             // changes the coin's position to the box's position
             let yMagic = 0.5;
 
@@ -265,6 +269,41 @@ const Character = memo(
             }, 2000);
 
             stateStorage.set(`already_collided_${box.name}`, true);
+          });
+        }
+
+        const extraCoins = stateStorage.get("extra_coins");
+
+        for (const coin of extraCoins) {
+          physics.add.collider(newChar, coin, () => {
+            const alreadyCollided = stateStorage.get(
+              `already_collided_${coin.name}`
+            );
+
+            if (alreadyCollided) return;
+
+            stateStorage.set(`already_collided_${coin.name}`, true);
+            stateStorage.set(
+              "coins_collected",
+              (stateStorage.get("coins_collected") || 0) + 1
+            );
+            // changes its mass to 0
+            coin.body.setCollisionFlags(2);
+
+            // set the new position
+            // coin.position.set(-60, 5, 3.75);
+            coin.scale.set(0, 0, 0);
+            coin.body.needUpdate = true;
+
+            // this will run only on the next update if body.needUpdate = true
+            coin.body.once.update(() => {
+              // set body back to dynamic
+              coin.body.setCollisionFlags(0);
+
+              // if you do not reset the velocity and angularVelocity, the object will keep it
+              coin.body.setVelocity(0, 0, 0);
+              coin.body.setAngularVelocity(0, 0, 0);
+            });
           });
         }
       }

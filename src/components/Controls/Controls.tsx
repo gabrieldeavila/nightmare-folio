@@ -243,7 +243,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
         character.body.setVelocity(x, y, z);
       } else if (clonedKeys.d.isDown && lastDown === "d") {
-        console.log("aaa");
         // add a rotation to the left
         const x = Math.sin(theta - Math.PI / 2) * speed;
         const y = character.body.velocity.y;
