@@ -36,8 +36,6 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
 
-    console.log(scene.character.position.z);
-
     if (
       scene.character.position.y < -15.2 ||
       scene.character.position.y > 200

@@ -264,10 +264,7 @@ const Character = memo(
               }, 2500);
             }, 2000);
 
-            // after 1 second, clear the interval
-
             stateStorage.set(`already_collided_${box.name}`, true);
-            console.log(coinCollider, "collided with box");
           });
         }
       }
