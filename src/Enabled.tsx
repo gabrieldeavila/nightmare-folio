@@ -18,6 +18,7 @@ import Lights from "./components/Lights/Lights";
 import Preload from "./components/Preload/Preload";
 import Header from "./components/Welcome/Header/Header";
 import "./global.css";
+import { handleAfterMainSetted } from "./components/Custom/handleAfterMainSetted";
 
 function Enabled() {
   const [scene] = useTriggerState({ name: "scene" });
@@ -202,6 +203,7 @@ function Enabled() {
             name="main"
             asset="mario"
             isMainCharacter
+            onAfterMainSetted={handleAfterMainSetted}
           />
 
           {goombaArray.map((name) => (
