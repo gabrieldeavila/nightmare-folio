@@ -101,7 +101,7 @@ const Character = memo(
 
       newChar.rotation.set(0, Math.PI * characterRotationPI, 0);
 
-      const position = onDefaultPosition?.(name) ?? [95, -4, 3.75];
+      const position = onDefaultPosition?.(name) ?? [-60, 5, 3.75];
 
       newChar.position.set(...position);
 
@@ -275,7 +275,7 @@ const Character = memo(
         const extraCoins = stateStorage.get("extra_coins");
 
         for (const coin of extraCoins) {
-          physics.add.collider(newChar, coin, () => {
+          const fun = () => {
             const alreadyCollided = stateStorage.get(
               `already_collided_${coin.name}`
             );
@@ -304,7 +304,10 @@ const Character = memo(
               coin.body.setVelocity(0, 0, 0);
               coin.body.setAngularVelocity(0, 0, 0);
             });
-          });
+          };
+
+          physics.add.collider(newChar, coin, fun);
+          physics.add.collider(coin, newChar, fun);
         }
       }
     }, [
