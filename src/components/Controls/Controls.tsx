@@ -35,6 +35,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
+    // console.log(scene.character.position.z);
 
     if (
       scene.character.position.y < -15.2 ||
@@ -238,14 +239,15 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
         const x = Math.sin(theta) * speed;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta) * speed;
+        const z = view3D ? Math.cos(theta) * speed : 0;
 
         character.body.setVelocity(x, y, z);
       } else if (clonedKeys.d.isDown && lastDown === "d") {
+        console.log("aaa");
         // add a rotation to the left
         const x = Math.sin(theta - Math.PI / 2) * speed;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta - Math.PI / 2) * speed;
+        const z = view3D ? Math.cos(theta - Math.PI / 2) * speed : 0;
         character.body.setVelocity(x, y, z);
         // add a transition to be smooth
         // now the character is moving
@@ -253,7 +255,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         const smooth = 0.1;
         const x2 = character.position.x + x * smooth;
         const y2 = character.position.y + y * smooth;
-        const z2 = character.position.z + z * smooth;
+        const z2 = view3D ? character.position.z + z * smooth : 0;
         character.position.set(x2, y2, z2);
 
         if (
@@ -274,7 +276,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         // add a rotation to the right
         const x = Math.sin(theta + Math.PI / 2) * speed;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta + Math.PI / 2) * speed;
+        const z = view3D ? Math.cos(theta + Math.PI / 2) * speed : 0;
         character.body.setVelocity(x, y, z);
 
         if (
@@ -296,7 +298,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         // walks backwards
         const x = Math.sin(theta + Math.PI) * speed;
         const y = character.body.velocity.y;
-        const z = Math.cos(theta + Math.PI) * speed;
+        const z = view3D ? Math.cos(theta + Math.PI) * speed : 0;
         character.body.setVelocity(x, y, z);
         if (
           !["running_backwards", "walking_backwards"].includes(
