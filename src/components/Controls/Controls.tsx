@@ -35,7 +35,8 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
-    // console.log(scene.character.position.x);
+
+    console.log(scene.character.position.z);
 
     if (
       scene.character.position.y < -15.2 ||
@@ -65,6 +66,29 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       });
     }
 
+    if (
+      !view3D &&
+      (scene.character.position.z > 4 || scene.character.position.z < -3.5)
+    ) {
+      scene.character.position.set(
+        scene.character.position.x,
+        scene.character.position.y + 1,
+        3.75
+      );
+
+      scene.character.body.needUpdate = true;
+      scene.character.body.setCollisionFlags(2);
+
+      // this will run only on the next update if body.needUpdate = true
+      scene.character.body.once.update(() => {
+        // set body back to dynamic
+        scene.character.body.setCollisionFlags(0);
+
+        // if you do not reset the velocity and angularVelocity, the object will keep it
+        scene.character.body.setVelocity(0, 0, 0);
+        scene.character.body.setAngularVelocity(0, 0, 0);
+      });
+    }
     if (character != null ?? character.body) {
       scene.light.position.x = character.position.x;
       scene.light.position.y = character.position.y + 200;

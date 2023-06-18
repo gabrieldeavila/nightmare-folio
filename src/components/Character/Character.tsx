@@ -206,7 +206,6 @@ const Character = memo(
 
         const surpiseBoxes = stateStorage.get("surprise_boxes");
         const coins = stateStorage.get("coins");
-        const ambient2 = stateStorage.get("ambient");
 
         for (const box of surpiseBoxes) {
           physics.add.collider(newChar, box, () => {
