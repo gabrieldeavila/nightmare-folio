@@ -103,6 +103,7 @@ const Character = memo(
       newChar.rotation.set(0, Math.PI * characterRotationPI, 0);
 
       const position = onDefaultPosition?.(name) ?? [-60, 5, 3.75];
+      // const position = onDefaultPosition?.(name) ?? [100, -3, 3.75];
 
       newChar.position.set(...position);
 

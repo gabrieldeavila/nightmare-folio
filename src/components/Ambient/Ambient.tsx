@@ -41,6 +41,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     const supriseBoxes: any[] = [];
     const coins: any[] = [];
     const extraCoins: any[] = [];
+    const teleport: any[] = [];
 
     ambient.traverse(
       // @ts-expect-error should be fixed in enable3d
@@ -94,6 +95,10 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
           if (child.name.includes("surprise_box")) {
             supriseBoxes.push(child);
           }
+
+          if (child.name.includes("teleport")) {
+            teleport.push(child);
+          }
         }
       }
     );
@@ -103,6 +108,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
     stateStorage.set("surprise_boxes", supriseBoxes);
     stateStorage.set("coins", coins);
     stateStorage.set("extra_coins", extraCoins);
+    stateStorage.set("teleporters", teleport);
     onStart?.(childs);
   }, [onStart, onTraverse]);
 

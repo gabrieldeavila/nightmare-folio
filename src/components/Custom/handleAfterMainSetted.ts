@@ -104,4 +104,27 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
     physics.add.collider(newChar, coin, fun);
     physics.add.collider(coin, newChar, fun);
   }
+
+  const teleporters = stateStorage.get("teleporters");
+
+  for (const teleporter of teleporters) {
+    physics.add.collider(newChar, teleporter, () => {
+      // changes its mass to 0
+      newChar.body.setCollisionFlags(2);
+
+      // set the new position
+      newChar.position.set(105.28, 5, 3.75);
+      newChar.body.needUpdate = true;
+
+      // this will run only on the next update if body.needUpdate = true
+      newChar.body.once.update(() => {
+        // set body back to dynamic
+        newChar.body.setCollisionFlags(0);
+
+        // if you do not reset the velocity and angularVelocity, the object will keep it
+        newChar.body.setVelocity(0, 0, 0);
+        newChar.body.setAngularVelocity(0, 0, 0);
+      });
+    });
+  }
 };
