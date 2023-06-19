@@ -83,8 +83,20 @@ function Enabled() {
     const charNames = goombaArray;
 
     if (!startedPlaying) return;
+    const mario = globalState.get("main_character");
 
     for (const charName of charNames) {
+      if (GOOMBA[charName].start_to_move_when_main_is_at != null) {
+        const mariosIsAt = mario.position.x;
+
+        // prevents if mario is not at the right position
+        if (
+          mariosIsAt < (GOOMBA[charName].start_to_move_when_main_is_at ?? 0)
+        ) {
+          return;
+        }
+      }
+
       if (
         checkDirection(
           charName,
