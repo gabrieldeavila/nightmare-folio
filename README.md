@@ -11,3 +11,5 @@ https://skfb.ly/oppOW
 "Clouds" (https://skfb.ly/UAww) by farhad.Guli is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Cloud Test" (https://skfb.ly/NK7C) by Andrea Marziano is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"Low Poly Island" (https://skfb.ly/UnVv) by jiberico is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

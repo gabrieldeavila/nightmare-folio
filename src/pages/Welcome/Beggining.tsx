@@ -6,7 +6,7 @@ function Beggining() {
   const navigate = useNavigate();
 
   const handleClick = useCallback(() => {
-    navigate("/mario");
+    navigate("/start");
   }, [navigate]);
 
   return <Header onClick={handleClick} />;
