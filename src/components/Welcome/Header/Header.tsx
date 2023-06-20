@@ -9,7 +9,7 @@ import {
 } from "@geavila/gt-design";
 import { memo, useCallback } from "react";
 import { Settings } from "react-feather";
-import { I18nextProvider, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { stateStorage, useTriggerState } from "react-trigger-state";
 import i18n from "../../../Translate/Translate";
 import "./style.css";
@@ -46,8 +46,6 @@ function Header({ onClick }: { onClick: () => void | Promise<void> }) {
             <Text.Title>NightmareFolio</Text.Title>
             <Text.H2>{t("MADE_BY")}</Text.H2>
           </Space.Center>
-
-          <I18nextProvider i18n={i18n} />
 
           <Space.Center mt="5">
             <Button.Normal fitContent onClick={onClick}>
@@ -87,7 +85,6 @@ const Modal = memo(() => {
   });
 
   const handleLanguageChange = useCallback(() => {
-    console.log(i18n.language);
     void i18n.changeLanguage(i18n.language.includes("en") ? "pt" : "en");
   }, []);
 
