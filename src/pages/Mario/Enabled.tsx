@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { AudioManager } from "@yandeu/audio";
 import { useCallback, useEffect } from "react";
 import {
@@ -5,24 +6,23 @@ import {
   stateStorage,
   useTriggerState,
 } from "react-trigger-state";
-import Ambient from "./components/Ambient/Ambient";
-import Camera from "./components/Camera/Camera";
-import Character from "./components/Character/Character";
-import Controls from "./components/Controls/Controls";
-import { checkDirection } from "./components/Custom/direction";
-import GOOMBA, { type TGoomba, goombaArray } from "./components/Custom/goomba";
-import { changeRotation } from "./components/Custom/rotation";
-import Enable3d from "./components/Enable/Enable";
-import Initial from "./components/Initial/Initial";
-import Lights from "./components/Lights/Lights";
-import Preload from "./components/Preload/Preload";
-import Header from "./components/Welcome/Header/Header";
-import "./global.css";
-import { handleAfterMainSetted } from "./components/Custom/handleAfterMainSetted";
+import Ambient from "../../components/Ambient/Ambient";
+import Camera from "../../components/Camera/Camera";
+import Character from "../../components/Character/Character";
+import Controls from "../../components/Controls/Controls";
+import { checkDirection } from "../../components/Custom/direction";
+import GOOMBA, {
+  goombaArray,
+  type TGoomba,
+} from "../../components/Custom/goomba";
+import { handleAfterMainSetted } from "../../components/Custom/handleAfterMainSetted";
+import { changeRotation } from "../../components/Custom/rotation";
+import Enable3d from "../../components/Enable/Enable";
+import Initial from "../../components/Initial/Initial";
+import Lights from "../../components/Lights/Lights";
+import Preload from "../../components/Preload/Preload";
 
 function Enabled() {
-  const [scene] = useTriggerState({ name: "scene" });
-
   const handlePreload = useCallback(async () => {
     const { load } = stateStorage.get("scene");
 
@@ -193,48 +193,36 @@ function Enabled() {
     sound.play();
   }, []);
 
-  const handleStart = useCallback(
-    (childs: any) => {
-      // add collision detection between the camera and the childs
-    },
-    [scene]
-  );
-
   return (
-    <>
-      {!startedPlaying && <Header onClick={handleInitialSounds} />}
-      <div>
-        <Enable3d>
-          <Initial />
-          <Preload onPreload={handlePreload} />
-          <Lights />
-          <Camera />
-          <Ambient onStart={handleStart} />
-          <Character
-            characterRotationPI={0.8}
-            name="main"
-            asset="mario"
-            isMainCharacter
-            onAfterMainSetted={handleAfterMainSetted}
-          />
+    <Enable3d>
+      <Initial />
+      <Preload onPreload={handlePreload} />
+      <Lights />
+      <Camera />
+      <Ambient onStart={handleInitialSounds} />
+      <Character
+        characterRotationPI={0.8}
+        name="main"
+        asset="mario"
+        isMainCharacter
+        onAfterMainSetted={handleAfterMainSetted}
+      />
 
-          {goombaArray.map((name) => (
-            <Character
-              key={name}
-              characterRotationPI={1.5}
-              name={name}
-              asset="goomba"
-              onDefaultAnimation={handleDefaultAnimation}
-              // @ts-expect-error in a hurry
-              onDefaultPosition={handleDefaultPosition}
-              onAddMovement={handleAddMovement}
-            />
-          ))}
+      {goombaArray.map((name) => (
+        <Character
+          key={name}
+          characterRotationPI={1.5}
+          name={name}
+          asset="goomba"
+          onDefaultAnimation={handleDefaultAnimation}
+          // @ts-expect-error in a hurry
+          onDefaultPosition={handleDefaultPosition}
+          onAddMovement={handleAddMovement}
+        />
+      ))}
 
-          <Controls onUpdate={handleUpdate} onJump={handleJump} />
-        </Enable3d>
-      </div>
-    </>
+      <Controls onUpdate={handleUpdate} onJump={handleJump} />
+    </Enable3d>
   );
 }
 

@@ -43,7 +43,7 @@ function Header({ onClick }: { onClick: () => void | Promise<void> }) {
           flexDirection="column"
         >
           <Space.Center flexDirection="column">
-            <Text.Title>MarioFolio</Text.Title>
+            <Text.Title>NightmareFolio</Text.Title>
             <Text.H2>{t("MADE_BY")}</Text.H2>
           </Space.Center>
 
