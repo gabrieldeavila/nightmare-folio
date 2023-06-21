@@ -12,4 +12,4 @@ https://skfb.ly/oppOW
 
 "Cloud Test" (https://skfb.ly/NK7C) by Andrea Marziano is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
-"Low Poly Island" (https://skfb.ly/UnVv) by jiberico is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Desert ruins #MedievalRemixChallenge" (https://skfb.ly/6zEDQ) by Artbake Graphics is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

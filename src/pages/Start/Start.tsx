@@ -66,7 +66,7 @@ function Enabled() {
   const handleInitialSounds = useCallback(async () => {}, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [0, 10, -30000];
+    return [0, 50, 0];
   }, []);
 
   return (
