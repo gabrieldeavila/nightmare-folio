@@ -139,6 +139,12 @@ const Character = memo(
         offset: { y: -0.25 },
       });
 
+      newChar.traverse((child) => {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      });
+
+      newChar.body.setDamping(0.5, 0.5);
       newChar.body.setFriction(1);
       newChar.body.setAngularFactor(0, 0, 0);
 

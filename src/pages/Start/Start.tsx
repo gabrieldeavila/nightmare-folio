@@ -61,12 +61,28 @@ function Enabled() {
     await Promise.all([ambient, character]);
   }, []);
 
-  const handleUpdate = useCallback(() => {}, []);
+  useEffect(() => {
+    globalState.set("3d_view", true);
+  }, []);
 
-  const handleInitialSounds = useCallback(async () => {}, []);
+  const handleUpdate = useCallback(() => {}, []);
+  const handleInitialSounds = useCallback(async () => {
+    const audio = new AudioManager();
+    await audio.load("start_song", "/assets/mp3/Happy Acoustic Folk", "mp3");
+
+    stateStorage.set("audio", audio);
+
+    const sound = await audio.add("start_song");
+
+    // dimish the volume
+    sound.setVolume(0.1);
+    sound.setLoop(true);
+
+    sound.play();
+  }, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [0, 50, 0];
+    return [5, 0, 0];
   }, []);
 
   return (
