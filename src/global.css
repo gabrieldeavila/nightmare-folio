@@ -1,3 +1,6 @@
+/* TODO: add in html */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;0,700;0,800;1,500;1,600;1,700;1,800&display=swap");
+
 body {
   margin: 0;
 }
@@ -8,4 +11,11 @@ canvas {
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+
+* {
+  /* add comic sans as font family */
+  font-family: "Montserrat", sans-serif !important;
+  letter-spacing: 0.02rem;
+  font-weight: 500;
 }

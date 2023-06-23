@@ -1,26 +1,17 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { AudioManager } from "@yandeu/audio";
 import { useCallback, useEffect } from "react";
-import {
-  globalState,
-  stateStorage,
-  useTriggerState,
-} from "react-trigger-state";
+import { globalState, stateStorage } from "react-trigger-state";
 import Ambient from "../../components/Ambient/Ambient";
 import Camera from "../../components/Camera/Camera";
 import Character from "../../components/Character/Character";
 import Controls from "../../components/Controls/Controls";
-import { checkDirection } from "../../components/Custom/direction";
-import GOOMBA, {
-  goombaArray,
-  type TGoomba,
-} from "../../components/Custom/goomba";
 import { handleAfterMainSetted } from "../../components/Custom/handleAfterMainSetted";
-import { changeRotation } from "../../components/Custom/rotation";
 import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
+import Message from "../../components/2d/Controls/Message";
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
@@ -82,28 +73,31 @@ function Enabled() {
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [5, 0, 0];
+    return [6, 0, 0];
   }, []);
 
   return (
-    <Enable3d>
-      <Initial />
-      <Preload onPreload={handlePreload} />
-      <Lights />
-      <Camera />
-      <Ambient onStart={handleInitialSounds} />
-      <Character
-        characterRotationPI={0.8}
-        name="main"
-        asset="mario"
-        isMainCharacter
-        onAfterMainSetted={handleAfterMainSetted}
-        // @ts-expect-error in a hurry
-        onDefaultPosition={handleDefaultPosition}
-      />
+    <>
+      <Message />
+      <Enable3d>
+        <Initial />
+        <Preload onPreload={handlePreload} />
+        <Lights />
+        <Camera />
+        <Ambient onStart={handleInitialSounds} />
+        <Character
+          characterRotationPI={0.8}
+          name="main"
+          asset="mario"
+          isMainCharacter
+          onAfterMainSetted={handleAfterMainSetted}
+          // @ts-expect-error in a hurry
+          onDefaultPosition={handleDefaultPosition}
+        />
 
-      <Controls onUpdate={handleUpdate} />
-    </Enable3d>
+        <Controls onUpdate={handleUpdate} />
+      </Enable3d>
+    </>
   );
 }
 

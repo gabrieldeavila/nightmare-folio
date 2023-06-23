@@ -4,6 +4,9 @@
   "3D_VIEW": "3D View",
   "MODAL_CONFIRM": "Confirm",
   "CHANGE_LANGUAGE": "Change to Portuguese",
+  "MOVE": "Movement",
+  "SPRINT": "Sprint",
+  "JUMP": "Jump",
   "TRANSLATE": {
     "LANGUAGE": "Language"
   },

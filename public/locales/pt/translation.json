@@ -4,6 +4,9 @@
   "3D_VIEW": "Visualização 3D",
   "MODAL_CONFIRM": "Confirmar",
   "CHANGE_LANGUAGE": "Mudar para Inglês",
+  "MOVE": "Movimentação",
+  "SPRINT": "Corrida",
+  "JUMP": "Pulo",
   "TRANSLATE": {
     "LANGUAGE": "Idioma"
   },
