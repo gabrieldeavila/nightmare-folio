@@ -1,9 +1,9 @@
-import { GTBasic, Space, Text } from "@geavila/gt-design";
-import "./style.css";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { Space, Text } from "@geavila/gt-design";
+import clsx from "clsx";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useTriggerState } from "react-trigger-state";
-import clsx from "clsx";
+import "./style.css";
 
 const OPTIONS = [
   {

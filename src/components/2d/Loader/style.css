@@ -1,0 +1,39 @@
+.loading-wrapper {
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+}
+
+/* animation to rotate the loader */
+.loader-anim svg {
+  animation: rotate 1s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+/* closes */
+.loading-is-done {
+  animation: close 1s ease-in-out forwards;
+}
+
+@keyframes close {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}

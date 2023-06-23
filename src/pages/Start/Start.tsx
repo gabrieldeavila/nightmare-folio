@@ -12,6 +12,7 @@ import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
 import Message from "../../components/2d/Controls/Message";
+import Loading from "../../components/2d/Loader/Loading";
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
@@ -76,8 +77,13 @@ function Enabled() {
     return [6, 0, 0];
   }, []);
 
+  const handleStart = useCallback(() => {
+    stateStorage.set("every_thing_is_loaded", true);
+  }, []);
+
   return (
     <>
+      <Loading />
       <Message />
       <Enable3d>
         <Initial />
@@ -90,6 +96,7 @@ function Enabled() {
           name="main"
           asset="mario"
           isMainCharacter
+          onAddMovement={handleStart}
           onAfterMainSetted={handleAfterMainSetted}
           // @ts-expect-error in a hurry
           onDefaultPosition={handleDefaultPosition}
