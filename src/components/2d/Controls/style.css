@@ -4,4 +4,21 @@
   left: 0;
   z-index: 2;
   padding: 0.5rem;
+  overflow: hidden;
+}
+
+/* animation to smoothly hide */
+.hide-msg {
+  animation: hide-msg 1s ease-in-out forwards;
+}
+
+@keyframes hide-msg {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
 }

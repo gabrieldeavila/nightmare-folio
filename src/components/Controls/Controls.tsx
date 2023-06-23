@@ -365,6 +365,8 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
         keys.lastDown = lastDown;
       }
+
+      stateStorage.set("last_key_down", currOption);
     };
 
     const pressTrue = (e: any) => press(e, true);

@@ -1,7 +1,9 @@
 import { GTBasic, Space, Text } from "@geavila/gt-design";
 import "./style.css";
-import { memo } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useTriggerState } from "react-trigger-state";
+import clsx from "clsx";
 
 const OPTIONS = [
   {
@@ -41,23 +43,66 @@ const OPTIONS = [
 ];
 
 function Message() {
+  const [lastDown] = useTriggerState({ name: "last_key_down" });
+  const keysToClick = useRef(
+    OPTIONS.reduce((curr, { options }) => {
+      for (const { label } of options) {
+        // @ts-expect-error do later
+        curr[label] = false;
+      }
+      return curr;
+    }, {})
+  );
+
+  const alreadyKnowTheGame = useMemo(
+    () => !(localStorage.getItem("know_the_game") == null),
+    []
+  );
+
+  const hasClickedEveryKey = useRef(alreadyKnowTheGame ?? false);
+
+  useEffect(() => {
+    if (hasClickedEveryKey.current) return;
+
+    const upperCase = lastDown?.toUpperCase?.();
+    // @ts-expect-error do later
+    keysToClick.current[upperCase] = true;
+
+    hasClickedEveryKey.current = Object.values(keysToClick.current).every(
+      (value) => value
+    );
+
+    if (hasClickedEveryKey.current) {
+      localStorage.setItem("know_the_game", "true");
+    }
+  }, [lastDown]);
+
+  if (alreadyKnowTheGame) return null;
+
   return (
-    <div className="message-wrapper">
-      <Space.Modifiers flexDirection="column">
-        <Text.H1
-          textShadow="1px 0px 5px white"
-          fontSize="20px"
-          color="black"
-          fontWeight="600"
-        >
-          Controls:
-        </Text.H1>
-        <Space.Modifiers flexDirection="column" gridGap="0.5rem">
-          {OPTIONS.map((option, index) => (
-            <Option {...option} key={index} />
-          ))}
+    <div className={clsx("message-wrapper")}>
+      <div
+        className={clsx(
+          "message-content",
+          hasClickedEveryKey.current && "hide-msg"
+        )}
+      >
+        <Space.Modifiers flexDirection="column">
+          <Text.H1
+            textShadow="1px 0px 5px white"
+            fontSize="20px"
+            color="black"
+            fontWeight="600"
+          >
+            Controls:
+          </Text.H1>
+          <Space.Modifiers flexDirection="column" gridGap="0.5rem">
+            {OPTIONS.map((option, index) => (
+              <Option {...option} key={index} />
+            ))}
+          </Space.Modifiers>
         </Space.Modifiers>
-      </Space.Modifiers>
+      </div>
     </div>
   );
 }
