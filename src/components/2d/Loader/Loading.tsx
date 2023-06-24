@@ -1,10 +1,10 @@
 import { GTBasic, Space, Text } from "@geavila/gt-design";
-import React, { useEffect, useState } from "react";
-import { useTriggerState } from "react-trigger-state";
-import "./style.css";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { Loader } from "react-feather";
 import { useTranslation } from "react-i18next";
-import clsx from "clsx";
+import { useTriggerState } from "react-trigger-state";
+import "./style.css";
 
 function Loading() {
   const [everyThingIsLoaded] = useTriggerState({

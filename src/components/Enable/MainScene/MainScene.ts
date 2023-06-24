@@ -27,7 +27,6 @@ class MainScene extends Scene3D {
     this.initialFall = true;
 
     stateStorage.set("keys", keys);
-
     stateStorage.set("scene", this);
 
     stateStorage.set("main_scene_init", new Date());

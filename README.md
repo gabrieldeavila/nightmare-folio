@@ -14,3 +14,5 @@ https://skfb.ly/oppOW
 "Desert ruins #MedievalRemixChallenge" (https://skfb.ly/6zEDQ) by Artbake Graphics is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 DanaMusic - Happy Acoustic Folk https://www.youtube.com/watch?v=g4UrR-Vx5kU
+
+"React logo" (https://skfb.ly/oERzY) by xenadus is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
