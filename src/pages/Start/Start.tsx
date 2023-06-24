@@ -13,6 +13,7 @@ import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
 import Message from "../../components/2d/Controls/Message";
 import Loading from "../../components/2d/Loader/Loading";
+import { useNavigate } from "react-router-dom";
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
@@ -81,6 +82,24 @@ function Enabled() {
     stateStorage.set("every_thing_is_loaded", true);
   }, []);
 
+  const handleTraverse = useCallback((child: any) => {
+    if (child.name === "react") {
+      globalState.set("react", child);
+    }
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handleAfterMainSetted = useCallback(() => {
+    const { character, physics } = globalState.get("scene");
+    const react = globalState.get("react");
+
+    console.log("character", character, physics, react);
+    physics.add.collider(character, react, () => {
+      navigate("/react");
+    });
+  }, [navigate]);
+
   return (
     <>
       <Loading />
@@ -90,7 +109,7 @@ function Enabled() {
         <Preload onPreload={handlePreload} />
         <Lights />
         <Camera />
-        <Ambient onStart={handleInitialSounds} />
+        <Ambient onStart={handleInitialSounds} onTraverse={handleTraverse} />
         <Character
           characterRotationPI={0.8}
           name="main"
