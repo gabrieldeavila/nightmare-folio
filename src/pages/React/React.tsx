@@ -3,14 +3,15 @@
 import Phaser from "phaser";
 
 import {
-  enable3d,
-  Scene3D,
   Canvas,
   ExtendedObject3D,
   FirstPersonControls,
+  Scene3D,
   THREE,
+  enable3d,
 } from "@enable3d/phaser-extension";
 import { memo, useEffect } from "react";
+import { globalState } from "react-trigger-state";
 
 class MainScene extends Scene3D {
   move: any;
@@ -97,7 +98,6 @@ class MainScene extends Scene3D {
       .then((object: any) => {
         const scene = object.scene;
         const book = new ExtendedObject3D();
-        console.log(book);
 
         book.name = "scene";
         book.add(scene);
@@ -106,23 +106,27 @@ class MainScene extends Scene3D {
         // add animations
         // sadly only the flags animations works
         object.animations.forEach((anim: any, i: any) => {
+          // @ts-expect-error do later
           book.mixer = this.third.animationMixers.create(book);
           // overwrite the action to be an array of actions
+          // @ts-expect-error do later
           book.action = [];
+          // @ts-expect-error do later
           book.action[i] = book.mixer.clipAction(anim);
+          // @ts-expect-error do later
           book.action[i].play();
         });
 
         book.traverse((child) => {
           if (child.isMesh) {
-            console.log("avanco");
-
             child.castShadow = child.receiveShadow = false;
+            // @ts-expect-error do later
             child.material.metalness = 0;
+            // @ts-expect-error do later
             child.material.roughness = 1;
-            console.log(/mesh/i.test(child.name), child.name);
+            console.log(/react/i.test(child.name), child.name);
+
             if (/mesh/i.test(child.name)) {
-              console.log("aaa");
               this.third.physics.add.existing(child, {
                 shape: "concave",
                 mass: 0,
@@ -131,6 +135,23 @@ class MainScene extends Scene3D {
               });
               child.body.setAngularFactor(0, 0, 0);
               child.body.setLinearFactor(0, 0, 0);
+            } else if (/react/i.test(child.name)) {
+              this.third.physics.add.existing(child, {
+                shape: "sphere",
+                mass: 1,
+              });
+              child.traverse((child) => {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              });
+
+              child.body.setDamping(0.5, 0.5);
+              child.body.setFriction(1);
+              child.body.setAngularFactor(0, 0, 0);
+
+              // https://docs.panda3d.org/1.10/python/programming/physics/bullet/ccd
+              child.body.setCcdMotionThreshold(1e-7);
+              child.body.setCcdSweptSphereRadius(0.25);
             }
           }
         });
@@ -262,203 +283,13 @@ class MainScene extends Scene3D {
       const raycaster = new THREE.Raycaster();
       // x and y are normalized device coordinates from -1 to +1
       raycaster.setFromCamera(
+        // @ts-expect-error - do later
         {
           x: 0.6 - this.move.x,
           y: -0.8 - this.move.y,
           width: 0,
           height: 0,
           isVector2: true,
-          set: function (_x: number, _y: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          setScalar: function (_scalar: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          setX: function (_x: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          setY: function (_y: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          setComponent: function (
-            _index: number,
-            _value: number
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          getComponent: function (_index: number): number {
-            throw new Error("Function not implemented.");
-          },
-          clone: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          copy: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          add: function (
-            _v: THREE.Vector2,
-            _w?: THREE.Vector2 | undefined
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          addScalar: function (_s: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          addVectors: function (
-            _a: THREE.Vector2,
-            _b: THREE.Vector2
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          addScaledVector: function (
-            _v: THREE.Vector2,
-            _s: number
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          sub: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          subScalar: function (_s: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          subVectors: function (
-            _a: THREE.Vector2,
-            _b: THREE.Vector2
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          multiply: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          multiplyScalar: function (_scalar: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          divide: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          divideScalar: function (_s: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          applyMatrix3: function (_m: THREE.Matrix3): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          min: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          max: function (_v: THREE.Vector2): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          clamp: function (
-            _min: THREE.Vector2,
-            _max: THREE.Vector2
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          clampScalar: function (_min: number, _max: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          clampLength: function (_min: number, _max: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          floor: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          ceil: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          round: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          roundToZero: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          negate: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          dot: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          cross: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          lengthSq: function (): number {
-            throw new Error("Function not implemented.");
-          },
-          length: function (): number {
-            throw new Error("Function not implemented.");
-          },
-          lengthManhattan: function (): number {
-            throw new Error("Function not implemented.");
-          },
-          manhattanLength: function (): number {
-            throw new Error("Function not implemented.");
-          },
-          normalize: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          angle: function (): number {
-            throw new Error("Function not implemented.");
-          },
-          angleTo: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          distanceTo: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          distanceToSquared: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          distanceToManhattan: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          manhattanDistanceTo: function (_v: THREE.Vector2): number {
-            throw new Error("Function not implemented.");
-          },
-          setLength: function (_length: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          lerp: function (_v: THREE.Vector2, _alpha: number): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          lerpVectors: function (
-            _v1: THREE.Vector2,
-            _v2: THREE.Vector2,
-            _alpha: number
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          equals: function (_v: THREE.Vector2): boolean {
-            throw new Error("Function not implemented.");
-          },
-          fromArray: function (
-            _array: number[] | ArrayLike<number>,
-            _offset?: number | undefined
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          // @ts-expect-error do later
-          toArray: function (
-            _array?: number[] | undefined,
-            _offset?: number | undefined
-          ): number[] {
-            throw new Error("Function not implemented.");
-          },
-          fromBufferAttribute: function (
-            _attribute: THREE.BufferAttribute,
-            _index: number
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          rotateAround: function (
-            _center: THREE.Vector2,
-            _angle: number
-          ): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
-          random: function (): THREE.Vector2 {
-            throw new Error("Function not implemented.");
-          },
         },
         this.third.camera
       );
@@ -489,217 +320,32 @@ class MainScene extends Scene3D {
       }
 
       // shoot
-      if (this.input.mousePointer.leftButtonDown()) {
+      const lastShoot = globalState.get("lastShoot");
+
+      if (
+        this.input.mousePointer.leftButtonDown() &&
+        (lastShoot + 200 < Date.now() || lastShoot == null)
+      ) {
+        globalState.set("lastShoot", Date.now());
         const x = 0;
         const y = 0;
         const force = 5;
         const pos = new THREE.Vector3();
 
         raycaster.setFromCamera(
+          // @ts-expect-error - do later
           {
             x,
             y,
             width: 0,
             height: 0,
             isVector2: true,
-            set: function (_x: number, _y: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            setScalar: function (_scalar: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            setX: function (_x: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            setY: function (_y: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            setComponent: function (
-              _index: number,
-              _value: number
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            getComponent: function (_index: number): number {
-              throw new Error("Function not implemented.");
-            },
-            clone: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            copy: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            add: function (
-              _v: THREE.Vector2,
-              _w?: THREE.Vector2 | undefined
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            addScalar: function (_s: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            addVectors: function (
-              _a: THREE.Vector2,
-              _b: THREE.Vector2
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            addScaledVector: function (
-              _v: THREE.Vector2,
-              _s: number
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            sub: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            subScalar: function (_s: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            subVectors: function (
-              _a: THREE.Vector2,
-              _b: THREE.Vector2
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            multiply: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            multiplyScalar: function (_scalar: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            divide: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            divideScalar: function (_s: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            applyMatrix3: function (_m: THREE.Matrix3): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            min: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            max: function (_v: THREE.Vector2): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            clamp: function (
-              _min: THREE.Vector2,
-              _max: THREE.Vector2
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            clampScalar: function (_min: number, _max: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            clampLength: function (_min: number, _max: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            floor: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            ceil: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            round: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            roundToZero: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            negate: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            dot: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            cross: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            lengthSq: function (): number {
-              throw new Error("Function not implemented.");
-            },
-            length: function (): number {
-              throw new Error("Function not implemented.");
-            },
-            lengthManhattan: function (): number {
-              throw new Error("Function not implemented.");
-            },
-            manhattanLength: function (): number {
-              throw new Error("Function not implemented.");
-            },
-            normalize: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            angle: function (): number {
-              throw new Error("Function not implemented.");
-            },
-            angleTo: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            distanceTo: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            distanceToSquared: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            distanceToManhattan: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            manhattanDistanceTo: function (_v: THREE.Vector2): number {
-              throw new Error("Function not implemented.");
-            },
-            setLength: function (_length: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            lerp: function (_v: THREE.Vector2, _alpha: number): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            lerpVectors: function (
-              _v1: THREE.Vector2,
-              _v2: THREE.Vector2,
-              _alpha: number
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            equals: function (_v: THREE.Vector2): boolean {
-              throw new Error("Function not implemented.");
-            },
-            fromArray: function (
-              _array: number[] | ArrayLike<number>,
-              _offset?: number | undefined
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            // @ts-expect-error do not need to implement
-            toArray: function (
-              _array?: number[] | undefined,
-              _offset?: number | undefined
-            ): number[] {
-              throw new Error("Function not implemented.");
-            },
-            fromBufferAttribute: function (
-              _attribute: THREE.BufferAttribute,
-              _index: number
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            rotateAround: function (
-              _center: THREE.Vector2,
-              _angle: number
-            ): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
-            random: function (): THREE.Vector2 {
-              throw new Error("Function not implemented.");
-            },
           },
           this.third.camera
         );
 
         pos.copy(raycaster.ray.direction);
         pos.add(raycaster.ray.origin);
-
         const sphere = this.third.physics.add.sphere(
           {
             radius: 0.05,
