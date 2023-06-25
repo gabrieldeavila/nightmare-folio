@@ -22,6 +22,7 @@ class MainScene extends Scene3D {
   player: ExtendedObject3D;
   // @ts-expect-error - private property
   firstPersonControls: FirstPersonControls;
+  ambient: any;
   // @ts-expect-error - private property
   keys: {
     w: Phaser.Input.Keyboard.Key;
@@ -35,6 +36,7 @@ class MainScene extends Scene3D {
   constructor() {
     super({ key: "MainScene" });
     this.move = { x: 0, y: 0, z: 0 };
+    this.ambient = null;
   }
 
   postRender() {
@@ -65,8 +67,8 @@ class MainScene extends Scene3D {
   create() {
     this.accessThirdDimension({ maxSubSteps: 10, fixedTimeStep: 1 / 180 });
 
-    void this.third.warpSpeed("-orbitControls");
-    this.third.haveSomeFun(50);
+    void this.third.warpSpeed("-orbitControls", "-ground");
+    // this.third.haveSomeFun(50);
     // @ts-expect-error do later
     this.third.renderer.gammaFactor = 1.5;
     this.third.camera.layers.enable(1); // enable layer 1
@@ -90,38 +92,49 @@ class MainScene extends Scene3D {
         this.postRender();
       }
     );
+    void this.third.load
+      .gltf("/assets/glb/sands_location.glb")
+      .then((object) => {
+        const scenario = object.scene;
+        console.log("lima");
+        this.ambient = new ExtendedObject3D();
+        this.ambient.name = "ambient";
+        this.ambient.add(scenario);
+
+        this.third.add.existing(this.ambient);
+        console.log(scenario);
+      });
 
     /**
      * hashtag3d (https://www.cgtrader.com/hashtag3d)
      * https://www.cgtrader.com/free-3d-models/military/armor/m4a1-carbine-e81d81d5-cfdb-4c57-be71-5c1b8092f4ea
      * Editorial License (https://www.cgtrader.com/pages/terms-and-conditions#general-terms-of-licensing)
      */
-    void this.third.load
-      .gltf("/assets/glb/guns/M4A1.glb")
-      .then((object) => {
-        const rifle = object.scene;
+    void this.third.load.gltf("/assets/glb/guns/M4A1.glb").then((object) => {
+      const rifle = object.scene;
 
-        this.rifle = new ExtendedObject3D();
-        this.rifle.name = "rifle";
-        this.rifle.add(rifle);
+      this.rifle = new ExtendedObject3D();
+      this.rifle.name = "rifle";
+      this.rifle.add(rifle);
 
-        this.third.add.existing(this.rifle);
+      this.third.add.existing(this.rifle);
 
-        this.rifle.traverse((child) => {
-          if (child.isMesh) {
-            child.layers.set(1); // mesh is in layer 1
-            child.castShadow = child.receiveShadow = true;
-            // @ts-expect-error do later
-            if (child.material) child.material.metalness = 0;
-          }
-        });
+      this.rifle.traverse((child) => {
+        if (child.isMesh) {
+          child.layers.set(1); // mesh is in layer 1
+          child.castShadow = child.receiveShadow = true;
+          // @ts-expect-error do later
+          if (child.material) child.material.metalness = 0;
+        }
       });
+    });
 
     // add red dot
     this.redDot = this.add.circle(
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
       4,
+      // white
       0xff0000
     );
     this.redDot.depth = 1;
