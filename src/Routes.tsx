@@ -1,23 +1,27 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 
-const Welcome = React.lazy(
+const Welcome = lazy(
   async () => await import("./pages/Welcome/Beggining.tsx")
 );
 
-const Start = React.lazy(async () => await import("./pages/Start/Start.tsx"));
+const Start = lazy(async () => await import("./pages/Start/Start.tsx"));
 
-const Mario = React.lazy(async () => await import("./pages/Mario/Enabled.tsx"));
+const Mario = lazy(async () => await import("./pages/Mario/Enabled.tsx"));
+
+const React = lazy(async () => await import("./pages/React/React.tsx"));
 
 function RoutesWrapper() {
   return (
-    <React.Suspense fallback={<>...</>}>
+    <Suspense fallback={<>...</>}>
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/start" element={<Start />} />
         <Route path="/mario" element={<Mario />} />
+        <Route path="/mario" element={<Mario />} />
+        <Route path="/react" element={<React />} />
       </Routes>
-    </React.Suspense>
+    </Suspense>
   );
 }
 

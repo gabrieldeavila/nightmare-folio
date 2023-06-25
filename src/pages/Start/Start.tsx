@@ -1,21 +1,23 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { AudioManager } from "@yandeu/audio";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { globalState, stateStorage } from "react-trigger-state";
+import Message from "../../components/2d/Controls/Message";
+import Loading from "../../components/2d/Loader/Loading";
 import Ambient from "../../components/Ambient/Ambient";
 import Camera from "../../components/Camera/Camera";
 import Character from "../../components/Character/Character";
 import Controls from "../../components/Controls/Controls";
-import { handleAfterMainSetted } from "../../components/Custom/handleAfterMainSetted";
 import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
-import Message from "../../components/2d/Controls/Message";
-import Loading from "../../components/2d/Loader/Loading";
-import { useNavigate } from "react-router-dom";
 
 function Enabled() {
+  const navigate = useNavigate();
+  const alreadyNavigated = useRef(false);
+
   const handlePreload = useCallback(async () => {
     const { load } = stateStorage.get("scene");
 
@@ -88,14 +90,14 @@ function Enabled() {
     }
   }, []);
 
-  const navigate = useNavigate();
-
   const handleAfterMainSetted = useCallback(() => {
     const { character, physics } = globalState.get("scene");
     const react = globalState.get("react");
 
     console.log("character", character, physics, react);
     physics.add.collider(character, react, () => {
+      if (alreadyNavigated.current) return;
+      alreadyNavigated.current = true;
       navigate("/react");
     });
   }, [navigate]);
