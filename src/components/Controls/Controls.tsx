@@ -50,7 +50,8 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       scene.character.body.setCollisionFlags(2);
 
       // set the new position
-      scene.character.position.set(-60, 5, 3.75);
+      const position = globalState.get("char_default_position");
+      scene.character.position.set(...position);
       scene.character.body.needUpdate = true;
 
       // this will run only on the next update if body.needUpdate = true

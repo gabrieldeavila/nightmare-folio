@@ -103,6 +103,8 @@ const ShooterControls = memo(({ onUpdate, onJump }: IControl) => {
         updateMoveTop = 3;
       }
 
+      console.log(...Object.values(camera.position));
+
       let theta = 1.56;
       const speed = 100 * keys.shift.isDown ? 5 : 2;
 
@@ -225,19 +227,114 @@ const ShooterControls = memo(({ onUpdate, onJump }: IControl) => {
       pos.multiplyScalar(0.8);
       pos.add(raycaster.ray.origin);
 
-      console.log(Object.values(scene.character.position), "get");
+      // character.body.setVelocity(0, 0, 0);
+      const { lastDown } = clonedKeys;
 
-      scene.character.body.needUpdate = true;
+      if (
+        clonedKeys.space.isDown &&
+        ((canJump && !scene.isJumping) || !scene.isDoubleJumping)
+      ) {
+        scene.jump();
+      } else if ((clonedKeys.w.isDown && lastDown === "w") || move) {
+        if (
+          !["running", "walking"].includes(character.animation.current) ||
+          scene.nowIs !== clonedKeys.shift.isDown
+        ) {
+          scene.nowIs = clonedKeys.shift.isDown;
 
-      // this will run only on the next update if body.needUpdate = true
-      scene.character.body.once.update(() => {
-        scene.character.position.set(100, 1000000, 100);
+          if (clonedKeys.shift.isDown) {
+            character.animation.play("running");
+          } else {
+            character.animation.play("walking");
+          }
+        }
 
-        // set body back to dynamic
-        scene.character.body.setCollisionFlags(0);
-        // if you do not reset the velocity and angularVelocity, the object will keep it
-      });
-      // character.rotation.copy(camera.rotation);
+        const x = Math.sin(theta) * speed;
+        const y = character.body.velocity.y;
+        const z = view3D ? Math.cos(theta) * speed : 0;
+
+        character.body.setVelocity(x, y, z);
+      } else if (clonedKeys.d.isDown && lastDown === "d") {
+        // add a rotation to the left
+        const x = Math.sin(theta - Math.PI / 2) * speed;
+        const y = character.body.velocity.y;
+        const z = view3D ? Math.cos(theta - Math.PI / 2) * speed : 0;
+        character.body.setVelocity(x, y, z);
+        // add a transition to be smooth
+        // now the character is moving
+        // smoothly
+        const smooth = 0.1;
+        const x2 = character.position.x + x * smooth;
+        const y2 = character.position.y + y * smooth;
+        const z2 = view3D ? character.position.z + z * smooth : 0;
+        character.position.set(x2, y2, z2);
+
+        if (
+          !["walking_right", "running_right"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== clonedKeys.shift.isDown
+        ) {
+          scene.nowIs = clonedKeys.shift.isDown;
+
+          if (clonedKeys.shift.isDown) {
+            character.animation.play("running_right");
+          } else {
+            character.animation.play("walking_right");
+          }
+        }
+      } else if (clonedKeys.a.isDown && lastDown === "a") {
+        // add a rotation to the right
+        const x = Math.sin(theta + Math.PI / 2) * speed;
+        const y = character.body.velocity.y;
+        const z = view3D ? Math.cos(theta + Math.PI / 2) * speed : 0;
+        character.body.setVelocity(x, y, z);
+
+        if (
+          !["running_left", "walking_left"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== clonedKeys.shift.isDown
+        ) {
+          scene.nowIs = clonedKeys.shift.isDown;
+
+          if (clonedKeys.shift.isDown) {
+            character.animation.play("running_left");
+          } else {
+            character.animation.play("walking_left");
+          }
+        }
+        // also change the rotation of the character
+      } else if (clonedKeys.s.isDown && lastDown === "s") {
+        // walks backwards
+        const x = Math.sin(theta + Math.PI) * speed;
+        const y = character.body.velocity.y;
+        const z = view3D ? Math.cos(theta + Math.PI) * speed : 0;
+        character.body.setVelocity(x, y, z);
+        if (
+          !["running_backwards", "walking_backwards"].includes(
+            character.animation.current
+          ) ||
+          scene.nowIs !== clonedKeys.shift.isDown
+        ) {
+          scene.nowIs = clonedKeys.shift.isDown;
+
+          if (clonedKeys.shift.isDown) {
+            character.animation.play("running_backwards");
+          } else {
+            character.animation.play("walking_backwards");
+          }
+        }
+      } else {
+        const changingPosition = stateStorage.get("changing_position");
+        if (
+          changingPosition.some((i: string) =>
+            character.animation.current.includes(i)
+          )
+        ) {
+          character.animation.play("idle");
+        }
+      }
     }
   }, [character, controls, isTouchDevice, scene]);
 

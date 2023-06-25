@@ -49,7 +49,10 @@ const Shooter = memo(
       newChar.add(characterObj);
 
       newChar.rotation.set(0, Math.PI * characterRotationPI, 0);
-
+      stateStorage.set(
+        "char_default_position",
+        onDefaultPosition?.(name) ?? [-60, 5, 3.75]
+      );
       const position = onDefaultPosition?.(name) ?? [-60, 5, 3.75];
       // const position = onDefaultPosition?.(name) ?? [100, -3, 3.75];
 
@@ -88,8 +91,8 @@ const Shooter = memo(
          * Add 3rd Person Controls
          */
         scene.controls = new FirstPersonControls(camera, newChar, {
-          offset: new THREE.Vector3(0, 5, 0),
-          targetRadius: 0,
+          offset: new THREE.Vector3(0, 3, 0),
+          targetRadius: 5,
           // @ts-expect-error - no types
           sensitivity: {
             x: 0.15,

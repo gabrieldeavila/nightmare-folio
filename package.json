@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@enable3d/phaser-extension": "^0.25.3",
     "@geavila/gt-design": "^1.0.26",
     "@hapi/ammo": "^6.0.1",
     "@react-three/fiber": "^8.13.0",
@@ -23,6 +24,7 @@
     "i18next-browser-languagedetector": "^7.0.2",
     "lodash": "^4.17.21",
     "matter-js": "^0.17.1",
+    "phaser": "^3.60.0",
     "polished": "^4.2.2",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
