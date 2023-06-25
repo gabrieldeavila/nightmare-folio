@@ -94,15 +94,46 @@ class MainScene extends Scene3D {
     );
     void this.third.load
       .gltf("/assets/glb/sands_location.glb")
-      .then((object) => {
-        const scenario = object.scene;
-        console.log("lima");
-        this.ambient = new ExtendedObject3D();
-        this.ambient.name = "ambient";
-        this.ambient.add(scenario);
+      .then((object: any) => {
+        const scene = object.scene;
+        const book = new ExtendedObject3D();
+        console.log(book);
 
-        this.third.add.existing(this.ambient);
-        console.log(scenario);
+        book.name = "scene";
+        book.add(scene);
+        this.third.add.existing(book);
+
+        // add animations
+        // sadly only the flags animations works
+        object.animations.forEach((anim: any, i: any) => {
+          book.mixer = this.third.animationMixers.create(book);
+          // overwrite the action to be an array of actions
+          book.action = [];
+          book.action[i] = book.mixer.clipAction(anim);
+          book.action[i].play();
+        });
+
+        book.traverse((child) => {
+          if (child.isMesh) {
+            console.log("avanco");
+
+            child.castShadow = child.receiveShadow = false;
+            child.material.metalness = 0;
+            child.material.roughness = 1;
+            console.log(/mesh/i.test(child.name), child.name);
+            if (/mesh/i.test(child.name)) {
+              console.log("aaa");
+              this.third.physics.add.existing(child, {
+                shape: "concave",
+                mass: 0,
+                collisionFlags: 1,
+                autoCenter: false,
+              });
+              child.body.setAngularFactor(0, 0, 0);
+              child.body.setLinearFactor(0, 0, 0);
+            }
+          }
+        });
       });
 
     /**
@@ -134,7 +165,6 @@ class MainScene extends Scene3D {
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
       4,
-      // white
       0xff0000
     );
     this.redDot.depth = 1;
