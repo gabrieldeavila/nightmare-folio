@@ -385,9 +385,7 @@ const config = {
 
 const React = memo(() => {
   useEffect(() => {
-    window.addEventListener("load", () => {
-      enable3d(() => new Phaser.Game(config)).withPhysics("./ammo/kripken/");
-    });
+    enable3d(() => new Phaser.Game(config)).withPhysics("./ammo/kripken/");
   }, []);
 
   return null;
