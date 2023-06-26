@@ -47,6 +47,7 @@ class MainScene extends Scene3D {
       window.innerWidth,
       window.innerHeight
     );
+
     this.third.renderer.render(this.third.scene, this.third.camera);
 
     this.third.renderer.clearDepth();
@@ -192,7 +193,7 @@ class MainScene extends Scene3D {
 
     // add player
     this.player = new ExtendedObject3D();
-    this.player.position.setY(1);
+    this.player.position.setY(2);
 
     // add first person controls
     this.firstPersonControls = new FirstPersonControls(
@@ -299,6 +300,7 @@ class MainScene extends Scene3D {
       pos.add(raycaster.ray.origin);
 
       this.rifle.position.copy(pos);
+
       this.rifle.rotation.copy(this.third.camera.rotation);
 
       // move forwards and backwards
@@ -329,7 +331,7 @@ class MainScene extends Scene3D {
         globalState.set("lastShoot", Date.now());
         const x = 0;
         const y = 0;
-        const force = 5;
+        const force = 10;
         const pos = new THREE.Vector3();
 
         raycaster.setFromCamera(

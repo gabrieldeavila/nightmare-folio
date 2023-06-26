@@ -18,3 +18,5 @@ DanaMusic - Happy Acoustic Folk https://www.youtube.com/watch?v=g4UrR-Vx5kU
 "React logo" (https://skfb.ly/oERzY) by xenadus is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Classic M4" (https://skfb.ly/oFxUS) by Mateusz Woliński is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"Medieval Archery Target" (https://skfb.ly/6WR8z) by CaptainHC is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
