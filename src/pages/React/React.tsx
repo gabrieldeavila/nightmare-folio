@@ -11,7 +11,8 @@ import {
   enable3d,
 } from "@enable3d/phaser-extension";
 import { memo, useEffect } from "react";
-import { globalState } from "react-trigger-state";
+import { globalState, stateStorage } from "react-trigger-state";
+import Loading from "../../components/2d/Loader/Loading";
 
 class MainScene extends Scene3D {
   move: any;
@@ -127,7 +128,6 @@ class MainScene extends Scene3D {
             child.material.metalness = 0;
             // @ts-expect-error do later
             child.material.roughness = 1;
-            console.log(/react/i.test(child.name), child.name);
 
             if (/target/i.test(child.name)) {
               this.third.physics.add.existing(child, {
@@ -143,7 +143,7 @@ class MainScene extends Scene3D {
             }
           }
         });
-
+        stateStorage.set("every_thing_is_loaded", true);
         globalState.set("bullet_targets", target);
       });
 
@@ -376,7 +376,6 @@ const config = {
   transparent: true,
   scale: {
     mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
     width: window.innerWidth,
     height: window.innerHeight,
   },
@@ -389,7 +388,7 @@ const React = memo(() => {
     enable3d(() => new Phaser.Game(config)).withPhysics("./ammo/kripken/");
   }, []);
 
-  return null;
+  return <Loading />;
 });
 
 React.displayName = "React";
