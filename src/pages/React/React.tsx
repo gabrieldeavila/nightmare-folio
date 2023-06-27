@@ -118,6 +118,8 @@ class MainScene extends Scene3D {
           book.action[i].play();
         });
 
+        const target: any = [];
+
         book.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = child.receiveShadow = false;
@@ -127,7 +129,7 @@ class MainScene extends Scene3D {
             child.material.roughness = 1;
             console.log(/react/i.test(child.name), child.name);
 
-            if (/mesh/i.test(child.name)) {
+            if (/target/i.test(child.name)) {
               this.third.physics.add.existing(child, {
                 shape: "concave",
                 mass: 0,
@@ -136,26 +138,13 @@ class MainScene extends Scene3D {
               });
               child.body.setAngularFactor(0, 0, 0);
               child.body.setLinearFactor(0, 0, 0);
-            } else if (/react/i.test(child.name)) {
-              this.third.physics.add.existing(child, {
-                shape: "sphere",
-                mass: 1,
-              });
-              child.traverse((child) => {
-                child.castShadow = true;
-                child.receiveShadow = true;
-              });
-
-              child.body.setDamping(0.5, 0.5);
-              child.body.setFriction(1);
-              child.body.setAngularFactor(0, 0, 0);
-
-              // https://docs.panda3d.org/1.10/python/programming/physics/bullet/ccd
-              child.body.setCcdMotionThreshold(1e-7);
-              child.body.setCcdSweptSphereRadius(0.25);
+              // makes it breakable
+              target.push(child);
             }
           }
         });
+
+        globalState.set("bullet_targets", target);
       });
 
     /**
@@ -365,6 +354,18 @@ class MainScene extends Scene3D {
         pos.multiplyScalar(24);
 
         sphere.body.applyForce(pos.x * force, pos.y * force, pos.z * force);
+
+        // add collision detection
+        const targets = globalState.get("bullet_targets");
+        for (const target of targets) {
+          if (target.body) {
+            this.third.physics.add.collider(sphere, target, () => {
+              // delete the target
+              const deletedPosition = new THREE.Vector3(0, -100, 0);
+              target.position.copy(deletedPosition);
+            });
+          }
+        }
       }
     }
   }
