@@ -106,7 +106,7 @@ function Enabled() {
       <Loading />
       <Message />
       <Enable3d>
-        <Initial />
+        <Initial defaultRight={250} />
         <Preload onPreload={handlePreload} />
         <Lights />
         <Camera />

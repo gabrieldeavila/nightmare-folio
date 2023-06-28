@@ -54,12 +54,7 @@ function Message() {
     }, {})
   );
 
-  const alreadyKnowTheGame = useMemo(
-    () => !(localStorage.getItem("know_the_game") == null),
-    []
-  );
-
-  const hasClickedEveryKey = useRef(alreadyKnowTheGame ?? false);
+  const hasClickedEveryKey = useRef(false);
 
   useEffect(() => {
     if (hasClickedEveryKey.current) return;
@@ -71,13 +66,7 @@ function Message() {
     hasClickedEveryKey.current = Object.values(keysToClick.current).every(
       (value) => value
     );
-
-    if (hasClickedEveryKey.current) {
-      localStorage.setItem("know_the_game", "true");
-    }
   }, [lastDown]);
-
-  if (alreadyKnowTheGame) return null;
 
   return (
     <div className={clsx("message-wrapper")}>
@@ -119,7 +108,7 @@ const Option = memo(({ label, options }: (typeof OPTIONS)[0]) => {
           <Keys {...option} key={index} />
         ))}
       </Space.Modifiers>
-      <Text.P fontWeight="500" textShadow="1px 0px 5px white">
+      <Text.P color="black" fontWeight="500" textShadow="1px 0px 5px white">
         {t(label)}
       </Text.P>
     </Space.Modifiers>

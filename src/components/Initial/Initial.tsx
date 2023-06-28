@@ -2,7 +2,7 @@ import { memo, useEffect } from "react";
 import { useTriggerState } from "react-trigger-state";
 import type { IInitial } from "./interface";
 
-const Initial = memo(({ onInit }: IInitial) => {
+const Initial = memo(({ onInit, defaultRight = 0 }: IInitial) => {
   const [scene] = useTriggerState({ name: "scene" });
 
   useEffect(() => {
@@ -18,8 +18,8 @@ const Initial = memo(({ onInit }: IInitial) => {
 
     scene.renderer.setPixelRatio(Math.max(1, window.devicePixelRatio / 2));
     scene.moveTop = 0;
-    scene.moveRight = 0;
-  }, [onInit, scene]);
+    scene.moveRight = defaultRight;
+  }, [defaultRight, onInit, scene]);
 
   return null;
 });
