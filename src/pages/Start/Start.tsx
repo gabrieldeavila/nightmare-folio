@@ -77,7 +77,7 @@ function Enabled() {
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
-    return [6, 0, 0];
+    return [0, 5, -3];
   }, []);
 
   const handleStart = useCallback(() => {
@@ -94,7 +94,6 @@ function Enabled() {
     const { character, physics } = globalState.get("scene");
     const react = globalState.get("react");
 
-    console.log("character", character, physics, react);
     physics.add.collider(character, react, () => {
       if (alreadyNavigated.current) return;
       alreadyNavigated.current = true;

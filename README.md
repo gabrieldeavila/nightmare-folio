@@ -20,3 +20,7 @@ DanaMusic - Happy Acoustic Folk https://www.youtube.com/watch?v=g4UrR-Vx5kU
 "Classic M4" (https://skfb.ly/oFxUS) by Mateusz Woliński is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Medieval Archery Target" (https://skfb.ly/6WR8z) by CaptainHC is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"Mystery Block - Super Mario Odyssey" (https://skfb.ly/o7DoX) by Islide is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+"Mario | Funko Pop Bros." (https://skfb.ly/66VnA) by mdsd95 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
