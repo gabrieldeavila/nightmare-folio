@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { AudioManager } from "@yandeu/audio";
-import { useCallback, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { globalState, stateStorage } from "react-trigger-state";
+import { useCallback, useEffect } from "react";
+import {
+  globalState,
+  stateStorage
+} from "react-trigger-state";
 import Message from "../../components/2d/Controls/Message";
 import Loading from "../../components/2d/Loader/Loading";
+import StartTip from "../../components/2d/Tips/StartTip";
 import Ambient from "../../components/Ambient/Ambient";
 import Camera from "../../components/Camera/Camera";
 import Character from "../../components/Character/Character";
@@ -13,12 +16,8 @@ import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
-import StartTip from "../../components/2d/Tips/StartTip";
 
 function Enabled() {
-  const navigate = useNavigate();
-  const alreadyNavigated = useRef(false);
-
   const handlePreload = useCallback(async () => {
     const { load } = stateStorage.get("scene");
 
@@ -88,19 +87,24 @@ function Enabled() {
   const handleTraverse = useCallback((child: any) => {
     if (child.name === "react") {
       globalState.set("react", child);
+    } else if (child.name.includes("MysteryBlock")) {
+      globalState.set("mysteryBlock", child);
     }
   }, []);
 
   const handleAfterMainSetted = useCallback(() => {
     const { character, physics } = globalState.get("scene");
     const react = globalState.get("react");
+    const mysteryBlock = globalState.get("mysteryBlock");
 
     physics.add.collider(character, react, () => {
-      if (alreadyNavigated.current) return;
-      alreadyNavigated.current = true;
-      navigate("/react");
+      stateStorage.set("start_tip", "react");
     });
-  }, [navigate]);
+
+    physics.add.collider(character, mysteryBlock, () => {
+      stateStorage.set("start_tip", "mistery_block");
+    });
+  }, []);
 
   return (
     <>

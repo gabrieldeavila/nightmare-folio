@@ -9,6 +9,8 @@
   "LOADING": "Carregando sua experiência 😼",
   "JUMP": "Pulo",
   "START_TIP": "Tente mover o personagem em direção ao símbolo do React ou à caixa surpresa!",
+  "REACT_TIP": "Pressione R para ir no mundo do React!",
+  "MISTERY_BLOCK_TIP": "Pressione M para encontrar uma surpresa 🤔",
   "TRANSLATE": {
     "LANGUAGE": "Idioma"
   },

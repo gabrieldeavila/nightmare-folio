@@ -8,6 +8,8 @@
   "SPRINT": "Sprint",
   "JUMP": "Jump",
   "START_TIP": "Try to move the character towards the React symbol or the surprise box",
+  "REACT_TIP": "Press R to enter the React mode",
+  "MISTERY_BLOCK_TIP": "Press M to encounter a surprise 😛",
   "LOADING": "Loading your experience 😼",
   "TRANSLATE": {
     "LANGUAGE": "Language"
