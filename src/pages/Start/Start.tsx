@@ -13,6 +13,7 @@ import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
+import StartTip from "../../components/2d/Tips/StartTip";
 
 function Enabled() {
   const navigate = useNavigate();
@@ -105,6 +106,7 @@ function Enabled() {
     <>
       <Loading />
       <Message />
+      <StartTip />
       <Enable3d>
         <Initial defaultRight={250} />
         <Preload onPreload={handlePreload} />

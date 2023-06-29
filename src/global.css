@@ -20,3 +20,17 @@ canvas {
   letter-spacing: 0.02rem;
   font-weight: 500;
 }
+
+.fixed {
+  position: fixed;
+  top: 5%;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -7,6 +7,7 @@
   "MOVE": "Movement",
   "SPRINT": "Sprint",
   "JUMP": "Jump",
+  "START_TIP": "Try to move the character towards the React symbol or the surprise box",
   "LOADING": "Loading your experience 😼",
   "TRANSLATE": {
     "LANGUAGE": "Language"
