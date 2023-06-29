@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { AudioManager } from "@yandeu/audio";
 import { useCallback, useEffect } from "react";
-import {
-  globalState,
-  stateStorage
-} from "react-trigger-state";
+import { globalState, stateStorage } from "react-trigger-state";
 import Message from "../../components/2d/Controls/Message";
 import Loading from "../../components/2d/Loader/Loading";
 import StartTip from "../../components/2d/Tips/StartTip";
@@ -74,6 +71,16 @@ function Enabled() {
     sound.setLoop(true);
 
     sound.play();
+
+    globalState.set("start_song", sound);
+  }, []);
+
+  useEffect(() => {
+    // remove the audio on unmount
+    return () => {
+      const song = globalState.get("start_song");
+      if (song) song.stop();
+    };
   }, []);
 
   const handleDefaultPosition = useCallback(() => {
