@@ -132,6 +132,7 @@ function Enabled() {
     await audio.load("mario_song", "/assets/mp3/theme_song", "mp3");
     await audio.load("mamma_mia", "/assets/mp3/mamma_mia", "mp3");
     await audio.load("jump", "/assets/mp3/jump", "mp3");
+    await audio.load("coin", "/assets/mp3/coin", "mp3");
 
     stateStorage.set("audio", audio);
 

@@ -2,16 +2,20 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { stateStorage } from "react-trigger-state";
 
-export const handleAfterMainSetted = (newChar: any, physics: any) => {
+export const handleAfterMainSetted = async (newChar: any, physics: any) => {
   const surpiseBoxes = stateStorage.get("surprise_boxes");
   const coins = stateStorage.get("coins");
+  const audio = stateStorage.get("audio");
 
   for (const box of surpiseBoxes) {
-    physics.add.collider(newChar, box, () => {
+    physics.add.collider(newChar, box, async () => {
       const alreadyCollided = stateStorage.get(`already_collided_${box.name}`);
 
       if (alreadyCollided) return;
       const index = box.name.split("surprise_box")[1];
+      const sound = await audio.add("coin");
+
+      sound.play();
 
       const coinCollider = coins.find(
         (coin: any) => coin.name === `coin${index}`
@@ -72,10 +76,13 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
   const extraCoins = stateStorage.get("extra_coins");
 
   for (const coin of extraCoins) {
-    const fun = () => {
+    const fun = async () => {
       const alreadyCollided = stateStorage.get(`already_collided_${coin.name}`);
 
       if (alreadyCollided) return;
+      const sound = await audio.add("coin");
+
+      sound.play();
 
       stateStorage.set(`already_collided_${coin.name}`, true);
       stateStorage.set(
