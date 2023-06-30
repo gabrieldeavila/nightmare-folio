@@ -28,7 +28,12 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
   const [controls] = useTriggerState({ name: "controls" });
 
   const handleControls = useCallback(() => {
-    if (scene == null || character?.position == null || controls == null) {
+    if (
+      scene == null ||
+      scene.character == null ||
+      character?.position == null ||
+      controls == null
+    ) {
       return;
     }
     const keys = globalState.get("keys");

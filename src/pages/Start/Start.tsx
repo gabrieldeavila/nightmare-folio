@@ -19,36 +19,52 @@ function Enabled() {
     const { load } = stateStorage.get("scene");
 
     // it shall be in the public folder!!
-    const ambient = load.preload("ambient", "/assets/glb/fantasy_eco_city.glb");
+    const ambient = load.preload(
+      "ambient-start",
+      "/assets/glb/fantasy_eco_city.glb"
+    );
 
     // it shall be in the public folder!!
-    const character = load.preload("mario", "/assets/glb/mario-t-pose.glb");
+    const character = load.preload(
+      "mario-start",
+      "/assets/glb/mario-t-pose.glb"
+    );
 
-    load.preload("mario-idle", "/assets/glb/mario.glb");
+    load.preload("mario-start-idle", "/assets/glb/mario.glb");
 
-    load.preload("mario-walking", "/assets/glb/mario-walking.glb");
+    load.preload("mario-start-walking", "/assets/glb/mario-walking.glb");
 
-    load.preload("mario-running", "/assets/glb/mario-running.glb");
+    load.preload("mario-start-running", "/assets/glb/mario-running.glb");
 
     load.preload(
-      "mario-walking_backwards",
+      "mario-start-walking_backwards",
       "/assets/glb/mario-walking_backwards.glb"
     );
 
     load.preload(
-      "mario-running_backwards",
+      "mario-start-running_backwards",
       "/assets/glb/mario-running_backwards.glb"
     );
 
-    load.preload("mario-walking_left", "/assets/glb/mario-walking_left.glb");
+    load.preload(
+      "mario-start-walking_left",
+      "/assets/glb/mario-walking_left.glb"
+    );
 
-    load.preload("mario-walking_right", "/assets/glb/mario-walking_right.glb");
+    load.preload(
+      "mario-start-walking_right",
+      "/assets/glb/mario-walking_right.glb"
+    );
 
-    load.preload("mario-running_left", "/assets/glb/mario-running_left.glb");
+    load.preload(
+      "mario-start-running_left",
+      "/assets/glb/mario-running_left.glb"
+    );
 
-    load.preload("mario-running_right", "/assets/glb/mario-running_right.glb");
-
-    load.preload("goomba", "/assets/glb/goomba.glb");
+    load.preload(
+      "mario-start-running_right",
+      "/assets/glb/mario-running_right.glb"
+    );
 
     await Promise.all([ambient, character]);
   }, []);
@@ -79,7 +95,11 @@ function Enabled() {
     // remove the audio on unmount
     return () => {
       const song = globalState.get("start_song");
-      if (song) song.stop();
+
+      if (song) {
+        stateStorage.set("every_thing_is_loaded", false);
+        song.stop();
+      }
     };
   }, []);
 
@@ -118,16 +138,20 @@ function Enabled() {
       <Loading />
       <Message />
       <StartTip />
-      <Enable3d>
+      <Enable3d name="start-scene">
         <Initial defaultRight={250} />
         <Preload onPreload={handlePreload} />
         <Lights />
         <Camera />
-        <Ambient onStart={handleInitialSounds} onTraverse={handleTraverse} />
+        <Ambient
+          name="ambient-start"
+          onStart={handleInitialSounds}
+          onTraverse={handleTraverse}
+        />
         <Character
           characterRotationPI={0.8}
-          name="main"
-          asset="mario"
+          name="main-start"
+          asset="mario-start"
           isMainCharacter
           onAddMovement={handleStart}
           onAfterMainSetted={handleAfterMainSetted}

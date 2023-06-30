@@ -1,16 +1,18 @@
 import { PhysicsLoader, Project } from "enable3d";
-import React, { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
+import { globalState, stateStorage } from "react-trigger-state";
 import MainScene from "./MainScene/MainScene";
 import type { IEnable } from "./interface";
-import { stateStorage } from "react-trigger-state";
 
-const Enable3d = memo(({ children }: IEnable) => {
+const Enable3d = memo(({ children, name }: IEnable) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const destination = ref.current!;
     stateStorage.set("changing_position", ["running", "walking"]);
     stateStorage.set("is_touch_device", "ontouchstart" in window);
+
+    globalState.set("scene-name", name);
 
     PhysicsLoader("./ammo/kripken/", () => {
       const project = new Project({
@@ -44,7 +46,7 @@ const Enable3d = memo(({ children }: IEnable) => {
     return () => {
       window.onresize = null;
     };
-  }, []);
+  }, [name]);
 
   return <div ref={ref}>{children}</div>;
 });

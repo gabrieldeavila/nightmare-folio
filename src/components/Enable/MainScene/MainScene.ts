@@ -1,10 +1,13 @@
 import { Scene3D } from "enable3d";
-import { stateStorage } from "react-trigger-state";
+import { globalState, stateStorage } from "react-trigger-state";
 
 class MainScene extends Scene3D {
   constructor() {
-    // @ts-expect-error - idk why this is an error 😖
-    super("MainScene");
+    const sceneName = globalState.get("scene-name") ?? "MainScene";
+
+    stateStorage.set("main_scene_constructor", sceneName);
+
+    super(sceneName);
   }
 
   init() {

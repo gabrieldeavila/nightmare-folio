@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect } from "react";
 import { stateStorage, useTriggerState } from "react-trigger-state";
 import type { IAmbient } from "./interface";
 
-const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
+const Ambient = memo(({ onTraverse, onStart, name }: IAmbient) => {
   const [trigger] = useTriggerState({ name: "scene" });
 
   const addAmbient = useCallback(async () => {
@@ -12,7 +12,7 @@ const Ambient = memo(({ onTraverse, onStart }: IAmbient) => {
 
     if (load == null) return;
 
-    const object = await load.gltf("ambient");
+    const object = await load.gltf(name ?? "ambient");
     const scene = object.scenes[0];
 
     stateStorage.set("ambient", scene);

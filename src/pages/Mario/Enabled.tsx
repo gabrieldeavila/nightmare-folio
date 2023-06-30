@@ -193,35 +193,43 @@ function Enabled() {
     sound.play();
   }, []);
 
+  const [sceneContructor] = useTriggerState({
+    name: "main_scene_constructor",
+  });
+
   return (
-    <Enable3d>
-      <Initial />
-      <Preload onPreload={handlePreload} />
-      <Lights />
-      <Camera />
-      <Ambient onStart={handleInitialSounds} />
-      <Character
-        characterRotationPI={0.8}
-        name="main"
-        asset="mario"
-        isMainCharacter
-        onAfterMainSetted={handleAfterMainSetted}
-      />
+    <Enable3d name="mario-scene">
+      {sceneContructor === "mario-scene" && (
+        <>
+          <Initial />
+          <Preload onPreload={handlePreload} />
+          <Lights />
+          <Camera />
+          <Ambient onStart={handleInitialSounds} />
+          <Character
+            characterRotationPI={0.8}
+            name="main"
+            asset="mario"
+            isMainCharacter
+            onAfterMainSetted={handleAfterMainSetted}
+          />
 
-      {goombaArray.map((name) => (
-        <Character
-          key={name}
-          characterRotationPI={1.5}
-          name={name}
-          asset="goomba"
-          onDefaultAnimation={handleDefaultAnimation}
-          // @ts-expect-error in a hurry
-          onDefaultPosition={handleDefaultPosition}
-          onAddMovement={handleAddMovement}
-        />
-      ))}
+          {goombaArray.map((name) => (
+            <Character
+              key={name}
+              characterRotationPI={1.5}
+              name={name}
+              asset="goomba"
+              onDefaultAnimation={handleDefaultAnimation}
+              // @ts-expect-error in a hurry
+              onDefaultPosition={handleDefaultPosition}
+              onAddMovement={handleAddMovement}
+            />
+          ))}
 
-      <Controls onUpdate={handleUpdate} onJump={handleJump} />
+          <Controls onUpdate={handleUpdate} onJump={handleJump} />
+        </>
+      )}
     </Enable3d>
   );
 }
