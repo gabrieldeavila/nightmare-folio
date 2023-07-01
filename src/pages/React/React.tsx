@@ -13,6 +13,7 @@ import {
 import { memo, useEffect } from "react";
 import { globalState, stateStorage } from "react-trigger-state";
 import Loading from "../Loading/Loading";
+import { AudioManager } from "@yandeu/audio";
 
 class MainScene extends Scene3D {
   move: any;
@@ -128,14 +129,14 @@ class MainScene extends Scene3D {
             child.material.metalness = 0;
             // @ts-expect-error do later
             child.material.roughness = 1;
+            this.third.physics.add.existing(child, {
+              shape: "concave",
+              mass: 0,
+              collisionFlags: 1,
+              autoCenter: false,
+            });
 
             if (/target/i.test(child.name)) {
-              this.third.physics.add.existing(child, {
-                shape: "concave",
-                mass: 0,
-                collisionFlags: 1,
-                autoCenter: false,
-              });
               child.body.setAngularFactor(0, 0, 0);
               child.body.setLinearFactor(0, 0, 0);
               // makes it breakable
@@ -143,6 +144,7 @@ class MainScene extends Scene3D {
             }
           }
         });
+
         stateStorage.set("every_thing_is_loaded", true);
         globalState.set("bullet_targets", target);
       });
@@ -176,7 +178,7 @@ class MainScene extends Scene3D {
       this.cameras.main.width / 2,
       this.cameras.main.height / 2,
       4,
-      0xff0000
+      0xb22222
     );
     this.redDot.depth = 1;
 
@@ -222,6 +224,32 @@ class MainScene extends Scene3D {
   }
 
   update(time: any, _delta: any) {
+    async function audio() {
+      const audio = new AudioManager();
+      await audio.load("react_song", "/assets/mp3/tension", "mp3");
+      await audio.load("bullet", "/assets/mp3/bullet", "mp3");
+
+      const sound = await audio.add("react_song");
+
+      // dimish the volume
+      sound.setVolume(0.5);
+      sound.setLoop(true);
+
+      sound.play();
+      globalState.set("react_song", sound);
+      globalState.set("audio", audio);
+    }
+
+    const someIsDown = Object.keys(this.keys).some(
+      // @ts-expect-error - do later
+      (key: any) => this.keys[key].isDown
+    );
+
+    if ((someIsDown || this.input.mousePointer) && globalState.get("loaded_first_react") == null) {
+      globalState.set("loaded_first_react", true);
+      void audio();
+    }
+
     if (this.rifle && this.rifle) {
       // some variables
       const zoom = this.input.mousePointer.rightButtonDown();
@@ -320,7 +348,7 @@ class MainScene extends Scene3D {
         globalState.set("lastShoot", Date.now());
         const x = 0;
         const y = 0;
-        const force = 10;
+        const force = 5;
         const pos = new THREE.Vector3();
 
         raycaster.setFromCamera(
@@ -343,17 +371,22 @@ class MainScene extends Scene3D {
             x: pos.x,
             y: pos.y,
             z: pos.z,
-            mass: 5,
-            // @ts-expect-error do later
-            bufferGeometry: true,
+            mass: 2,
           },
-          { phong: { color: 0x202020 } }
+          { phong: { color: 0x080808 } }
         );
 
         pos.copy(raycaster.ray.direction);
         pos.multiplyScalar(24);
 
         sphere.body.applyForce(pos.x * force, pos.y * force, pos.z * force);
+        const sound = async () => {
+          const audio = globalState.get("audio");
+          const sound = await audio.add("bullet");
+          sound.play();
+        };
+
+        void sound();
 
         // add collision detection
         const targets = globalState.get("bullet_targets");
