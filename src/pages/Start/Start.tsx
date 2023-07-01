@@ -77,6 +77,7 @@ function Enabled() {
   const handleInitialSounds = useCallback(async () => {
     const audio = new AudioManager();
     await audio.load("start_song", "/assets/mp3/Happy Acoustic Folk", "mp3");
+    await audio.load("select", "/assets/mp3/select", "mp3");
 
     stateStorage.set("audio", audio);
 
@@ -89,6 +90,7 @@ function Enabled() {
     sound.play();
 
     globalState.set("start_song", sound);
+    globalState.set("audio", audio);
   }, []);
 
   useEffect(() => {
@@ -123,13 +125,22 @@ function Enabled() {
     const { character, physics } = globalState.get("scene");
     const react = globalState.get("react");
     const mysteryBlock = globalState.get("mysteryBlock");
+    const audio = globalState.get("audio");
 
-    physics.add.collider(character, react, () => {
+    physics.add.collider(character, react, async () => {
+      if (stateStorage.get("start_tip") === "react") return;
+
       stateStorage.set("start_tip", "react");
+      const sound = await audio.add("select");
+      sound.play();
     });
 
-    physics.add.collider(character, mysteryBlock, () => {
+    physics.add.collider(character, mysteryBlock, async () => {
+      if (stateStorage.get("start_tip") === "mistery_block") return;
+
       stateStorage.set("start_tip", "mistery_block");
+      const sound = await audio.add("select");
+      sound.play();
     });
   }, []);
 
