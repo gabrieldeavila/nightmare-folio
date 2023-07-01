@@ -14,6 +14,7 @@ import { memo, useEffect } from "react";
 import { globalState, stateStorage } from "react-trigger-state";
 import Loading from "../Loading/Loading";
 import { AudioManager } from "@yandeu/audio";
+import Message from "../../components/2d/Controls/Message";
 
 class MainScene extends Scene3D {
   move: any;
@@ -245,7 +246,26 @@ class MainScene extends Scene3D {
       (key: any) => this.keys[key].isDown
     );
 
-    if ((someIsDown || this.input.mousePointer) && globalState.get("loaded_first_react") == null) {
+    const lastKeyDown = Object.keys(this.keys).find(
+      // @ts-expect-error - do later
+      (key: any) => this.keys[key].isDown
+    );
+
+    const isMouseRightDown = this.input.mousePointer.rightButtonDown();
+    const isMouseLeftDown = this.input.mousePointer.leftButtonDown();
+
+    if (isMouseLeftDown) {
+      stateStorage.set("last_key_down", "mouse_left");
+    } else if (isMouseRightDown) {
+      stateStorage.set("last_key_down", "mouse_right");
+    } else if (lastKeyDown) {
+      stateStorage.set("last_key_down", lastKeyDown);
+    }
+
+    if (
+      (someIsDown || this.input.mousePointer) &&
+      globalState.get("loaded_first_react") == null
+    ) {
       globalState.set("loaded_first_react", true);
       void audio();
     }
@@ -416,12 +436,64 @@ const config = {
   ...Canvas({ antialias: true }),
 };
 
+const OPTIONS = [
+  {
+    label: "MOVE",
+    options: [
+      {
+        label: "W",
+      },
+      {
+        label: "A",
+      },
+      {
+        label: "S",
+      },
+      {
+        label: "D",
+      },
+    ],
+  },
+  {
+    label: "TILT",
+    options: [
+      {
+        label: "E",
+      },
+      {
+        label: "Q",
+      },
+    ],
+  },
+  {
+    label: "SHOOT",
+    options: [
+      {
+        label: "MOUSE_LEFT",
+      },
+    ],
+  },
+  {
+    label: "AIM",
+    options: [
+      {
+        label: "MOUSE_RIGHT",
+      },
+    ],
+  },
+];
+
 const React = memo(() => {
   useEffect(() => {
     enable3d(() => new Phaser.Game(config)).withPhysics("./ammo/kripken/");
   }, []);
 
-  return <Loading />;
+  return (
+    <>
+      <Message options={OPTIONS} />
+      <Loading />
+    </>
+  );
 });
 
 React.displayName = "React";

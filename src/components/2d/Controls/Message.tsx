@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useTriggerState } from "react-trigger-state";
 import "./style.css";
 
-const OPTIONS = [
+const OPTIONS_DEFAULT = [
   {
     label: "MOVE",
     options: [
@@ -42,10 +42,15 @@ const OPTIONS = [
   },
 ];
 
-function Message() {
+function Message({
+  options,
+}: {
+  options?: Array<(typeof OPTIONS_DEFAULT)[0]>;
+}) {
   const [lastDown] = useTriggerState({ name: "last_key_down" });
+  const msgOptions = useMemo(() => options ?? OPTIONS_DEFAULT, [options]);
   const keysToClick = useRef(
-    OPTIONS.reduce((curr, { options }) => {
+    msgOptions.reduce((curr, { options }) => {
       for (const { label } of options) {
         // @ts-expect-error do later
         curr[label] = false;
@@ -58,7 +63,6 @@ function Message() {
 
   useEffect(() => {
     if (hasClickedEveryKey.current) return;
-
     const upperCase = lastDown?.toUpperCase?.();
     // @ts-expect-error do later
     keysToClick.current[upperCase] = true;
@@ -86,7 +90,7 @@ function Message() {
             Controls:
           </Text.H1>
           <Space.Modifiers flexDirection="column" gridGap="0.5rem">
-            {OPTIONS.map((option, index) => (
+            {msgOptions.map((option, index) => (
               <Option {...option} key={index} />
             ))}
           </Space.Modifiers>
@@ -98,7 +102,7 @@ function Message() {
 
 export default Message;
 
-const Option = memo(({ label, options }: (typeof OPTIONS)[0]) => {
+const Option = memo(({ label, options }: (typeof OPTIONS_DEFAULT)[0]) => {
   const { t } = useTranslation();
 
   return (
@@ -117,7 +121,7 @@ const Option = memo(({ label, options }: (typeof OPTIONS)[0]) => {
 
 Option.displayName = "Option";
 
-const Keys = memo(({ label }: (typeof OPTIONS)[0]["options"][0]) => {
+const Keys = memo(({ label }: (typeof OPTIONS_DEFAULT)[0]["options"][0]) => {
   return (
     <Space.Modifiers
       p="0.5rem"
