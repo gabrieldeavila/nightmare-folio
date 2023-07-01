@@ -1,4 +1,13 @@
-.loading-container canvas {
+.loading-content {
+  top: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+.loading-content canvas {
   background-color: var(--primary) !important;
 }
 
@@ -23,5 +32,21 @@
   }
   100% {
     transform: rotate(180deg);
+  }
+}
+
+/* closes */
+.loading-is-done {
+  animation: close 1s ease-in-out forwards;
+}
+
+@keyframes close {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 }

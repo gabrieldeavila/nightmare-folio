@@ -21,6 +21,7 @@ import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
+import Loading from "../Loading/Loading";
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
@@ -198,40 +199,48 @@ function Enabled() {
     name: "main_scene_constructor",
   });
 
+  const handleStart = useCallback(() => {
+    stateStorage.set("every_thing_is_loaded", true);
+  }, []);
+
   return (
-    <Enable3d name="mario-scene">
-      {sceneContructor === "mario-scene" && (
-        <>
-          <Initial />
-          <Preload onPreload={handlePreload} />
-          <Lights />
-          <Camera />
-          <Ambient onStart={handleInitialSounds} />
-          <Character
-            characterRotationPI={0.8}
-            name="main"
-            asset="mario"
-            isMainCharacter
-            onAfterMainSetted={handleAfterMainSetted}
-          />
-
-          {goombaArray.map((name) => (
+    <>
+      <Loading />
+      <Enable3d name="mario-scene">
+        {sceneContructor === "mario-scene" && (
+          <>
+            <Initial />
+            <Preload onPreload={handlePreload} />
+            <Lights />
+            <Camera />
+            <Ambient onStart={handleInitialSounds} />
             <Character
-              key={name}
-              characterRotationPI={1.5}
-              name={name}
-              asset="goomba"
-              onDefaultAnimation={handleDefaultAnimation}
-              // @ts-expect-error in a hurry
-              onDefaultPosition={handleDefaultPosition}
-              onAddMovement={handleAddMovement}
+              characterRotationPI={0.8}
+              name="main"
+              asset="mario"
+              isMainCharacter
+              onAfterMainSetted={handleAfterMainSetted}
+              onAddMovement={handleStart}
             />
-          ))}
 
-          <Controls onUpdate={handleUpdate} onJump={handleJump} />
-        </>
-      )}
-    </Enable3d>
+            {goombaArray.map((name) => (
+              <Character
+                key={name}
+                characterRotationPI={1.5}
+                name={name}
+                asset="goomba"
+                onDefaultAnimation={handleDefaultAnimation}
+                // @ts-expect-error in a hurry
+                onDefaultPosition={handleDefaultPosition}
+                onAddMovement={handleAddMovement}
+              />
+            ))}
+
+            <Controls onUpdate={handleUpdate} onJump={handleJump} />
+          </>
+        )}
+      </Enable3d>
+    </>
   );
 }
 

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { stateStorage } from "react-trigger-state";
 
-export const handleAfterMainSetted = async (newChar: any, physics: any) => {
+export const handleAfterMainSetted = (newChar: any, physics: any) => {
   const surpiseBoxes = stateStorage.get("surprise_boxes");
   const coins = stateStorage.get("coins");
   const audio = stateStorage.get("audio");

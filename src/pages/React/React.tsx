@@ -12,7 +12,7 @@ import {
 } from "@enable3d/phaser-extension";
 import { memo, useEffect } from "react";
 import { globalState, stateStorage } from "react-trigger-state";
-import Loading from "../../components/2d/Loader/Loading";
+import Loading from "../Loading/Loading";
 
 class MainScene extends Scene3D {
   move: any;

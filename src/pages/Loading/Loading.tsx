@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 import { GTBasic, Space, Text } from "@geavila/gt-design";
 import "./style.css";
 import { useTranslation } from "react-i18next";
 import { Loader } from "react-feather";
 import { useTriggerState } from "react-trigger-state";
+import clsx from "clsx";
 
-const Loading = () => {
+const Loading = ({ avoidClose }: { avoiClose?: boolean }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -134,11 +135,26 @@ const Loading = () => {
     name: "every_thing_is_loaded",
   });
 
-  // if (everyThingIsLoaded) return null;
+  const [hideAfterUnloaded, setHideAfterUnloaded] = useState(false);
+
+  useEffect(() => {
+    if (everyThingIsLoaded) {
+      setTimeout(() => {
+        setHideAfterUnloaded(true);
+      }, 500);
+    }
+  }, [everyThingIsLoaded]);
+
+  if (hideAfterUnloaded) return null;
 
   return (
     <GTBasic>
-      <div className="loading-container">
+      <div
+        className={clsx(
+          "loading-content",
+          !avoidClose && everyThingIsLoaded && "loading-is-done"
+        )}
+      >
         <Space.Modifiers
           alignItems="center"
           justifyContent="center"
