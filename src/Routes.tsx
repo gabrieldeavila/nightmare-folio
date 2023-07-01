@@ -11,6 +11,8 @@ const Mario = lazy(async () => await import("./pages/Mario/Enabled.tsx"));
 
 const React = lazy(async () => await import("./pages/React/React.tsx"));
 
+const Loading = lazy(async () => await import("./pages/Loading/Loading.tsx"));
+
 function RoutesWrapper() {
   return (
     <Suspense fallback={<>...</>}>
@@ -20,6 +22,7 @@ function RoutesWrapper() {
         <Route path="/mario" element={<Mario />} />
         <Route path="/mario" element={<Mario />} />
         <Route path="/react" element={<React />} />
+        <Route path="/teste" element={<Loading />} />
       </Routes>
     </Suspense>
   );
