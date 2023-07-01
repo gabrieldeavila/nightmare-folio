@@ -3,7 +3,6 @@ import { AudioManager } from "@yandeu/audio";
 import { useCallback, useEffect } from "react";
 import { globalState, stateStorage } from "react-trigger-state";
 import Message from "../../components/2d/Controls/Message";
-import Loading from "../../components/2d/Loader/Loading";
 import StartTip from "../../components/2d/Tips/StartTip";
 import Ambient from "../../components/Ambient/Ambient";
 import Camera from "../../components/Camera/Camera";
@@ -13,6 +12,7 @@ import Enable3d from "../../components/Enable/Enable";
 import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
+import Loading from "../Loading/Loading";
 
 function Enabled() {
   const handlePreload = useCallback(async () => {
