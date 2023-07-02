@@ -110,7 +110,7 @@ const Ambient = memo(({ onTraverse, onStart, name }: IAmbient) => {
     stateStorage.set("extra_coins", extraCoins);
     stateStorage.set("teleporters", teleport);
     onStart?.(childs);
-  }, [onStart, onTraverse]);
+  }, [name, onStart, onTraverse]);
 
   useEffect(() => {
     addAmbient().catch((err) => console.error(err));

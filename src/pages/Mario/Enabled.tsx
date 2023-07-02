@@ -158,9 +158,11 @@ function Enabled() {
     const view3d = globalState.get("3d_view");
 
     const scene = globalState.get("scene");
+
     for (const charName of goombaArray) {
       const goombaObj = globalState.get(charName);
-      // add collision detection
+      if (!goombaObj) continue;
+
       scene.physics.add.collider(mainChar, goombaObj, async () => {
         // apply force X to the other direction of the main character
         const lastApplied = stateStorage.get("last_applied_force");

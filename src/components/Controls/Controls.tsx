@@ -92,6 +92,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         scene.character.body.setAngularVelocity(0, 0, 0);
       });
     }
+
     if (character != null ?? character.body) {
       scene.light.position.x = character.position.x;
       scene.light.position.y = character.position.y + 200;
