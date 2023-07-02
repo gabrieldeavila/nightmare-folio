@@ -28,6 +28,7 @@ class MainScene extends Scene3D {
   // @ts-expect-error - private property
   firstPersonControls: FirstPersonControls;
   ambient: any;
+  revenge: any;
   // @ts-expect-error - private property
   keys: {
     w: Phaser.Input.Keyboard.Key;
@@ -99,6 +100,12 @@ class MainScene extends Scene3D {
       }
     );
     void this.third.load
+      .gltf("/assets/glb/guns/react_logo.glb")
+      .then((object: any) => {
+        globalState.set("react_revenge", object.scene);
+      });
+
+    void this.third.load
       .gltf("/assets/glb/sands_location.glb")
       .then((object: any) => {
         const scene = object.scene;
@@ -143,6 +150,12 @@ class MainScene extends Scene3D {
               child.body.setLinearFactor(0, 0, 0);
               // makes it breakable
               target.push(child);
+            }
+
+            if (/react/i.test(child.name)) {
+              child.body.setAngularFactor(0, 0, 0);
+              child.body.setLinearFactor(0, 0, 0);
+              globalState.set("react", child);
             }
           }
         });
@@ -425,6 +438,46 @@ class MainScene extends Scene3D {
               );
             });
           }
+        }
+
+        // add collision detection to react
+        const react = globalState.get("react");
+        const shots = globalState.get("targets_shots");
+
+        if (react && shots === targets.length) {
+          this.third.physics.add.collider(sphere, react, () => {
+            stateStorage.set("shot_react", true);
+            // delete the target
+            const deletedPosition = new THREE.Vector3(0, -100, 0);
+            react.position.copy(deletedPosition);
+            this.third.physics.destroy(react.body);
+            // loop of 50
+            for (let i = 0; i < 30; i++) {
+              const revenge = globalState.get("react_revenge").clone();
+
+              this.revenge = new ExtendedObject3D();
+              this.revenge.name = "revenge";
+
+              this.revenge.add(revenge);
+
+              // random position
+              const randomPosition = new THREE.Vector3(
+                // between 10 and -10
+                Math.floor(Math.random() * 21) - 10,
+                10,
+                Math.random() * 100 - 5
+              );
+
+              this.revenge.position.copy(randomPosition);
+
+              this.third.add.existing(this.revenge, {
+                shape: "concave",
+                mass: 0,
+                collisionFlags: 1,
+                autoCenter: false,
+              });
+            }
+          });
         }
       }
     }

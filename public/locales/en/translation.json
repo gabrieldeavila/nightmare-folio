@@ -19,10 +19,12 @@
   "TARGETS": "Targets",
   "REACT": {
     "INITIAL": "Dear human, if you want to beat me, shoot the targets first",
-    "FIRST_TARGET": "yaay, you hit the first target",
+    "FIRST_TARGET": "yaay, you hit the first target, but sometimes you need to hit more than once",
     "KEEP_GOING": "I see you are a good shooter...",
     "LOOK_AROUND": "Look around, there are more targets to be hit",
+    "FIFTH": "you have hit 5 targets, but will you hit the last one?",
     "LAST_TARGET": "I doubt you can find the last one",
+    "ME_VS_YOU": "Now it's me vs you. Will you find my weak spot?",
     "OVERTROWN": "You have overtrown me, human. I have no choice but to surrender",
     "FINAL": "You might have won this time, but will you knock all of my friends down? 😈 Press B to go back to the initial scene"
   },
