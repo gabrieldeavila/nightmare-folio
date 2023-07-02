@@ -122,6 +122,8 @@ const Option = memo(({ label, options }: (typeof OPTIONS_DEFAULT)[0]) => {
 Option.displayName = "Option";
 
 const Keys = memo(({ label }: (typeof OPTIONS_DEFAULT)[0]["options"][0]) => {
+  const { t } = useTranslation();
+
   return (
     <Space.Modifiers
       p="0.5rem"
@@ -132,7 +134,7 @@ const Keys = memo(({ label }: (typeof OPTIONS_DEFAULT)[0]["options"][0]) => {
       background="#f5f5f5"
       boxShadow="0 0 5px rgba(0,0,0,0.1)"
     >
-      {label}
+      {t(label)}
     </Space.Modifiers>
   );
 });

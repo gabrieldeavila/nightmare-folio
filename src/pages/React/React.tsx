@@ -15,6 +15,7 @@ import { globalState, stateStorage } from "react-trigger-state";
 import Loading from "../Loading/Loading";
 import { AudioManager } from "@yandeu/audio";
 import Message from "../../components/2d/Controls/Message";
+import ReactTip from "../../components/2d/Tips/ReactTip";
 
 class MainScene extends Scene3D {
   move: any;
@@ -147,7 +148,7 @@ class MainScene extends Scene3D {
         });
 
         stateStorage.set("every_thing_is_loaded", true);
-        globalState.set("bullet_targets", target);
+        stateStorage.set("bullet_targets", target);
       });
 
     /**
@@ -416,6 +417,12 @@ class MainScene extends Scene3D {
               // delete the target
               const deletedPosition = new THREE.Vector3(0, -100, 0);
               target.position.copy(deletedPosition);
+              this.third.physics.destroy(target.body);
+
+              stateStorage.set(
+                "targets_shots",
+                (globalState.get("targets_shots") ?? 0) + 1
+              );
             });
           }
         }
@@ -490,6 +497,7 @@ const React = memo(() => {
 
   return (
     <>
+      <ReactTip />
       <Message options={OPTIONS} />
       <Loading />
     </>

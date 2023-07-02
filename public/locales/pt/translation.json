@@ -8,9 +8,24 @@
   "SPRINT": "Corrida",
   "LOADING": "Carregando sua experiência 😼",
   "JUMP": "Pulo",
+  "TILT": "Inclinação",
+  "SHOOT": "Atirar",
+  "MOUSE_LEFT": "Botão esquerdo do mouse",
+  "MOUSE_RIGHT": "Botão direito do mouse",
+  "AIM": "Mira",
   "START_TIP": "Tente mover o personagem em direção ao símbolo do React ou à caixa surpresa!",
   "REACT_TIP": "Pressione R para ir no mundo do React!",
   "MISTERY_BLOCK_TIP": "Pressione M para encontrar uma surpresa 🤔",
+  "TARGETS": "Alvos",
+  "REACT": {
+    "INITIAL": "Queridinho, se você quer me derrotar, tente atirar nos alvos primeiros",
+    "FIRST_TARGET": "Você é bom! Mas eu sou melhor! HAHAHA",
+    "KEEP_GOING": "até que tu é bomzinho",
+    "LOOK_AROUND": "Olhe ao seu redor, você pode encontrar algo interessante",
+    "LAST_TARGET": "Dúvido que você vai achar o último",
+    "OVERTROWN": "Nãooooo! Você me derrotou! Eu não tenho nada contra você, eu só queria ser o queridinho de todos 😭",
+    "FINAL": "Você pode ter me derrotado, mas será que você consegue derrotar o resto? 😈 Pressione B para voltar ao menu inicial"
+  },
   "TRANSLATE": {
     "LANGUAGE": "Idioma"
   },

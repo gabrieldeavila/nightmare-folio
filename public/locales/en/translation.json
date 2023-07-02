@@ -7,10 +7,25 @@
   "MOVE": "Movement",
   "SPRINT": "Sprint",
   "JUMP": "Jump",
+  "TILT": "Tilt",
+  "SHOOT": "Shoot",
+  "MOUSE_LEFT": "Left mouse button",
+  "MOUSE_RIGHT": "Right mouse button",
+  "AIM": "Aim",
   "START_TIP": "Try to move the character towards the React symbol or the surprise box",
   "REACT_TIP": "Press R to enter the React mode",
   "MISTERY_BLOCK_TIP": "Press M to encounter a surprise 😛",
   "LOADING": "Loading your experience 😼",
+  "TARGETS": "Targets",
+  "REACT": {
+    "INITIAL": "Dear human, if you want to beat me, shoot the targets first",
+    "FIRST_TARGET": "yaay, you hit the first target",
+    "KEEP_GOING": "I see you are a good shooter...",
+    "LOOK_AROUND": "Look around, there are more targets to be hit",
+    "LAST_TARGET": "I doubt you can find the last one",
+    "OVERTROWN": "You have overtrown me, human. I have no choice but to surrender",
+    "FINAL": "You might have won this time, but will you knock all of my friends down? 😈 Press B to go back to the initial scene"
+  },
   "TRANSLATE": {
     "LANGUAGE": "Language"
   },
