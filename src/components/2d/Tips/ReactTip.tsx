@@ -1,6 +1,7 @@
 import { Space, Text } from "@geavila/gt-design";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useTriggerState } from "react-trigger-state";
 
 function ReactTip() {
@@ -15,7 +16,9 @@ function ReactTip() {
   const [shotReact] = useTriggerState({ name: "shot_react", initial: false });
 
   const message = useMemo(() => {
-    if (revengeShots && revengeShots === revengeTargets.length) return t("REACT.OVERTROWN");
+    if (revengeShots && revengeShots === revengeTargets.length) {
+      return t("REACT.OVERTROWN");
+    }
 
     if (shotReact) return t("REACT.FINAL");
 
@@ -40,6 +43,27 @@ function ReactTip() {
     t,
     targets.length,
   ]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // add listener to B or L key
+    const listener = (e: any) => {
+      if (
+        e.key === "l" ||
+        (e.key === "b" && t("REACT.OVERTROWN") === message)
+      ) {
+        // FIXME should find a way to remove the enable3d instead of reloading the page
+        window.location.href = "/start";
+      }
+    };
+
+    document.addEventListener("keydown", listener);
+
+    return () => {
+      document.removeEventListener("keydown", listener);
+    };
+  }, [message, navigate, shotReact, t]);
 
   return (
     <div className="fixed">

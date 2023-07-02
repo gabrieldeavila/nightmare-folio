@@ -18,7 +18,7 @@
   "LOADING": "Loading your experience 😼",
   "TARGETS": "Targets",
   "REACT": {
-    "INITIAL": "Dear human, if you want to beat me, shoot the targets first",
+    "INITIAL": "Dear human, if you want to beat me, shoot the targets first, but if you are a Loser press L",
     "FIRST_TARGET": "yaay, you hit the first target, but sometimes you need to hit more than once",
     "KEEP_GOING": "I see you are a good shooter...",
     "LOOK_AROUND": "Look around, there are more targets to be hit",
