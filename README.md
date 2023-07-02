@@ -26,3 +26,5 @@ DanaMusic - Happy Acoustic Folk https://www.youtube.com/watch?v=g4UrR-Vx5kU
 "Mario | Funko Pop Bros." (https://skfb.ly/66VnA) by mdsd95 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 "Tensions Run High by Soundridemusic" (https://www.youtube.com/watch?v=Ly9H63SLJJo) Music: Tensions Run High by Soundridemusic
+
+"We are the champions - Queen" (https://www.youtube.com/watch?v=04854XqcfCY)

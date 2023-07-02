@@ -6,11 +6,18 @@ import { useTriggerState } from "react-trigger-state";
 function ReactTip() {
   const { t } = useTranslation();
   const [targets] = useTriggerState({ name: "bullet_targets", initial: [] });
+  const [revengeTargets] = useTriggerState({
+    name: "revenge_targets",
+    initial: [],
+  });
   const [shots] = useTriggerState({ name: "targets_shots", initial: 0 });
+  const [revengeShots] = useTriggerState({ name: "revenge_shots", initial: 0 });
   const [shotReact] = useTriggerState({ name: "shot_react", initial: false });
 
   const message = useMemo(() => {
-    if (shotReact) return t("REACT.OVERTROWN");
+    if (revengeShots && revengeShots === revengeTargets.length) return t("REACT.OVERTROWN");
+
+    if (shotReact) return t("REACT.FINAL");
 
     if (shots === 0) return t("REACT.INITIAL");
 
@@ -25,7 +32,14 @@ function ReactTip() {
     if (shots === targets.length) return t("REACT.ME_VS_YOU");
 
     return t("REACT.KEEP_GOING");
-  }, [shotReact, shots, t, targets.length]);
+  }, [
+    revengeShots,
+    revengeTargets.length,
+    shotReact,
+    shots,
+    t,
+    targets.length,
+  ]);
 
   return (
     <div className="fixed">
@@ -33,22 +47,16 @@ function ReactTip() {
         <Space.Modifiers gridGap="0.5rem" justifyContent="center" width="60%">
           <Space.Modifiers gridGap="0.5rem" alignItems="center">
             <Text.Strong color="blue">React:</Text.Strong>
-            <Text.P>{message}</Text.P>
+            <Text.P textAlign="center">{message}</Text.P>
           </Space.Modifiers>
         </Space.Modifiers>
 
-        {shots < targets.length && (
-          <Space.Modifiers
-            position="absolute"
-            gridGap="0.5rem"
-            alignItems="center"
-            right="10px"
-          >
-            <Text.Strong color="red">{t("TARGETS")}:</Text.Strong>
-            <Text.P>
-              {shots}/{targets.length}
-            </Text.P>
-          </Space.Modifiers>
+        {revengeTargets.length === 0 && shots < targets.length && (
+          <Targets {...{ shots, targets }} />
+        )}
+
+        {revengeShots < revengeTargets.length && (
+          <Targets shots={revengeShots} targets={revengeTargets} />
         )}
       </div>
     </div>
@@ -56,3 +64,21 @@ function ReactTip() {
 }
 
 export default ReactTip;
+
+const Targets = ({ shots, targets }: { shots: any; targets: any }) => {
+  const { t } = useTranslation();
+
+  return (
+    <Space.Modifiers
+      position="absolute"
+      gridGap="0.5rem"
+      alignItems="center"
+      right="10px"
+    >
+      <Text.Strong color="red">{t("TARGETS")}:</Text.Strong>
+      <Text.P>
+        {shots}/{targets.length}
+      </Text.P>
+    </Space.Modifiers>
+  );
+};

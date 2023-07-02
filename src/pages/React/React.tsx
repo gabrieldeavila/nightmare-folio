@@ -102,7 +102,7 @@ class MainScene extends Scene3D {
     void this.third.load
       .gltf("/assets/glb/guns/react_logo.glb")
       .then((object: any) => {
-        globalState.set("react_revenge", object.scene);
+        globalState.set("react_revenge", object);
       });
 
     void this.third.load
@@ -243,6 +243,15 @@ class MainScene extends Scene3D {
       const audio = new AudioManager();
       await audio.load("react_song", "/assets/mp3/tension", "mp3");
       await audio.load("bullet", "/assets/mp3/bullet", "mp3");
+      await audio.load("appear", "/assets/mp3/appear", "mp3");
+      await audio.load("disappear", "/assets/mp3/disappear", "mp3");
+      await audio.load("victory", "/assets/mp3/victory", "mp3");
+      await audio.load("champion", "/assets/mp3/champion", "mp3");
+      await audio.load(
+        "disappear-target",
+        "/assets/mp3/disappear-target",
+        "mp3"
+      );
 
       const sound = await audio.add("react_song");
 
@@ -431,6 +440,13 @@ class MainScene extends Scene3D {
               const deletedPosition = new THREE.Vector3(0, -100, 0);
               target.position.copy(deletedPosition);
               this.third.physics.destroy(target.body);
+              const sound = async () => {
+                const audio = globalState.get("audio");
+                const sound = await audio.add("disappear-target");
+                sound.play();
+              };
+
+              void sound();
 
               stateStorage.set(
                 "targets_shots",
@@ -438,6 +454,57 @@ class MainScene extends Scene3D {
               );
             });
           }
+        }
+
+        const revengeHasStarted = globalState.get("revenge_has_started");
+        if (revengeHasStarted) {
+          for (const revenge of globalState.get("revenge_targets")) {
+            this.third.physics.add.collider(sphere, revenge, () => {
+              // delete the target
+              const deletedPosition = new THREE.Vector3(0, -100, 0);
+              revenge.position.copy(deletedPosition);
+              this.third.physics.destroy(revenge.body);
+
+              const sound = async () => {
+                const audio = globalState.get("audio");
+                const sound = await audio.add("disappear");
+                sound.play();
+              };
+
+              void sound();
+
+              stateStorage.set(
+                "revenge_shots",
+                (globalState.get("revenge_shots") ?? 0) + 1
+              );
+
+              const isAllShots = globalState.get("revenge_shots") === 10;
+              if (isAllShots) {
+                stateStorage.set("user_has_won", true);
+              }
+            });
+          }
+        }
+
+        if (globalState.get("user_has_won")) {
+          const sound = async () => {
+            if (globalState.get("has_played_victory")) {
+              return;
+            }
+            globalState.set("has_played_victory", true);
+
+            const audio = globalState.get("audio");
+            const sound = await audio.add("victory");
+            const reactSong = globalState.get("react_song");
+            reactSong.stop();
+            sound.play();
+
+            const champion = await audio.add("champion");
+            champion.setLoop(true);
+            champion.play();
+          };
+
+          void sound();
         }
 
         // add collision detection to react
@@ -451,12 +518,15 @@ class MainScene extends Scene3D {
             const deletedPosition = new THREE.Vector3(0, -100, 0);
             react.position.copy(deletedPosition);
             this.third.physics.destroy(react.body);
-            // loop of 50
-            for (let i = 0; i < 30; i++) {
-              const revenge = globalState.get("react_revenge").clone();
+            const revengeToShoot = [];
+
+            // loop of 30
+            for (let i = 0; i < 10; i++) {
+              const revenge = globalState.get("react_revenge").scene.clone();
+              const object = globalState.get("react_revenge");
 
               this.revenge = new ExtendedObject3D();
-              this.revenge.name = "revenge";
+              this.revenge.name = `revenge-${i}`;
 
               this.revenge.add(revenge);
 
@@ -469,14 +539,47 @@ class MainScene extends Scene3D {
               );
 
               this.revenge.position.copy(randomPosition);
+              const currRevenge = this.revenge.clone();
+              revengeToShoot.push(currRevenge);
 
-              this.third.add.existing(this.revenge, {
-                shape: "concave",
-                mass: 0,
-                collisionFlags: 1,
-                autoCenter: false,
-              });
+              setTimeout(() => {
+                const sound = async () => {
+                  const audio = globalState.get("audio");
+                  const sound = await audio.add("appear");
+                  sound.play();
+                };
+
+                // add animations
+                // sadly only the flags animations works
+                object.animations.forEach((anim: any, i: any) => {
+                  currRevenge.mixer =
+                    this.third.animationMixers.create(currRevenge);
+                  // overwrite the action to be an array of actions
+                  currRevenge.action = [];
+                  currRevenge.action[i] = currRevenge.mixer.clipAction(anim);
+                  currRevenge.action[i].play();
+                });
+
+                void sound();
+
+                this.third.physics.add.existing(currRevenge, {
+                  shape: "concave",
+                  mass: 0,
+                  collisionFlags: 1,
+                  autoCenter: false,
+                });
+
+                this.third.add.existing(currRevenge, {
+                  shape: "concave",
+                  mass: 0,
+                  collisionFlags: 1,
+                  autoCenter: false,
+                });
+              }, 500 * i);
             }
+            stateStorage.set("revenge_has_started", true);
+
+            stateStorage.set("revenge_targets", revengeToShoot);
           });
         }
       }
