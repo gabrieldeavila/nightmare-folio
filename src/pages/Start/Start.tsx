@@ -102,7 +102,7 @@ function Enabled() {
         song.stop();
       }
       stateStorage.set("every_thing_is_loaded", false);
-      const deleteKeys = ["ambient_childs"];
+      const deleteKeys = ["ambient_childs", "scene"];
 
       deleteKeys.forEach((key) => {
         globalState.delete(key);
