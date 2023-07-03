@@ -125,10 +125,6 @@ function Enabled() {
   }, [startedPlaying]);
 
   const handleInitialSounds = useCallback(async () => {
-    const isUsing3dView = globalState.get("header-form")?.switch ?? true;
-
-    globalState.set("3d_view", isUsing3dView);
-
     const audio = new AudioManager();
     await audio.load("mario_song", "/assets/mp3/theme_song", "mp3");
     await audio.load("mamma_mia", "/assets/mp3/mamma_mia", "mp3");

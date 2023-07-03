@@ -69,10 +69,6 @@ function Enabled() {
     await Promise.all([ambient, character]);
   }, []);
 
-  useEffect(() => {
-    globalState.set("3d_view", true);
-  }, []);
-
   const handleUpdate = useCallback(() => {}, []);
   const handleInitialSounds = useCallback(async () => {
     const audio = new AudioManager();

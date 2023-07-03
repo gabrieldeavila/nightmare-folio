@@ -26,6 +26,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
   const [isTouchDevice] = useTriggerState({ name: "is_touch_device" });
   const [character] = useTriggerState({ name: "main_character" });
   const [controls] = useTriggerState({ name: "controls" });
+  const [view3D] = useTriggerState({ name: "3d_view", initial: true });
 
   const handleControls = useCallback(() => {
     if (
@@ -36,8 +37,8 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
     ) {
       return;
     }
+
     const keys = globalState.get("keys");
-    const view3D = globalState.get("3d_view");
 
     const { camera, moveTop, moveRight, move, canJump } = scene;
 
@@ -122,13 +123,25 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         controls.offset.z = 10;
         controls.theta = 0;
         controls.phi = 0;
-
         if (!stateStorage.get("is_view")) {
           stateStorage.set("is_view", true);
         }
         scene.character.rotation.set(0, Math.PI * 0.5, 0);
-
         controls.update(0, 0);
+        if (globalState.get("first_view_update") == null) {
+          globalState.set("first_view_update", true);
+          scene.character.body.setCollisionFlags(2);
+          scene.character.body.needUpdate = true;
+
+          scene.character.body.once.update(() => {
+            // set body back to dynamic
+            scene.character.body.setCollisionFlags(0);
+
+            // if you do not reset the velocity and angularVelocity, the object will keep it
+            scene.character.body.setVelocity(0, 0, 0);
+            scene.character.body.setAngularVelocity(0, 0, 0);
+          });
+        }
       } else {
         if (stateStorage.get("is_view")) {
           controls.offset.x = 0;
@@ -332,7 +345,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
         }
       }
     }
-  }, [character, controls, isTouchDevice, scene]);
+  }, [character, controls, isTouchDevice, scene, view3D]);
 
   useEffect(() => {
     const options = {
@@ -381,7 +394,16 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
 
     const pressTrue = (e: any) => press(e, true);
 
-    const pressFalse = (e: any) => press(e, false);
+    const pressFalse = (e: any) => {
+      // if it's F change perspective
+      if (e.key === "f") {
+        stateStorage.set("3d_view", !view3D);
+        stateStorage.set("first_view_update", null);
+        return;
+      }
+
+      press(e, false);
+    };
 
     document.addEventListener("keydown", pressTrue);
     document.addEventListener("keyup", pressFalse);
@@ -391,7 +413,7 @@ const Controls = memo(({ onUpdate, onJump }: IControl) => {
       document.removeEventListener("keydown", pressTrue);
       document.removeEventListener("keyup", pressFalse);
     };
-  }, [handleControls, delta, update, time, onUpdate]);
+  }, [handleControls, delta, update, time, onUpdate, view3D]);
 
   return <Jump onJump={onJump} />;
 });
