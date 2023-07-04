@@ -22,8 +22,9 @@ import Initial from "../../components/Initial/Initial";
 import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
 import Loading from "../Loading/Loading";
+import ControlTip from "./ControlTip";
 
-function Enabled() {
+function Mario() {
   const handlePreload = useCallback(async () => {
     const { load } = stateStorage.get("scene");
 
@@ -203,6 +204,7 @@ function Enabled() {
 
   return (
     <>
+      <ControlTip />
       <Loading />
       <Enable3d name="mario-scene">
         {sceneContructor === "mario-scene" && (
@@ -246,4 +248,4 @@ function Enabled() {
   );
 }
 
-export default Enabled;
+export default Mario;

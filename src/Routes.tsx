@@ -5,7 +5,7 @@ const Welcome = lazy(async () => await import("./pages/Welcome/Beggining.tsx"));
 
 const Start = lazy(async () => await import("./pages/Start/Start.tsx"));
 
-const Mario = lazy(async () => await import("./pages/Mario/Enabled.tsx"));
+const Mario = lazy(async () => await import("./pages/Mario/Mario.tsx"));
 
 const React = lazy(async () => await import("./pages/React/React.tsx"));
 

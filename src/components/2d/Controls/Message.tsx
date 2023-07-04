@@ -47,6 +47,8 @@ function Message({
 }: {
   options?: Array<(typeof OPTIONS_DEFAULT)[0]>;
 }) {
+  const { t } = useTranslation();
+
   const [lastDown] = useTriggerState({ name: "last_key_down" });
   const msgOptions = useMemo(() => options ?? OPTIONS_DEFAULT, [options]);
   const keysToClick = useRef(
@@ -87,7 +89,7 @@ function Message({
             color="black"
             fontWeight="600"
           >
-            Controls:
+            {t("CONTROLS")}:
           </Text.H1>
           <Space.Modifiers flexDirection="column" gridGap="0.5rem">
             {msgOptions.map((option, index) => (
