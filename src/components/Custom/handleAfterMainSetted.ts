@@ -47,7 +47,7 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
       setTimeout(() => {
         clearInterval(clearMagic);
 
-        // // now go down
+        // now go down
         const clearMagic2 = setInterval(() => {
           coinCollider.position.set(
             box.position.x,
@@ -61,11 +61,13 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
           yMagic2 += 0.01;
         }, 10);
 
-        // // after 1 second, clear the interval
+        // after 1 second, clear the interval
         setTimeout(() => {
           clearInterval(clearMagic2);
-          // changes the box metalness to 0
           box.material.metalness = 0.8;
+
+          // kills the coin
+          coinCollider.scale.set(0, 0, 0);
         }, 2500);
       }, 2000);
 
@@ -93,7 +95,6 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
       coin.body.setCollisionFlags(2);
 
       // set the new position
-      // coin.position.set(-60, 5, 3.75);
       coin.scale.set(0, 0, 0);
       coin.body.needUpdate = true;
 
@@ -102,7 +103,6 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
         // set body back to dynamic
         coin.body.setCollisionFlags(0);
 
-        // if you do not reset the velocity and angularVelocity, the object will keep it
         coin.body.setVelocity(0, 0, 0);
         coin.body.setAngularVelocity(0, 0, 0);
       });
