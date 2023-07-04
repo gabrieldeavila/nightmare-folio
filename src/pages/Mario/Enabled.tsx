@@ -234,7 +234,11 @@ function Enabled() {
               />
             ))}
 
-            <Controls onUpdate={handleUpdate} onJump={handleJump} />
+            <Controls
+              changePerspective
+              onUpdate={handleUpdate}
+              onJump={handleJump}
+            />
           </>
         )}
       </Enable3d>
