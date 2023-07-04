@@ -18,6 +18,7 @@
     "@types/three": "^0.152.0",
     "@yandeu/audio": "^0.0.2",
     "clsx": "^1.2.1",
+    "date-fns": "^2.30.0",
     "enable3d": "0.25.3",
     "framer-motion": "^10.12.16",
     "i18next": "^22.5.0",

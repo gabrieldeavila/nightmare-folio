@@ -23,6 +23,7 @@ import Lights from "../../components/Lights/Lights";
 import Preload from "../../components/Preload/Preload";
 import Loading from "../Loading/Loading";
 import ControlTip from "./ControlTip";
+import MarioTip from "../../components/2d/Tips/MarioTip";
 
 function Mario() {
   const handlePreload = useCallback(async () => {
@@ -83,6 +84,10 @@ function Mario() {
 
   const handleUpdate = useCallback(() => {
     const charNames = goombaArray;
+    stateStorage.set("time_spent", {
+      ...stateStorage.get("time_spent"),
+      current: new Date(),
+    });
 
     if (!startedPlaying) return;
     const mario = globalState.get("main_character");
@@ -205,6 +210,7 @@ function Mario() {
   return (
     <>
       <ControlTip />
+      <MarioTip />
       <Loading />
       <Enable3d name="mario-scene">
         {sceneContructor === "mario-scene" && (
