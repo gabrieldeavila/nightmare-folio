@@ -133,6 +133,11 @@ const Controls = memo(
             globalState.set("first_view_update", true);
             scene.character.body.setCollisionFlags(2);
             scene.character.body.needUpdate = true;
+            scene.character.position.set(
+              scene.character.position.x,
+              scene.character.position.y + 1.5,
+              3.75
+            );
 
             scene.character.body.once.update(() => {
               // set body back to dynamic
