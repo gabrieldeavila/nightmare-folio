@@ -8,7 +8,7 @@ import { Loader } from "react-feather";
 import { useTriggerState } from "react-trigger-state";
 import clsx from "clsx";
 
-const Loading = ({ avoidClose }: { avoiClose?: boolean }) => {
+const Loading = ({ avoidClose }: { avoidClose?: boolean }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
