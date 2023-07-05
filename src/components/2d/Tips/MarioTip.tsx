@@ -26,13 +26,16 @@ function MarioTip() {
       if (!hasEnded) return;
 
       if (e.key === "b") {
-        navigate("/start");
         stateStorage.set("every_thing_is_loaded", false);
         const deleteKeys = ["ambient_childs", "scene"];
 
         deleteKeys.forEach((key) => {
           globalState.delete(key);
         });
+
+        // FIXME: find a way to navigate to start without window.location.href
+        window.location.href = "/start";
+        // navigate("/start");
       }
     };
 
