@@ -143,7 +143,7 @@ function Mario() {
     const sound = await audio.add("mario_song");
 
     sound.setLoop(true);
-
+    sound.setVolume(0.4);
     sound.play();
     globalState.set("mario_song", sound);
 

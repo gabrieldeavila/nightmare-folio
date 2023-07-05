@@ -14,6 +14,7 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
       if (alreadyCollided) return;
       const index = box.name.split("surprise_box")[1];
       const sound = await audio.add("coin");
+      sound.setVolume(0.4);
 
       sound.play();
 
@@ -83,6 +84,7 @@ export const handleAfterMainSetted = (newChar: any, physics: any) => {
 
       if (alreadyCollided) return;
       const sound = await audio.add("coin");
+      sound.setVolume(0.1);
 
       sound.play();
 
