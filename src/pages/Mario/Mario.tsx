@@ -203,8 +203,24 @@ function Mario() {
     name: "main_scene_constructor",
   });
 
-  const handleStart = useCallback(() => {
+  const handleStart = useCallback((character: any) => {
     stateStorage.set("every_thing_is_loaded", true);
+
+    const { physics } = globalState.get("scene");
+    const child = globalState.get("the_end_of_a_project");
+
+    // add collider to the end of the project
+    physics.add.collider(character, child, async () => {
+      if (globalState.get("has_ended")) return;
+
+      stateStorage.set("has_ended", true);
+    });
+  }, []);
+
+  const handleTraverse = useCallback((child: any) => {
+    if (child.name === "the_end_of_a_project") {
+      globalState.set("the_end_of_a_project", child);
+    }
   }, []);
 
   return (
@@ -219,7 +235,10 @@ function Mario() {
             <Preload onPreload={handlePreload} />
             <Lights />
             <Camera />
-            <Ambient onStart={handleInitialSounds} />
+            <Ambient
+              onTraverse={handleTraverse}
+              onStart={handleInitialSounds}
+            />
             <Character
               characterRotationPI={0.8}
               name="main"

@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import { Space, Text } from "@geavila/gt-design";
 import { differenceInMinutes } from "date-fns";
 import React, { memo, useEffect, useMemo } from "react";
@@ -12,6 +13,8 @@ function MarioTip() {
     name: "time_spent",
     initial: { start: new Date(), current: new Date() },
   });
+
+  const [hasEnded] = useTriggerState({ name: "has_ended", initial: false });
 
   useEffect(() => {
     // add listener to start tip
@@ -40,14 +43,22 @@ function MarioTip() {
     [timeSpent]
   );
 
+  const { t } = useTranslation();
+
   return (
     <div className="fixed">
-      <Space.Modifiers>
-        <Info title="SCORE" value={coins * 100} />
-        <Info title="COINS" value={coins} />
-        <Info title="TIME" value={minutesAndSecondsSpent} />
-        <Info title="LIVES" value="∞" />
-      </Space.Modifiers>
+      {hasEnded ? (
+        <div className="flex">
+          <Text.Strong color="black">{t("END")}</Text.Strong>
+        </div>
+      ) : (
+        <Space.Modifiers>
+          <Info title="SCORE" value={coins * 100} />
+          <Info title="COINS" value={coins} />
+          <Info title="TIME" value={minutesAndSecondsSpent} />
+          <Info title="LIVES" value="∞" />
+        </Space.Modifiers>
+      )}
     </div>
   );
 }

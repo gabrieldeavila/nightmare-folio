@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import React, { useEffect, useMemo } from "react";
-import Message from "../../components/2d/Controls/Message";
+import { useMemo } from "react";
 import { useTriggerState } from "react-trigger-state";
+import Message from "../../components/2d/Controls/Message";
 
 const OPTIONS_3D = [
   {
