@@ -22,6 +22,7 @@
   "START_TIP": "Try to move the character towards the React symbol or the surprise box",
   "REACT_TIP": "Press R to enter the React mode",
   "MISTERY_BLOCK_TIP": "Press M to encounter a surprise 😛",
+  "GIT_LINK_TIP": "Press G to go to my GitHub profile",
   "LOADING": "Loading your experience 😼",
   "TARGETS": "Targets",
   "REACT": {

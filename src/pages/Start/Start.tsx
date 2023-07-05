@@ -119,6 +119,8 @@ function Enabled() {
       globalState.set("react", child);
     } else if (child.name.includes("MysteryBlock")) {
       globalState.set("mysteryBlock", child);
+    } else if (child.name === "NODE_333") {
+      globalState.set("git-link", child);
     }
   }, []);
 
@@ -126,6 +128,7 @@ function Enabled() {
     const { character, physics } = globalState.get("scene");
     const react = globalState.get("react");
     const mysteryBlock = globalState.get("mysteryBlock");
+    const gitLink = globalState.get("git-link");
     const audio = globalState.get("audio");
 
     physics.add.collider(character, react, async () => {
@@ -140,6 +143,14 @@ function Enabled() {
       if (stateStorage.get("start_tip") === "mistery_block") return;
 
       stateStorage.set("start_tip", "mistery_block");
+      const sound = await audio.add("select");
+      sound.play();
+    });
+
+    physics.add.collider(character, gitLink, async () => {
+      if (stateStorage.get("start_tip") === "git_link") return;
+
+      stateStorage.set("start_tip", "git_link");
       const sound = await audio.add("select");
       sound.play();
     });

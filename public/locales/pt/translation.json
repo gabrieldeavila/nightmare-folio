@@ -23,6 +23,7 @@
   "START_TIP": "Tente mover o personagem em direção ao símbolo do React ou à caixa surpresa!",
   "REACT_TIP": "Pressione R para ir no mundo do React!",
   "MISTERY_BLOCK_TIP": "Pressione M para encontrar uma surpresa 🤔",
+  "GIT_LINK_TIP": "Pressione G para ir ao meu GitHub",
   "TARGETS": "Alvos",
   "REACT": {
     "INITIAL": "Queridinho, se você quer me derrotar, tente atirar nos alvos primeiros, mas se quer desistir, pressione o L",

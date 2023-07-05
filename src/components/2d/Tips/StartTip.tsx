@@ -6,6 +6,7 @@ import { useTriggerState } from "react-trigger-state";
 
 const TIPS = {
   react: "REACT_TIP",
+  git_link: "GIT_LINK_TIP",
   mistery_block: "MISTERY_BLOCK_TIP",
   start: "START_TIP",
 };
@@ -25,6 +26,9 @@ function StartTip() {
         navigate("/mario");
       } else if (e.key === "r" && startTip === "react") {
         navigate("/react");
+      } else if (e.key === "g" && startTip === "git_link") {
+        // redirects to a new tab
+        window.open("https://github.com/gabrieldeavila", "_blank");
       }
     };
 
@@ -38,7 +42,9 @@ function StartTip() {
   return (
     <div className="fixed">
       <div className="flex">
-        <Text.Strong color="black">{t(currTip)}</Text.Strong>
+        <Text.Strong textShadow="1px 0px 5px white" color="black">
+          {t(currTip)}
+        </Text.Strong>
       </div>
     </div>
   );
