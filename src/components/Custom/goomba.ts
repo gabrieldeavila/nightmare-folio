@@ -1,7 +1,7 @@
 const goombaPosition0: [number, number, number] = [-40, 2.5, 4];
 const goombaPosition1: [number, number, number] = [-19, 2.5, 4];
 const goombaPosition3: [number, number, number] = [25, 10.2, 4];
-const goombaPosition4: [number, number, number] = [25, 2.5, 4];
+const goombaPosition4: [number, number, number] = [20, 2.5, 4];
 
 const GOOMBA = {
   goomba_0: {
@@ -32,7 +32,7 @@ const GOOMBA = {
     position: goombaPosition4,
     right_limit: 23.26,
     left_limit: 9.6,
-    start_to_move_when_main_is_at: -6,
+    start_to_move_when_main_is_at: 0.5,
   },
 };
 
