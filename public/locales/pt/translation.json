@@ -19,6 +19,7 @@
   "COINS": "Moedas",
   "TIME": "Tempo Gasto",
   "LIVES": "Vidas",
+  "END": "Você finalizou o jogo! Pressione B para voltar ao menu inicial",
   "START_TIP": "Tente mover o personagem em direção ao símbolo do React ou à caixa surpresa!",
   "REACT_TIP": "Pressione R para ir no mundo do React!",
   "MISTERY_BLOCK_TIP": "Pressione M para encontrar uma surpresa 🤔",

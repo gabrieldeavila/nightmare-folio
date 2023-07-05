@@ -136,6 +136,7 @@ function Mario() {
     await audio.load("mamma_mia", "/assets/mp3/mamma_mia", "mp3");
     await audio.load("jump", "/assets/mp3/jump", "mp3");
     await audio.load("coin", "/assets/mp3/coin", "mp3");
+    await audio.load("victory", "/assets/mp3/victory", "mp3");
 
     stateStorage.set("audio", audio);
 
@@ -144,6 +145,7 @@ function Mario() {
     sound.setLoop(true);
 
     sound.play();
+    globalState.set("mario_song", sound);
 
     setStartedPlaying(true);
   }, [setStartedPlaying]);

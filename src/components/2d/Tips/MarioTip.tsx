@@ -4,7 +4,11 @@ import { differenceInMinutes } from "date-fns";
 import React, { memo, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useTriggerState } from "react-trigger-state";
+import {
+  globalState,
+  stateStorage,
+  useTriggerState,
+} from "react-trigger-state";
 
 function MarioTip() {
   const navigate = useNavigate();
@@ -19,10 +23,16 @@ function MarioTip() {
   useEffect(() => {
     // add listener to start tip
     const listener = (e: KeyboardEvent) => {
-      if (e.key === "m") {
-        navigate("/mario");
-      } else if (e.key === "r") {
-        navigate("/react");
+      if (!hasEnded) return;
+
+      if (e.key === "b") {
+        navigate("/start");
+        stateStorage.set("every_thing_is_loaded", false);
+        const deleteKeys = ["ambient_childs", "scene"];
+
+        deleteKeys.forEach((key) => {
+          globalState.delete(key);
+        });
       }
     };
 
@@ -31,7 +41,21 @@ function MarioTip() {
     return () => {
       window.removeEventListener("keydown", listener);
     };
-  }, [navigate]);
+  }, [hasEnded, navigate]);
+
+  useEffect(() => {
+    async function doStuff() {
+      if (hasEnded) {
+        const audio = globalState.get("audio");
+        const song = globalState.get("mario_song");
+        const victory = await audio.add("victory");
+        victory.play();
+        song?.stop();
+      }
+    }
+
+    void doStuff();
+  }, [hasEnded]);
 
   const minutesAndSecondsSpent = useMemo(
     () =>
@@ -49,7 +73,9 @@ function MarioTip() {
     <div className="fixed">
       {hasEnded ? (
         <div className="flex">
-          <Text.Strong color="black">{t("END")}</Text.Strong>
+          <Text.Strong textShadow="1px 0px 5px white" color="black">
+            {t("END")}
+          </Text.Strong>
         </div>
       ) : (
         <Space.Modifiers>

@@ -18,6 +18,7 @@
   "COINS": "Coins",
   "TIME": "Time Spent",
   "LIVES": "Lives",
+  "END": "You have reached the end of the game. Press B to go back to the initial scene",
   "START_TIP": "Try to move the character towards the React symbol or the surprise box",
   "REACT_TIP": "Press R to enter the React mode",
   "MISTERY_BLOCK_TIP": "Press M to encounter a surprise 😛",
