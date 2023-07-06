@@ -12,20 +12,21 @@ A powerful extension for Three.js that enhances its capabilities and simplifies 
 ### react trigger state
 My own library to manage states throughout React components.
 ### gt design
-My own design system.
+My own design system with i18n support.
 
 ## Scenes
 ### Start Scene
-The start scene sets the stage for the entire experience. It welcomes the user with visually appealing graphics and engaging animations. The scene creates a sense of anticipation and excitement, drawing the user into the project.
+The start scene sets the stage for the entire experience. It welcomes the user with visually appealing graphics and engaging animations. The scene creates a sense of anticipation and excitement, drawing the user into the project. [PLAY](https://nightmare-folio.vercel.app/start)
 ![Start](https://raw.githubusercontent.com/gabrieldeavila/nightmare-folio/master/public/img/start.png)
 
 ### React Shooting Scene
 In the React shooting scene, the user takes control of a character in a thrilling shooting game. The scene leverages the interactive capabilities of React to create a dynamic gaming experience. The enable3d library enhances the graphics and physics, making the shooting scene visually stunning and immersive. Will you be able to defeat React?
+[PLAY](https://nightmare-folio.vercel.app/react)
 ![React](https://raw.githubusercontent.com/gabrieldeavila/nightmare-folio/master/public/img/react-quest.png)
 
 ### Mario 2D/3D Perspective Game
 The final scene takes inspiration from the iconic Mario games, providing an exciting 2D or 3D perspective game. Users can navigate through the game world, collecting coins, overcoming obstacles, and facing challenges. The combination of React, Three.js, and enable3d enables the creation of a rich and enjoyable gaming experience.
-
+[PLAY](https://nightmare-folio.vercel.app/mario)
 3D:
 ![Mario 3d](https://raw.githubusercontent.com/gabrieldeavila/nightmare-folio/master/public/img/mario-3d.png)
 2D:
