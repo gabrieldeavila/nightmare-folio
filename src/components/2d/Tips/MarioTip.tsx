@@ -60,15 +60,26 @@ function MarioTip() {
     void doStuff();
   }, [hasEnded]);
 
-  const minutesAndSecondsSpent = useMemo(
-    () =>
-      `${differenceInMinutes(timeSpent.current, timeSpent.start)}:${(
-        timeSpent.current.getSeconds() - timeSpent.start.getSeconds()
-      )
-        .toString()
-        .padStart(2, "0")}`,
-    [timeSpent]
-  );
+  const minutesAndSecondsSpent = useMemo(() => {
+    if (!timeSpent.current) return "0:00";
+    // if the current time is less than the start time, it means that the user
+    // has changed the system time, so we reset the time spent
+
+    if (timeSpent.current < timeSpent.start) {
+      stateStorage.set("time_spent", {
+        ...stateStorage.get("time_spent"),
+        start: new Date(),
+        current: new Date(),
+      });
+      return "0:00";
+    }
+
+    const minutes = differenceInMinutes(timeSpent.current, timeSpent.start);
+    const seconds =
+      timeSpent.current.getSeconds() -
+      timeSpent.start.getSeconds().toString();
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }, [timeSpent]);
 
   const { t } = useTranslation();
 
